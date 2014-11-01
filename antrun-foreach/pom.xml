@@ -43,12 +43,12 @@
                         <groupId>ant-contrib</groupId>
                         <artifactId>ant-contrib</artifactId>
                         <version>1.0b3</version>
-                        <!--                        <exclusions>
+                        <exclusions>
                             <exclusion>
                                 <artifactId>ant</artifactId>
                                 <groupId>ant</groupId>
                             </exclusion>
-                        </exclusions>-->
+                        </exclusions>
                     </dependency>
                 </dependencies>
                 <configuration>
