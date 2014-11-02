@@ -2,7 +2,7 @@
 <project name="maven-antrun-" default="main"  >
 <target name="main">
   <taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
-  <foreach param="fileName" target="unzipLibs">
+  <foreach param="fileName" target="unzipLibs" inheritall="true">
     <path>
       <fileset dir="${basedir}" casesensitive="yes">
         <include name="*.xml"/>
