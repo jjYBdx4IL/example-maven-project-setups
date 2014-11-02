@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="maven-antrun-" default="main"  >
+<target name="main">
+  <exec executable="pwd">
+                </exec>
+  <taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
+  <foreach param="fileName" target="unzipLibs">
+    <path>
+      <fileset dir="/home/mark/mysvn/devel/java/misc/maven/antrun-foreach" casesensitive="yes">
+        <include name="*.xml"/>
+      </fileset>
+    </path>
+  </foreach>
+</target>
+<target name="unzipLibs">
+  <echo message="${fileName}"/>
+</target>
+</project>

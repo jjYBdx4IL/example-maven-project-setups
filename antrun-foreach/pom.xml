@@ -22,16 +22,11 @@
                     <execution>
                         <phase>process-test-resources</phase>
                         <configuration>
-                            <tasks>
-                                <taskdef resource="net/sf/antcontrib/antcontrib.properties" />
-                                <foreach target="unzipLibs" param="fileName">
-                                    <path>
-                                        <fileset dir="${basedir}" casesensitive="yes">
-                                            <include name="*.xml"/>
-                                        </fileset>
-                                    </path>
-                                </foreach>
-                            </tasks>
+                            <target>
+                                <!-- maven does not support defining more than one target... -->
+                                <!-- https://jira.codehaus.org/browse/MANTRUN-86 -->
+                                <ant antfile="${basedir}/unzip.xml" />
+                            </target>
                         </configuration>
                         <goals>
                             <goal>run</goal>
@@ -52,9 +47,6 @@
                     </dependency>
                 </dependencies>
                 <configuration>
-                    <target name="unzipLibs">
-                        <echo message="${fileName}" />
-                    </target>
                 </configuration>
             </plugin>            
         </plugins>

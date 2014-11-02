@@ -1,4 +1,0 @@
-<target name="unzipLibs">
-    <echo message="${fileName}" />
-</target>
-
