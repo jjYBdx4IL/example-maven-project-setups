@@ -4,7 +4,7 @@
   <taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
   <foreach param="fileName" target="unzipLibs">
     <path>
-      <fileset dir="." casesensitive="yes">
+      <fileset dir="${basedir}" casesensitive="yes">
         <include name="*.xml"/>
       </fileset>
     </path>

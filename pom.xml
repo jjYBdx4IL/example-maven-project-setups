@@ -16,6 +16,7 @@
     <modules>
         <module>antrun-conditional</module>
         <module>antrun-foreach</module>
+        <module>antrun-buildfile-params</module>
     </modules>
 </project>
 
