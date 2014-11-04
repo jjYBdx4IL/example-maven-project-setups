@@ -17,6 +17,7 @@
         <module>antrun-conditional</module>
         <module>antrun-foreach</module>
         <module>antrun-buildfile-params</module>
+        <module>nar-maven-plugin-jni-example</module>
     </modules>
 </project>
 
