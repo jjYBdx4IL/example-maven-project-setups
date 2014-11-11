@@ -45,7 +45,6 @@
 
     <jar src="dependency/plexus-utils.jar"/>
     <jar src="dependency/izpack-panel-example.jar"/>
-    <!--<jar src="../${project.artifactId}-${project.version}.jar"/>-->
 
     <!-- 
         The panels section.
