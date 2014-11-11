@@ -1,5 +1,3 @@
 language: java
-before_script: sudo apt-get -y install build-essential
-script: mvn -V install
-after_script: ls -lR
+install: sudo apt-get -y install build-essential
 
