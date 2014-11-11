@@ -1,5 +1,5 @@
 language: java
-install: sudo apt-get -y install build-essential
+install: sudo apt-get -y install build-essential libc6:i386
 script: mvn -V -B install
 after_script: ls -lR
 notifications:
