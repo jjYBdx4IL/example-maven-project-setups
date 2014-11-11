@@ -3,8 +3,8 @@
   <!-- http://launch4j.sourceforge.net/docs.html -->
   <dontWrapJar>false</dontWrapJar>
   <headerType>gui</headerType>
-  <jar>${project.build.directory}/${project.artifactId}-${project.version}-shaded.jar</jar>
-  <outfile>${project.build.directory}/${project.artifactId}-${project.version}-win.exe</outfile>
+  <jar>${launch4j.input.jar}</jar>
+  <outfile>${launch4j.output.exe}</outfile>
   <errTitle></errTitle>
   <cmdLine></cmdLine>
   <chdir>.</chdir>
@@ -15,6 +15,9 @@
   <restartOnCrash>false</restartOnCrash>
   <manifest></manifest>
   <icon></icon>
+  <classPath>
+      <mainClass>maven.examples.Main</mainClass>
+  </classPath>
   <singleInstance>
     <mutexName>${project.artifactId}</mutexName>
     <windowTitle>${project.artifactId}</windowTitle>

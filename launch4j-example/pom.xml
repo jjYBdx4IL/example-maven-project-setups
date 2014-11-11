@@ -18,6 +18,8 @@
         <launch4j.work.unpackdir>${project.build.directory}/launch4j-workdir</launch4j.work.unpackdir>
         <launch4j.work.workdir>${launch4j.work.unpackdir}/launch4j-${launch4j.version}-workdir-${launch4j.os.classifier}</launch4j.work.workdir>
         <launch4j.xml>${project.build.directory}/classes/l4j.xml</launch4j.xml>
+        <launch4j.input.jar>${project.build.directory}/${project.artifactId}-${project.version}-shaded.jar</launch4j.input.jar>
+        <launch4j.output.exe>${project.build.directory}/${project.artifactId}-${project.version}-win.exe</launch4j.output.exe>
     </properties>
 
     <repositories>
@@ -32,6 +34,11 @@
     </repositories>
 
     <dependencies>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.17</version>
+        </dependency>
         <dependency>
             <groupId>net.sf.launch4j</groupId>
             <artifactId>launch4j</artifactId>
@@ -115,6 +122,29 @@
                     <shadedArtifactAttached>true</shadedArtifactAttached> <!-- Make the shaded artifact not the main one -->
                     <shadedClassifierName>shaded</shadedClassifierName> <!-- set the suffix to the shaded jar -->
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.9.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-artifacts</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>attach-artifact</goal>
+                        </goals>
+                        <configuration>
+                            <artifacts>
+                                <artifact>
+                                    <file>${launch4j.output.exe}</file>
+                                    <type>exe</type>
+                                    <classifier>windows</classifier>
+                                </artifact>
+                            </artifacts>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
 
