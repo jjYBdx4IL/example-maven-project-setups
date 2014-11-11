@@ -142,6 +142,9 @@ public class Main {
     
     public static void main(String[] args) throws InterruptedException {
         Main main = new Main();
+        if (args.length > 0) {
+            main.label.setText(main.label.getText() + " " + args[0]);
+        }
         main.openWindow();
         main.waitForWindowClosing();
         log.info("quit");

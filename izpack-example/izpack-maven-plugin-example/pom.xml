@@ -1,0 +1,128 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>de.mstier.maven.examples</groupId>
+        <artifactId>izpack-parent</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <groupId>de.mstier.maven.examples</groupId>
+    <artifactId>izpack-maven-plugin-example</artifactId>
+
+    <name>Maven Examples :: IzPack Plugin Example</name>
+
+    <packaging>jar</packaging>
+
+    <properties>
+        <staging.dir>${project.build.directory}/staging</staging.dir>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>de.mstier.maven.examples</groupId>
+            <artifactId>izpack-panel-example</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.izpack</groupId>
+            <artifactId>izpack-compiler</artifactId>
+            <classifier>standalone</classifier>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.izpack</groupId>
+            <artifactId>izpack-dist</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.plexus</groupId>
+            <artifactId>plexus-utils</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.6</version>
+                <executions>
+                    <execution>
+                        <id>copy-izpack-resource</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${staging.dir}</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>src/main/izpack</directory>
+                                    <filtering>true</filtering>
+                                </resource>
+                                <resource>
+                                    <directory>src/main/resources</directory>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>2.8</version>
+                <executions>
+                    <execution>
+                        <id>unpack-dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>unpack-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <includeArtifactIds>izpack-native,izpack-dist</includeArtifactIds>
+                            <outputDirectory>${staging.dir}</outputDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <includeArtifactIds>plexus-utils,izpack-panel-example</includeArtifactIds>
+                            <outputDirectory>${staging.dir}/dependency</outputDirectory>
+                            <stripVersion>true</stripVersion>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.izpack</groupId>
+                <artifactId>izpack-maven-plugin</artifactId>
+                <version>${my.izpack.version}</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.codehaus.izpack</groupId>
+                        <artifactId>izpack-compiler</artifactId>
+                        <version>${my.izpack.version}</version>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <izpackBasedir>${staging.dir}</izpackBasedir>
+                    <customPanelDirectory>${staging.dir}</customPanelDirectory>
+                    <installFile>${staging.dir}/install.xml</installFile>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>standard-installer</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>izpack</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

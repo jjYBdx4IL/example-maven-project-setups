@@ -1,0 +1,48 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>de.mstier.maven.examples</groupId>
+    <artifactId>izpack-parent</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <name>Maven Examples :: IzPack Parent</name>
+
+    <packaging>pom</packaging>
+
+    <properties>
+        <my.izpack.version>5.0.0-beta11</my.izpack.version>
+    </properties>
+
+    <modules>
+        <module>izpack-panel-example</module>
+        <module>izpack-maven-plugin-example</module>
+    </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>de.mstier.maven.examples</groupId>
+                <artifactId>izpack-panel-example</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.izpack</groupId>
+                <artifactId>izpack-compiler</artifactId>
+                <version>${my.izpack.version}</version>
+                <classifier>standalone</classifier>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.izpack</groupId>
+                <artifactId>izpack-dist</artifactId>
+                <version>${my.izpack.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.plexus</groupId>
+                <artifactId>plexus-utils</artifactId>
+                <version>1.5.6</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+</project>
