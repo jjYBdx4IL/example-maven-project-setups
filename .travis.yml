@@ -1,6 +1,7 @@
 language: java
 install: sudo apt-get -y install build-essential
 script: mvn -V -B install
+before_script: ls -l
 notifications:
   email: false
 
