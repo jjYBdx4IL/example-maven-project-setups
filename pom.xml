@@ -19,8 +19,7 @@
         <module>antrun-buildfile-params</module>
         <module>nar-maven-plugin-jni-example</module>
         <!--<module>java6only</module>-->
-        <!-- does not work on travis CI (workdir unpack probably does not set exec bits): -->
-        <!--<module>launch4j-plugin</module>-->
+        <module>launch4j-plugin</module>
         <module>launch4j-example</module>
     </modules>
 </project>
