@@ -6,10 +6,14 @@
 
     <modelVersion>4.0.0</modelVersion>
     
-    <groupId>de.mstier.maven.examples</groupId>
+    <parent>
+        <groupId>com.github.jjYBdx4IL.maven.examples</groupId>
+        <artifactId>github-maven-examples</artifactId>
+        <version>1.0-SNAPSHOT</version>
+        <relativePath>..</relativePath>
+    </parent>
+
     <artifactId>antrun-conditional</artifactId>
-    <packaging>jar</packaging>
-    <version>1.0-SNAPSHOT</version>
 
     <name>Maven Examples :: Antrun Conditional</name>
     

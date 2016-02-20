@@ -1,4 +1,4 @@
-package de.mstier.maven.examples.java6only;
+package com.github.jjYBdx4IL.maven.examples.java6only;
 
 import java.io.File;
 import java.nio.file.Files;

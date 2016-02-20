@@ -3,12 +3,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>de.mstier.maven.examples</groupId>
+        <groupId>com.github.jjYBdx4IL.maven.examples</groupId>
         <artifactId>izpack-parent</artifactId>
         <version>1.0-SNAPSHOT</version>
+        <relativePath>..</relativePath>
     </parent>
 
-    <groupId>de.mstier.maven.examples</groupId>
     <artifactId>izpack-maven-plugin-example</artifactId>
 
     <name>Maven Examples :: IzPack Plugin Example</name>
@@ -21,7 +21,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>de.mstier.maven.examples</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>izpack-panel-example</artifactId>
         </dependency>
         <dependency>

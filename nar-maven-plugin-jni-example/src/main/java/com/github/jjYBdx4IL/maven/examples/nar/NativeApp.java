@@ -1,4 +1,4 @@
-package testg;
+package com.github.jjYBdx4IL.maven.examples.nar;
 
 public class NativeApp
 {

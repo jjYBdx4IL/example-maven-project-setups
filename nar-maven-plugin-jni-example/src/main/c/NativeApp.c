@@ -1,7 +1,7 @@
 #include <stdio.h>
-#include "testg_NativeApp.h"
+#include "com_github_jjYBdx4IL_maven_examples_nar_NativeApp.h"
 
-JNIEXPORT jstring JNICALL Java_testg_NativeApp_sayHello( JNIEnv *env, jobject obj ) {
+JNIEXPORT jstring JNICALL Java_com_github_jjYBdx4IL_maven_examples_nar_NativeApp_sayHello( JNIEnv *env, jobject obj ) {
 	jstring value;           /* the return value */
 
 	char buf[40];            /* working buffer (really only need 20 ) */

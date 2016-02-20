@@ -1,43 +1,68 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+    <modelVersion>4.0.0</modelVersion>
 
-  <groupId>de.mstier.maven.examples</groupId>
-  <artifactId>nar-maven-plugin-jni-example</artifactId>
-  <packaging>nar</packaging>
-  <version>1.0-SNAPSHOT</version>
+    <parent>
+        <groupId>com.github.jjYBdx4IL.maven.examples</groupId>
+        <artifactId>github-maven-examples</artifactId>
+        <version>1.0-SNAPSHOT</version>
+        <relativePath>..</relativePath>
+    </parent>
 
-  <name>Maven Examples :: nar-maven-plugin JNI Project</name>
+    <artifactId>nar-maven-plugin-jni-example</artifactId>
+    <packaging>nar</packaging>
+
+    <name>Maven Examples :: nar-maven-plugin JNI Project</name>
   
-  <properties>
-    <skipTests>true</skipTests>
-  </properties>  
+    <properties>
+        <skipTests>true</skipTests>
+    </properties>
 
-  <build>
-    <defaultGoal>integration-test</defaultGoal>
-    <plugins>
-      <plugin>
-        <groupId>com.github.maven-nar</groupId>
-        <artifactId>nar-maven-plugin</artifactId>
-        <version>3.2.0</version>
-        <extensions>true</extensions>
-        <configuration>
-          <libraries>
-            <library>
-              <type>jni</type>
-              <narSystemPackage>testg</narSystemPackage>
-            </library>
-          </libraries>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
+    <build>
+        <defaultGoal>integration-test</defaultGoal>
+        <plugins>
+            <plugin>
+                <groupId>com.github.maven-nar</groupId>
+                <artifactId>nar-maven-plugin</artifactId>
+                <version>3.2.0</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <libraries>
+                        <library>
+                            <type>jni</type>
+                            <narSystemPackage>com.github.jjYBdx4IL.maven.examples.nar</narSystemPackage>
+                        </library>
+                    </libraries>
+                </configuration>
+            </plugin>
 
-  <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-    </dependency>
-  </dependencies>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.10</version>
+                <executions>
+                    <execution>
+                        <id>add-source</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>${project.build.directory}/nar/nar-generated/</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>3.8.1</version>
+        </dependency>
+    </dependencies>
 </project>

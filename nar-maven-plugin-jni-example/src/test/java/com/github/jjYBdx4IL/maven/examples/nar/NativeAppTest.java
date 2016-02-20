@@ -1,6 +1,4 @@
-package testg;
-
-import testg.NativeApp;
+package com.github.jjYBdx4IL.maven.examples.nar;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;

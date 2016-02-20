@@ -6,12 +6,12 @@
 
     <modelVersion>4.0.0</modelVersion>
     
-    <groupId>de.mstier.maven.examples</groupId>
-    <artifactId>parent</artifactId>
+    <groupId>com.github.jjYBdx4IL.maven.examples</groupId>
+    <artifactId>github-maven-examples</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
 
-    <name>Maven Examples</name>
+    <name>Maven Project Setup Examples</name>
     
     <modules>
         <module>antrun-conditional</module>
