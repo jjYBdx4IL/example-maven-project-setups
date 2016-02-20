@@ -65,7 +65,7 @@
             <version>4.12</version>
         </dependency>
         
-        <!-- The following dependency is needed to automatically loaded the native libs from .nar files.
+        <!-- The following dependency is needed to automatically load the native libs from .nar files.
              This makes running NativeApp.java directly from within NetBeans work.
              Fixes issue 1,      https://github.com/jjYBdx4IL/example-maven-project-setups/issues/1
         -->
