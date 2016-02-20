@@ -24,7 +24,7 @@
             <plugin>
                 <groupId>com.github.maven-nar</groupId>
                 <artifactId>nar-maven-plugin</artifactId>
-                <version>3.2.0</version>
+                <version>3.2.3</version>
                 <extensions>true</extensions>
                 <configuration>
                     <libraries>
@@ -62,7 +62,17 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>3.8.1</version>
+            <version>4.12</version>
+        </dependency>
+        
+        <!-- The following dependency is needed to automatically loaded the native libs from .nar files.
+             This makes running NativeApp.java directly from within NetBeans work.
+             Fixes issue 1,      https://github.com/jjYBdx4IL/example-maven-project-setups/issues/1
+        -->
+        <dependency>
+            <groupId>org.scijava</groupId>
+            <artifactId>native-lib-loader</artifactId>
+            <version>2.1.3</version>
         </dependency>
     </dependencies>
 </project>
