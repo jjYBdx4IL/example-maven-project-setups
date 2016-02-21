@@ -55,6 +55,7 @@
                     </execution>
                 </executions>
             </plugin>
+            
         </plugins>
     </build>
 
@@ -116,6 +117,28 @@
                             </linker>
                         </configuration>
                     </plugin>                
+                    
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>1.2.1</version>
+                        <executions>
+                            <execution>
+                                <id>default-cli</id>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <arguments>
+                                <argument>-Djava.library.path=${basedir}/target/nar/nar-maven-plugin-jni-example-1.0-SNAPSHOT-x86_64-w64-mingw32-gcc-jni/lib/x86_64-w64-mingw32-gcc/jni</argument>
+                                <argument>-classpath</argument>
+                                <classpath/>
+                                <argument>${env.RUN_THIS_CLASS}</argument>
+                            </arguments>
+                        </configuration>
+                    </plugin>
                 </plugins>
             </build>
         </profile>
