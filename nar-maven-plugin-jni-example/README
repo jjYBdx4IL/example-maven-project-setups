@@ -1,0 +1,14 @@
+STATUS
+======
+
+"mvn clean install" (incl tests):
+
+ * Linux OK
+ * Cygwin64 OK (-Pcygwin)
+
+Running app directly from within Netbeans:
+
+ * Linux OK
+ * Windows/Cygwin64 FAIL
+
+

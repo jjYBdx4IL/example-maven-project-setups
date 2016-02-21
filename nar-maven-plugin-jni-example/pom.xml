@@ -62,7 +62,6 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.12</version>
         </dependency>
         
         <!-- The following dependency is needed to automatically load the native libs from .nar files.
@@ -75,4 +74,51 @@
             <version>2.1.3</version>
         </dependency>
     </dependencies>
+
+    <profiles>
+        <profile>
+            <id>cygwin</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.github.maven-nar</groupId>
+                        <artifactId>nar-maven-plugin</artifactId>
+                        <configuration>
+                            <aol>x86_64-w64-mingw32-gcc</aol>
+                            <gnuUseOnWindows>true</gnuUseOnWindows>                    
+                    
+                            <c>
+                                <name>gcc</name>
+                                <includes>
+                                    <include>**/*.c</include>
+                                </includes>
+                                <options>
+                                    <option>-D__int64=int64_t</option>
+                                    <option>-I${JAVA_HOME}/include</option>
+                                    <option>-I${JAVA_HOME}/include/win32</option>
+                                    <option>${java.os.include}</option>
+                                    <option>${stack.protector.option}</option>
+                                    <option>${architecture.option}</option>
+                                    <option>${subsystem.option}</option>
+                                    <option>${debug.option}</option>
+                                    <option>-shared</option>
+                                    <option>-fexceptions</option>
+                                    <option>-lstdc++</option>
+                                </options>
+                            </c>
+                    
+                            <linker>
+                                <name>gcc</name>
+                                <options>
+                                    <option>${architecture.option}</option>
+                                    <option>${subsystem.option}</option>
+                                </options>
+                            </linker>
+                        </configuration>
+                    </plugin>                
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+            
 </project>
