@@ -29,6 +29,7 @@
         <module>launch4j-plugin</module>
         <module>launch4j-example</module>
         <module>izpack-example</module>
+        <module>javacpp-opencv-example</module>
     </modules>
 
     <build>
