@@ -14,6 +14,7 @@
     
     <properties>
         <exec.mainClass>com.github.jjYBdx4IL.maven.examples.javacpp.Stitching</exec.mainClass>
+        <libPath>${project.build.directory}/unpackedLibs</libPath>
     </properties>
     
     <build>
@@ -43,9 +44,42 @@
                                     <includes>**/aestheticode.jpg</includes>
                                 </artifactItem>
                             </artifactItems>
-                        </configuration>          
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>unpack2</id>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>unpack-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <includeArtifactIds>opencv,ffmpeg</includeArtifactIds>
+                            <outputDirectory>${libPath}</outputDirectory>
+                            <includes>**/*.so*,**/*.dll</includes>
+                            <actTransitively>true</actTransitively>
+                        </configuration>
                     </execution>
                 </executions>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>test-compile</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <tasks>
+                        <move todir="${libPath}">
+                            <fileset dir="${libPath}"/>
+                            <mapper type="flatten"/>
+                        </move>
+                    </tasks>
+                </configuration>
             </plugin>
             
             <plugin>
@@ -54,7 +88,10 @@
                 <configuration>
                     <systemPropertyVariables>
                         <org.bytedeco.javacpp.logger>slf4j</org.bytedeco.javacpp.logger>
+                        <org.bytedeco.javacpp.loadlibraries>false</org.bytedeco.javacpp.loadlibraries>
+                        <load.libs.from.dir>${libPath}</load.libs.from.dir>
                     </systemPropertyVariables>
+                    <argLine>-Djava.library.path=${java.library.path}:${libPath}</argLine>
                 </configuration>
             </plugin>
         </plugins>
@@ -70,7 +107,7 @@
             <groupId>org.bytedeco.javacpp-presets</groupId>
             <artifactId>ffmpeg</artifactId>
             <version>2.8.1-1.1</version>
-        </dependency>        
+        </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
