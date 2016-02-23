@@ -1,0 +1,78 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="
+        http://maven.apache.org/POM/4.0.0
+            http://maven.apache.org/maven-v4_0_0.xsd
+            ">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.github.jjYBdx4IL.maven.examples</groupId>
+        <artifactId>github-maven-examples</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>download-plugin-example</artifactId>
+
+    <name>Maven Examples :: Download Maven Plugin Example</name>
+
+    <properties>
+        <jetty.http.port>7392</jetty.http.port>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.googlecode.maven-download-plugin</groupId>
+                <artifactId>download-maven-plugin</artifactId>
+                <version>1.2.1</version>
+                <executions>
+                    <execution>
+                        <phase>integration-test</phase>
+                        <goals>
+                            <goal>wget</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <url>http://localhost:${jetty.http.port}/a</url>
+                    <outputFileName>foo.bar</outputFileName>
+                    <targetDirectory>${project.build.directory}</targetDirectory>
+                    <md5>60b725f10c9c85c70d97880dfe8191b3</md5>
+                    <skipCache>true</skipCache>
+                    <retries>2</retries>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+                <version>9.3.7.v20160115</version>
+                <executions>
+                    <execution>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>start</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>jetty-stop</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>stop</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <httpConnector>
+                        <port>${jetty.http.port}</port>
+                    </httpConnector>
+                    <stopPort>7876</stopPort>
+                    <stopKey>abc</stopKey>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
+
