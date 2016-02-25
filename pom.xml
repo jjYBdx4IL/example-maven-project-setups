@@ -32,6 +32,7 @@
         <module>izpack-example</module>
         <module>javacpp-opencv-example</module>
         <module>download-plugin-example</module>
+        <module>multimodule-archetype-example</module>
     </modules>
 
     <build>

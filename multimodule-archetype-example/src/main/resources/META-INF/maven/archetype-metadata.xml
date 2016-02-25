@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="US-ASCII"?>
+<archetype-descriptor name="basic">
+    <!-- http://maven.apache.org/archetype/maven-archetype-plugin/specification/archetype-metadata.html -->
+
+<!--    <fileSets>
+        <fileSet filtered="true" packaged="true">
+            <directory>one</directory>
+      
+            <includes>
+                <include>pom.xml</include>
+            </includes>
+        </fileSet>
+    </fileSets>-->
+  
+    <modules>
+        <module name="${rootArtifactId}" id="${rootArtifactId}" dir="main">
+        </module>
+        <module name="${rootArtifactId}-autoarch" id="${rootArtifactId}-autoarch" dir="autoarch">
+        </module>
+        <module name="${rootArtifactId}-allarch" id="${rootArtifactId}-allarch" dir="allarch">
+        </module>
+    </modules>
+
+    <requiredProperties>
+        <requiredProperty key="javacppVersion" />
+    </requiredProperties>
+</archetype-descriptor>
