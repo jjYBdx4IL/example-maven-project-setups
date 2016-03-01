@@ -37,9 +37,9 @@
 
             <plugin>
                 <!-- http://stackoverflow.com/questions/6060560/trying-to-integrate-launch4j-in-a-maven-project-using-alakai-plugin -->
-                <groupId>org.bluestemsoftware.open.maven.plugin</groupId>
-                <artifactId>launch4j-plugin</artifactId>
-                <version>1.5.0.0</version>
+                <groupId>com.akathist.maven.plugins.launch4j</groupId>
+                <artifactId>launch4j-maven-plugin</artifactId>
+                <version>1.7.8</version>
                 <executions>
 
                     <!-- GUI exe -->

@@ -17,7 +17,7 @@
     <name>Maven Examples :: Launch4j Example</name>
 
     <properties>
-        <launch4j.version>3.5.0</launch4j.version>
+        <launch4j.version>3.8.0</launch4j.version>
         <launch4j.work.unpackdir>${project.build.directory}/launch4j-workdir</launch4j.work.unpackdir>
         <launch4j.work.workdir>${launch4j.work.unpackdir}/launch4j-${launch4j.version}-workdir-${launch4j.os.classifier}</launch4j.work.workdir>
         <launch4j.xml>${project.build.directory}/classes/l4j.xml</launch4j.xml>
