@@ -1,0 +1,121 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="
+        http://maven.apache.org/POM/4.0.0
+            http://maven.apache.org/maven-v4_0_0.xsd
+            ">
+
+    <modelVersion>4.0.0</modelVersion>
+    
+    <parent>
+        <groupId>com.github.jjYBdx4IL.maven.examples</groupId>
+        <artifactId>github-maven-examples</artifactId>
+        <version>1.0-SNAPSHOT</version>
+        <relativePath>..</relativePath>
+    </parent>
+
+    <artifactId>compile-time-annotation-processing</artifactId>
+
+    <name>Maven Examples :: Compile-Time Annotation Processing</name>
+    <description>Compile the annotation processor and the generated classes using only one maven module.</description>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.10</version>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>${project.build.directory}/generated-sources/anno</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.5.1</version>
+                <executions>
+                    <execution>
+                        <id>compiler-processor</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                        <configuration>
+                            <compilerArgs>
+                                <arg>-proc:none</arg>
+                            </compilerArgs>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>process-annotations</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                        <configuration>
+                            <annotationProcessors>
+                                <arg>com.github.jjYBdx4IL.maven.examples.annotations.AnnotationProcessor</arg>
+                            </annotationProcessors>
+                            <fork>true</fork> <!-- bug; non-forked compiler has basedir set to user.dir or sth -->
+                        </configuration>
+                    </execution>
+                    <!-- TODO compile only generated classes -->
+                    <execution>
+                        <id>default-compile</id> <!-- using an id of default-compile will override the default execution -->
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                        <configuration>
+<!--                            <compileSourceRoots>
+                                <root>${project.build.directory}/generated-sources/anno</root>
+                            </compileSourceRoots>-->
+                            <!--                            <excludes>
+                                <exclude>**/AnnotationProcessor.java</exclude>
+                            </excludes>-->
+                            <!--                            <compilerArgs>
+                                <arg>-proc:none</arg>
+                            </compilerArgs>-->
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>1.7.18</version>
+        </dependency>
+        <dependency>
+            <groupId>com.helger</groupId>
+            <artifactId>jcodemodel</artifactId>
+            <version>2.8.3</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-core</artifactId>
+            <version>1.3</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+</project>
+

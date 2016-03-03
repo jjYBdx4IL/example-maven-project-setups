@@ -33,6 +33,7 @@
         <module>javacpp-opencv-example</module>
         <module>download-plugin-example</module>
         <module>multimodule-archetype-example</module>
+        <module>compile-time-annotation-processing</module>
     </modules>
 
     <build>
