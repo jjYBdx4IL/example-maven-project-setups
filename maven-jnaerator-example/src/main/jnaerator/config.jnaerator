@@ -1,0 +1,11 @@
+// JNAerator config file.
+
+-library fann
+
+-package jna.fann
+
+-I$(DIR)/../../../target/FANN-2.2.0-Source/src/include
+
+$(DIR)/../../../target/FANN-2.2.0-Source/src/include/fann.h
+
+//-publicRawBindings
