@@ -1,4 +1,4 @@
-#include <com_github_jjYBdx4IL_maven_examples_jnajni_JNIAccess.h>
+#include <com_github_jjYBdx4IL_maven_examples_jnajni_JNIAccessWithLibLoader.h>
 
 /*
  * test functions for native access via JNI
@@ -10,7 +10,7 @@
  * Method:    sum
  * Signature: ([I)I
  */
-JNIEXPORT jint JNICALL Java_com_github_jjYBdx4IL_maven_examples_jnajni_JNIAccess_sum
+JNIEXPORT jint JNICALL Java_com_github_jjYBdx4IL_maven_examples_jnajni_JNIAccessWithLibLoader_sum
   (JNIEnv *env, jclass class, jintArray ptr)
 {
     jint sum = 0;
@@ -31,7 +31,7 @@ JNIEXPORT jint JNICALL Java_com_github_jjYBdx4IL_maven_examples_jnajni_JNIAccess
  * Method:    inc
  * Signature: (I)I
  */
-JNIEXPORT jint JNICALL Java_com_github_jjYBdx4IL_maven_examples_jnajni_JNIAccess_inc
+JNIEXPORT jint JNICALL Java_com_github_jjYBdx4IL_maven_examples_jnajni_JNIAccessWithLibLoader_inc
   (JNIEnv *env, jclass class, jint arg)
 {
     return arg + 1;
