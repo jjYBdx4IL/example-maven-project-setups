@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.github.jjYBdx4IL.maven.examples</groupId>
+        <artifactId>github-maven-examples</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>jna-jni-example</artifactId>
+    <packaging>jar</packaging>
+
+    <name>Maven Examples :: JNA/JNI Example Project</name>
+  
+    <build>
+        <defaultGoal>integration-test</defaultGoal>
+        <plugins>
+            <!-- ITs run against the natives bundled in the final jar -->
+            <plugin>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>2.19.1</version>
+                <executions>
+                    <execution>
+                        <id>run-tests</id>
+                        <phase>integration-test</phase>
+                        <goals>
+                            <goal>integration-test</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <systemPropertyVariables>
+                        <jna.debug_load>true</jna.debug_load>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
+            <!-- regular tests run against the unpacked native lib -->
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.19.1</version>
+                <configuration>
+                    <systemPropertyVariables>
+                        <jna.debug_load>true</jna.debug_load>
+                    </systemPropertyVariables>
+                    <forkCount>1</forkCount>
+                    <!-- run JNA and JNI tests in separate VM instances: -->
+                    <reuseForks>false</reuseForks>
+                    <!-- only needed for direct JNI loading, not for JNA: -->
+                    <argLine>-Djava.library.path=${project.build.directory}</argLine>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.5.0</version>
+                <!-- native lib build only supported on linux/gnu systems -->
+                <executions>
+                    <execution>
+                        <id>native-build</id>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <phase>process-classes</phase>
+                        <configuration>
+                            <executable>${project.basedir}/src/main/resources/build.sh</executable>
+                            <arguments>
+                                <arg>${project.basedir}</arg>
+                                <arg>${project.build.directory}</arg>
+                                <arg>${project.build.outputDirectory}</arg>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.java.dev.jna</groupId>
+            <artifactId>jna</artifactId>
+            <version>4.2.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjdk.jmh</groupId>
+            <artifactId>jmh-core</artifactId>
+            <version>1.12</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.openjdk.jmh</groupId>
+            <artifactId>jmh-generator-annprocess</artifactId>
+            <version>1.12</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+</project>

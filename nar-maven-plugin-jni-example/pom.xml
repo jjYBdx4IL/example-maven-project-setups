@@ -67,6 +67,8 @@
         <!-- The following dependency is needed to automatically load the native libs from .nar files.
              This makes running NativeApp.java directly from within NetBeans work.
              Fixes issue 1,      https://github.com/jjYBdx4IL/example-maven-project-setups/issues/1
+
+             Update: this is already done by jna.
         -->
         <dependency>
             <groupId>org.scijava</groupId>
