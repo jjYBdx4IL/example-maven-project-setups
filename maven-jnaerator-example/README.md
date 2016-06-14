@@ -1,4 +1,6 @@
-STATUS
-======
+# Maven JNAerator/Bridj Example
 
-build running, test is loading the native lib, test not complete (linux only)
+## STATUS
+
+Full cycle complete. Build native lib, build java class for native lib
+using jnaerator maven plugin, run XOR training test.
