@@ -15,7 +15,7 @@
     <packaging>pom</packaging>
 
     <properties>
-        <my.izpack.version>5.0.0-beta11</my.izpack.version>
+        <my.izpack.version>5.0.8</my.izpack.version>
     </properties>
 
     <modules>

@@ -2,4 +2,4 @@
 
 --
 [![Build Status](https://travis-ci.org/jjYBdx4IL/example-maven-project-setups.png?branch=master)](https://travis-ci.org/jjYBdx4IL/example-maven-project-setups)
-devel/java/misc/github/github-example-maven-project-setups@7030
+devel/java/misc/github/github-example-maven-project-setups@7032
