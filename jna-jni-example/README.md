@@ -23,4 +23,5 @@ The not as simple case of calling a C function to return the sum of an int array
 JNI is faster than JNA by a factor of 3. This is most likely due to how JNI access the int[] at the native level, which
 includes releasing pointers and stuff. There might be faster ways to do this with JNI.
 
-
+btw: the "us/op" (microseconds per operation) actually mean "microseconds per 1000 native function calls", so a call
+to the native increment function via JNI takes around 12 nanoseconds on an Intel Core i5 750.
