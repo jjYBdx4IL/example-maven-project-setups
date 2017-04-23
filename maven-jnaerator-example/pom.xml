@@ -19,6 +19,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <fann.version>2.2.0</fann.version>
     </properties>
 
@@ -46,9 +47,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.19.1</version>
                 <configuration>
-                    <systemPropertyVariables>
-                        <java.library.path>${project.build.directory}/native</java.library.path>
-                    </systemPropertyVariables>
+                    <argLine>-Djava.library.path=${project.build.directory}/native</argLine>
                 </configuration>
             </plugin>
             <!-- build native lib and create jar on linux systems-->
