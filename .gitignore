@@ -1,0 +1,9 @@
+/antrun-conditional/target/
+/antrun-buildfile-params/target/
+/antrun-foreach/target/
+/antrun-set-maven-props/target/
+/nar-maven-plugin-jni-example/target/
+/launch4j-example/target/
+.project
+.settings
+.classpath

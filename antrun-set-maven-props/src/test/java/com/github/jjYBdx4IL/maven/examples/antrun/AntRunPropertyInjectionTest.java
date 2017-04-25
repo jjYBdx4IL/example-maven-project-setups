@@ -14,7 +14,7 @@ public class AntRunPropertyInjectionTest {
 
     @Test
     public void test() throws IOException {
-        assertEquals("<replaced> NOT replACED\n",
+        assertEquals("<replaced> NOT replACED" + System.lineSeparator(),
                 IOUtils.toString(getClass().getResource("testfile.txt"), "ASCII"));
     }
 }
