@@ -25,6 +25,7 @@
         <module>antrun-foreach</module>
         <module>antrun-buildfile-params</module>
         <module>antrun-set-maven-props</module>
+        <module>gwt-example</module>
         <module>nar-maven-plugin-jni-example</module>
         <!-- intentionally broken: -->
         <!--<module>java6only</module>-->

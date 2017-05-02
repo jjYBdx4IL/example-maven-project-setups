@@ -1,0 +1,22 @@
+= devel =
+
+mvn install gwt:run
+
+Updating the java source file and hitting "reload" in your browser
+is all it takes to reload the java source code changes!
+
+Update: since gwt 2.7+ there is no hosted development any more. (TODO)
+
+= prod =
+
+mvn clean install -Pprod && mvn jetty:run -Pprod
+
+= fast prod run =
+
+mvn clean install -Pprod,fast
+
+= find updates =
+
+mvn versions:display-dependency-updates
+mvn versions:display-plugin-updates
+
