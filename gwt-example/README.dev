@@ -11,6 +11,9 @@ Update: since gwt 2.7+ there is no hosted development any more. (TODO)
 
 mvn clean install -Pprod && mvn jetty:run -Pprod
 
+Make sure you have installed the latest chromedriver and it is available on
+your path.
+
 = fast prod run =
 
 mvn clean install -Pprod,fast
