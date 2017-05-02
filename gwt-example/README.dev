@@ -1,24 +1,38 @@
-= devel =
+# GWT Example
 
-mvn install gwt:run
+## devel
+
+mvn clean install -DskipITs
+mvn gwt:run
+mvn gwt:debug
 
 Updating the java source file and hitting "reload" in your browser
 is all it takes to reload the java source code changes!
 
-Update: since gwt 2.7+ there is no hosted development any more. (TODO)
+Since GWT 2.7 gwt:debug is only for debugging the server side implementation.
+For the client, use the development tools built into the chrome browser.
+With the source code mappings you can debug the original java sources from
+wihtin the chrome javascript debugger.
 
-= prod =
+## prod
 
-mvn clean install -Pprod && mvn jetty:run -Pprod
+To build the final javascript code, use the 'prod' profile:
 
-Make sure you have installed the latest chromedriver and it is available on
+mvn clean install -Pprod
+
+## chromedriver
+
+Make sure you have the latest chromedriver installed and it is available on
 your path.
 
-= fast prod run =
+## fast compilation
+
+The 'fast' profile is intended to limit javascript compilation to one browser
+and one language.
 
 mvn clean install -Pprod,fast
 
-= find updates =
+## find updates
 
 mvn versions:display-dependency-updates
 mvn versions:display-plugin-updates
