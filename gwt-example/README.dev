@@ -10,9 +10,9 @@ Updating the java source file and hitting "reload" in your browser
 is all it takes to reload the java source code changes!
 
 Since GWT 2.7 gwt:debug is only for debugging the server side implementation.
-For the client, use the development tools built into the chrome browser.
+For the (javascript) client, use the development tools built into the chrome browser.
 With the source code mappings you can debug the original java sources from
-wihtin the chrome javascript debugger.
+within the chrome javascript debugger.
 
 ## prod
 
