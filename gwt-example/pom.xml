@@ -251,7 +251,7 @@
                     <plugin>
                         <groupId>org.eclipse.jetty</groupId>
                         <artifactId>jetty-maven-plugin</artifactId>
-                        <version>9.2.15.v20160210</version>
+                        <version>9.2.21.v20170120</version>
                         <configuration>
                             <contextXml>${basedir}/src/main/webapp/WEB-INF/jetty-context.xml</contextXml>
                             <webAppSourceDirectory>${webappDirectory}</webAppSourceDirectory>
