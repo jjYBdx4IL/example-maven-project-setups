@@ -101,13 +101,13 @@ public class RpcDemo extends FlowPanel {
             }
         });
 
-//        animation = new Animation(1000, 400);
+        animation = new Animation(1000, 400);
 
         add(textBox);
         add(button);
         add(label);
         add(button2);
-//        add(animation);
+        add(animation);
         add(startAnimButton);
         add(stopAnimButton);
         add(fpsTextBox);
@@ -117,13 +117,13 @@ public class RpcDemo extends FlowPanel {
         startAnimButton.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-//                animation.start();
+                animation.start();
             }
         });
         stopAnimButton.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-//                fpsTextBox.setValue(Float.toString(animation.stop()) + " fps");
+                fpsTextBox.setValue(Float.toString(animation.stop()) + " fps");
             }
         });
     }

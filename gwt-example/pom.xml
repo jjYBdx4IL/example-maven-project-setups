@@ -75,10 +75,11 @@
                     <runTarget>sandbox.html</runTarget>
                     <hostedWebapp>${webappDirectory}</hostedWebapp>
                     
-                    <style>PRETTY</style>
-                    <draftCompile>true</draftCompile>
-                    <optimizationLevel>0</optimizationLevel>
-                    <productionMode>false</productionMode>
+                    <!--<style>PRETTY</style>-->
+                    <!--<draftCompile>true</draftCompile>-->
+                    <!--<optimizationLevel>0</optimizationLevel>-->
+                    <!--<productionMode>false</productionMode>-->
+                    <!--<incremental>true</incremental>-->
                     
                     <compileReport>${gwt.compileReport}</compileReport>
                     <logLevel>${gwt.logLevel}</logLevel>
@@ -284,6 +285,11 @@
     </profiles>
     
     <dependencies>
+        <dependency>
+            <groupId>com.github.jjYBdx4IL.gwt</groupId>
+            <artifactId>gwt-graphics</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
         <dependency>
             <groupId>com.github.jjYBdx4IL</groupId>
             <artifactId>github-utils</artifactId>
