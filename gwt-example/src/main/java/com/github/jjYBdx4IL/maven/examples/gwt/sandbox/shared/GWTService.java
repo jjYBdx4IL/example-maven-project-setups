@@ -14,5 +14,6 @@ public interface GWTService extends RemoteService {
     void forceOOM();
     
     @NoXsrfProtect
-    boolean login(String user, String password);
+    void login(String user, String password);
+    void logout();
 }

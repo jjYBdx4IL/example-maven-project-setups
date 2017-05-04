@@ -27,6 +27,7 @@ public class RpcDemo extends FlowPanel {
     private TextBox textBox;
     private Label label;
     private Button loginButton;
+    private Button logoutButton;
     private Button button;
     private Button button2;
     private Button startAnimButton;
@@ -45,6 +46,7 @@ public class RpcDemo extends FlowPanel {
 
         textBox = new TextBox();
         loginButton = new Button(ResourceBundle.message.loginDesc());
+        logoutButton = new Button(ResourceBundle.message.logoutDesc());
         button = new Button(ResourceBundle.message.greetMeDesc());
         label = new Label(ResourceBundle.message.wait4input());
         button2 = new Button(ResourceBundle.message.forceOOM());
@@ -97,6 +99,13 @@ public class RpcDemo extends FlowPanel {
             }
         });
 
+        logoutButton.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                ResourceBundle.asyncService.logout(new LogoutCallback());
+            }
+        });
+        
         button.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
@@ -115,6 +124,7 @@ public class RpcDemo extends FlowPanel {
         animation = new Animation(1000, 400);
 
         add(loginButton);
+        add(logoutButton);
         add(textBox);
         add(button);
         add(label);
@@ -154,7 +164,7 @@ public class RpcDemo extends FlowPanel {
         }
     }
 
-    private class LoginCallback implements AsyncCallback<Boolean> {
+    private class LoginCallback implements AsyncCallback<Void> {
 
         @Override
         public void onFailure(Throwable caught) {
@@ -162,14 +172,21 @@ public class RpcDemo extends FlowPanel {
         }
 
         @Override
-        public void onSuccess(Boolean result) {
-            if (result == null || !result.booleanValue()) {
-                Window.alert("login failed");
-                return;
-            }
-            
+        public void onSuccess(Void result) {
             // trigger XSRF token fetch after login
             Sandbox.getEventBus().fireEvent(new LoginEvent());
+        }
+    }
+
+    private class LogoutCallback implements AsyncCallback<Void> {
+
+        @Override
+        public void onFailure(Throwable caught) {
+            Window.alert(caught.toString());
+        }
+
+        @Override
+        public void onSuccess(Void result) {
         }
     }
 }

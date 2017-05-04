@@ -9,8 +9,15 @@ import javax.servlet.http.HttpSession;
 
 public class GWTServiceImpl extends XsrfProtectedServiceServlet implements GWTService {
 
+    private static final String SESSION_ATTRNAME_USER = "username";
+    private static final String SESSION_ATTRNAME_AUTHENTICATED = "authenticated";
+    
     @Override
     public String greetme(String username) {
+        Boolean authenticated = (Boolean) getSession().getAttribute(SESSION_ATTRNAME_AUTHENTICATED);
+        if (authenticated == null || !authenticated.booleanValue()) {
+            return "Hello unauthenticated user!";
+        }
         return "Hello " + username.toUpperCase() + "!";
     }
 
@@ -23,18 +30,26 @@ public class GWTServiceImpl extends XsrfProtectedServiceServlet implements GWTSe
     }
 
     @Override
-    public boolean login(String user, String password) {
+    public void login(String user, String password) {
         if (!password.equals("secret")) {
-            return false;
+            throw new RuntimeException("auth failed");
         }
         
+        getSession().setAttribute(SESSION_ATTRNAME_USER, user);
+        getSession().setAttribute(SESSION_ATTRNAME_AUTHENTICATED, true);
+    }
+    
+    private HttpSession getSession() {
         HttpServletRequest request = this.getThreadLocalRequest();
-        HttpSession session = request.getSession(true);
+        HttpSession session = request.getSession();
+        return session;
+    }
+
+    @Override
+    public void logout() {
+        getSession().removeAttribute(SESSION_ATTRNAME_USER);
+        getSession().removeAttribute(SESSION_ATTRNAME_AUTHENTICATED);
         
-        session.setAttribute("username", user);
-        session.setAttribute("authenticated", true);
-        
-        return true;
     }
 
 }

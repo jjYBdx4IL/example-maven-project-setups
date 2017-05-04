@@ -37,3 +37,8 @@ mvn clean install -Pprod,fast
 mvn versions:display-dependency-updates
 mvn versions:display-plugin-updates
 
+## session handling
+
+sandbox.jsp forces the existence of a session, ie. the session (id) itself is
+decoupled from the authorization state.
+

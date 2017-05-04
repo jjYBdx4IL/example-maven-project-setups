@@ -48,6 +48,7 @@
                     <excludes>
                         <exclude>**/gwt/sandbox/client/datagrid/**</exclude>
                         <exclude>/main/webapp/**.html</exclude>
+                        <exclude>/main/webapp/**.jsp</exclude>
                     </excludes>
                     <organizationName>jjYBdx4IL</organizationName>
                     <inceptionYear>2017</inceptionYear>
@@ -72,7 +73,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <runTarget>sandbox.html</runTarget>
+                    <runTarget>sandbox.jsp</runTarget>
                     <hostedWebapp>${webappDirectory}</hostedWebapp>
                     
                     <!--<style>PRETTY</style>-->
@@ -243,7 +244,7 @@
                             <skipITs>false</skipITs>
 
                             <systemPropertyVariables>
-                                <sandbox.location>http://localhost:${jetty.port}/sandbox.html</sandbox.location>
+                                <sandbox.location>http://localhost:${jetty.port}/sandbox.jsp</sandbox.location>
                             </systemPropertyVariables>
                         </configuration>
                     </plugin>
@@ -305,14 +306,22 @@
         
         <dependency>
             <groupId>com.google.gwt</groupId>
-            <artifactId>gwt-user</artifactId>
+            <artifactId>gwt-dev</artifactId>
             <version>${gwt.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-servlet</artifactId>
             <version>${gwt.version}</version>
+            <scope>provided</scope>
         </dependency>
+<!--        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-jsp</artifactId>
+            <version>9.2.21.v20170120</version>
+            <scope>provided</scope>
+        </dependency>-->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -351,5 +360,10 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+    <dependencyManagement>
+        <dependencies>
+            
+        </dependencies>
+    </dependencyManagement>
 
 </project>
