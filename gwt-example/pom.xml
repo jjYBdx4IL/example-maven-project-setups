@@ -21,6 +21,7 @@
         <gwt.version>2.8.1</gwt.version>
         <webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
         <jetty.port>8080</jetty.port>
+        <jetty.version>9.2.21.v20170120</jetty.version>
     </properties>
     
     <build>
@@ -314,14 +315,7 @@
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-servlet</artifactId>
             <version>${gwt.version}</version>
-            <scope>provided</scope>
         </dependency>
-<!--        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-jsp</artifactId>
-            <version>9.2.21.v20170120</version>
-            <scope>provided</scope>
-        </dependency>-->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -362,7 +356,31 @@
     </dependencies>
     <dependencyManagement>
         <dependencies>
-            
+            <dependency>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-annotations</artifactId>
+                <version>${jetty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-client</artifactId>
+                <version>${jetty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-servlet</artifactId>
+                <version>${jetty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-servlets</artifactId>
+                <version>${jetty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-webapp</artifactId>
+                <version>${jetty.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

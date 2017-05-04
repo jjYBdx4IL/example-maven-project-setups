@@ -101,11 +101,11 @@ public class SeleniumIT extends SeleniumTestBase {
         List<WebElement> inputs = filterVisible(getDriver().findElements(By.tagName("input")));
         assertEquals(2, inputs.size());
         List<WebElement> buttons = filterVisible(getDriver().findElements(By.tagName("button")));
-        assertEquals(4, buttons.size());
+        assertEquals(6, buttons.size());
         inputs.get(0).sendKeys("abc\n");
         takeScreenshot();
-        buttons.get(0).click();
-        waitForElement("Received reply from server: Hello ABC!");
+        buttons.get(2).click();
+        waitForElement("Received reply from server: Hello unauthenticated user!");
         takeScreenshot();
     }
 
