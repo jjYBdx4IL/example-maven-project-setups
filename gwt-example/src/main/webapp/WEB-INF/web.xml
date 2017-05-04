@@ -13,4 +13,21 @@
         <servlet-name>gwtServiceImpl</servlet-name>
         <url-pattern>/sandbox/gwtrpc</url-pattern>
     </servlet-mapping>
+    
+    <!-- XSRF stuff -->
+    <!-- www.gwtproject.org/doc/latest/DevGuideSecurityRpcXsrf.html -->
+    <servlet>
+        <servlet-name>xsrf</servlet-name>
+        <servlet-class>
+            com.google.gwt.user.server.rpc.XsrfTokenServiceServlet
+        </servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>xsrf</servlet-name>
+        <url-pattern>/sandbox/xsrf</url-pattern>
+    </servlet-mapping> 
+    <context-param>
+        <param-name>gwt.xsrf.session_cookie_name</param-name>
+        <param-value>JSESSIONID</param-value>
+    </context-param>
 </web-app>

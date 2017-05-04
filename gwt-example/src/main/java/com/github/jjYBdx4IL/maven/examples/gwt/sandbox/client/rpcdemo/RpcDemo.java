@@ -2,6 +2,8 @@ package com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client.rpcdemo;
 
 import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client.ResourceBundle;
 import static com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client.ResourceBundle.message;
+import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client.Sandbox;
+import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client.events.LoginEvent;
 import static com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client.rpcdemo.ResourceBundle.RES;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -24,6 +26,7 @@ public class RpcDemo extends FlowPanel {
 
     private TextBox textBox;
     private Label label;
+    private Button loginButton;
     private Button button;
     private Button button2;
     private Button startAnimButton;
@@ -41,6 +44,7 @@ public class RpcDemo extends FlowPanel {
         RES.getStyle().ensureInjected();
 
         textBox = new TextBox();
+        loginButton = new Button(ResourceBundle.message.loginDesc());
         button = new Button(ResourceBundle.message.greetMeDesc());
         label = new Label(ResourceBundle.message.wait4input());
         button2 = new Button(ResourceBundle.message.forceOOM());
@@ -86,6 +90,13 @@ public class RpcDemo extends FlowPanel {
             throw new RuntimeException();
         }
 
+        loginButton.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                ResourceBundle.asyncService.login("user123", "secret", new LoginCallback());
+            }
+        });
+
         button.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
@@ -103,6 +114,7 @@ public class RpcDemo extends FlowPanel {
 
         animation = new Animation(1000, 400);
 
+        add(loginButton);
         add(textBox);
         add(button);
         add(label);
@@ -139,6 +151,25 @@ public class RpcDemo extends FlowPanel {
         @Override
         public void onSuccess(String result) {
             label.setText(ResourceBundle.message.receivedReply(result));
+        }
+    }
+
+    private class LoginCallback implements AsyncCallback<Boolean> {
+
+        @Override
+        public void onFailure(Throwable caught) {
+            Window.alert(caught.toString());
+        }
+
+        @Override
+        public void onSuccess(Boolean result) {
+            if (result == null || !result.booleanValue()) {
+                Window.alert("login failed");
+                return;
+            }
+            
+            // trigger XSRF token fetch after login
+            Sandbox.getEventBus().fireEvent(new LoginEvent());
         }
     }
 }
