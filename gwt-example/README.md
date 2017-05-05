@@ -2,9 +2,9 @@
 
 ## devel
 
-mvn clean install -DskipITs
-mvn gwt:run
-mvn gwt:debug
+	mvn clean install -DskipITs
+	mvn gwt:run
+	mvn gwt:debug
 
 Updating the java source file and hitting "reload" in your browser
 is all it takes to reload the java source code changes!
@@ -18,7 +18,7 @@ within the chrome javascript debugger.
 
 To build the final javascript code, use the 'prod' profile:
 
-mvn clean install -Pprod
+	mvn clean install -Pprod
 
 ## chromedriver
 
@@ -30,12 +30,12 @@ your path.
 The 'fast' profile is intended to limit javascript compilation to one browser
 and one language.
 
-mvn clean install -Pprod,fast
+	mvn clean install -Pprod,fast
 
 ## find updates
 
-mvn versions:display-dependency-updates
-mvn versions:display-plugin-updates
+	mvn versions:display-dependency-updates
+	mvn versions:display-plugin-updates
 
 ## session handling
 
