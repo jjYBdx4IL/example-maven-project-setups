@@ -42,3 +42,12 @@ and one language.
 sandbox.jsp forces the existence of a session, ie. the session (id) itself is
 decoupled from the authorization state.
 
+## debugging
+
+GWT uses source maps for debugging client code directly inside your browser.
+These source maps do not support reverse mappings to the compiled javascript
+code (for whatever stupid reason), watches generally don't work, and browser
+currently do not allow to look up variables. This makes debugging static
+variables using the browser's development tools impossible. Solution: don't
+use static variables or buffer them locally in non-static variables so they
+can be inspected via the local scope...

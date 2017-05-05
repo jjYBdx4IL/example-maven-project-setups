@@ -9,6 +9,7 @@ import com.google.gwt.user.client.rpc.ServiceDefTarget;
 import com.google.gwt.user.client.rpc.XsrfToken;
 import com.google.gwt.user.client.rpc.XsrfTokenService;
 import com.google.gwt.user.client.rpc.XsrfTokenServiceAsync;
+import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
@@ -17,7 +18,14 @@ import com.google.web.bindery.event.shared.EventBus;
  */
 public class XSRF {
 
-    static void init(final EventBus eventBus) {
+    private final EventBus eventBus;
+    
+    @Inject
+    public XSRF(EventBus eventBus) {
+        this.eventBus = eventBus;
+    }
+    
+    public void init() {
         XsrfTokenServiceAsync xsrf = (XsrfTokenServiceAsync) GWT.create(XsrfTokenService.class);
         ((ServiceDefTarget) xsrf).setServiceEntryPoint(GWT.getModuleBaseURL() + "xsrf");
         xsrf.getNewXsrfToken(new AsyncCallback<XsrfToken>() {

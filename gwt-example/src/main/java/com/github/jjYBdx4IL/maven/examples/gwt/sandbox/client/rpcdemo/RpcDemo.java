@@ -8,6 +8,7 @@ import static com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client.rpcdemo.Res
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.text.shared.Renderer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -17,6 +18,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.ValueListBox;
+import com.google.inject.Inject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,8 +38,12 @@ public class RpcDemo extends FlowPanel {
     private TextBox fpsTextBox;
     private ListBox listBox;
     private ValueListBox enumListBox;
+    
+    private final EventBus eventBus;
 
-    public RpcDemo() {
+    @Inject
+    public RpcDemo(EventBus eventBus) {
+        this.eventBus = eventBus;
     }
 
     @Override
@@ -174,7 +180,7 @@ public class RpcDemo extends FlowPanel {
         @Override
         public void onSuccess(Void result) {
             // trigger XSRF token fetch after login
-            Sandbox.getEventBus().fireEvent(new LoginEvent());
+            eventBus.fireEvent(new LoginEvent());
         }
     }
 

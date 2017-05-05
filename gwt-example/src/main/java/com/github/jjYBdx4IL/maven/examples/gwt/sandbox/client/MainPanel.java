@@ -17,6 +17,7 @@ import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client.eventbus.SimpleEve
 import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client.handlermanager.HandlerManagerDemo;
 import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client.keyevents.KeyEventDemo;
 import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client.rpcdemo.RpcDemo;
+import com.google.inject.Inject;
 import java.util.logging.Logger;
 
 public class MainPanel extends Composite implements ValueChangeHandler<String> {
@@ -24,9 +25,10 @@ public class MainPanel extends Composite implements ValueChangeHandler<String> {
     private static final Logger logger = Logger.getLogger(MainPanel.class.getName());
     TabLayoutPanel tabLayoutPanel;
 
-    public MainPanel() {
+    @Inject
+    public MainPanel(final RpcDemo rpcDemo) {
         tabLayoutPanel = new TabLayoutPanel(1.5, Unit.EM);
-        tabLayoutPanel.add(new RpcDemo(), "RpcDemo");
+        tabLayoutPanel.add(rpcDemo, "RpcDemo");
         tabLayoutPanel.add(new StackOverflow15161741(), "StackOverflow15161741");
         tabLayoutPanel.add(new SimpleEventBusDemo(), "SimpleEventBusDemo");
         tabLayoutPanel.add(new HandlerManagerDemo(), "HandlerManagerDemo");

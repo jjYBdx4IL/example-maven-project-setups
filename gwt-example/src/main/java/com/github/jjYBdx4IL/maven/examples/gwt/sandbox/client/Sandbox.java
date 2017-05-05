@@ -8,9 +8,9 @@ import com.google.gwt.user.client.ui.RootLayoutPanel;
 import static com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client.ResourceBundle.RES;
 import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client.events.CompletionEvent;
 import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client.events.LoginEvent;
+import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client.gin.Injector;
 import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client.shared.ManualEventHandling;
 import com.google.gwt.event.shared.EventBus;
-import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.rpc.XsrfToken;
 import java.util.logging.Logger;
@@ -22,13 +22,16 @@ public class Sandbox implements EntryPoint, ResizeHandler, CompletionEvent.Handl
 
     private static final Logger LOG = Logger.getLogger(ManualEventHandling.class.getName());
 
-    private static final String rootDivId = "testPane";
+    private final String rootDivId = "testPane";
 
-    private MainPanel mainPanel = new MainPanel();
+    private MainPanel mainPanel = Injector.INSTANCE.getMainPanel();
+    private EventBus eventBus = Injector.INSTANCE.getEventBus();
+    private XSRF xsrf = Injector.INSTANCE.getXSRF();
 
-    private static EventBus eventBus = new SimpleEventBus();
+    private String jSessionId = Cookies.getCookie("JSESSIONID");
 
-    private static String jSessionId = Cookies.getCookie("JSESSIONID");
+    public Sandbox() {
+    }
 
     /**
      * This is the entry point method.
@@ -36,10 +39,11 @@ public class Sandbox implements EntryPoint, ResizeHandler, CompletionEvent.Handl
     @Override
     public void onModuleLoad() {
         LoginEvent.register(eventBus, this);
+        CompletionEvent.register(eventBus, this);
 
         if (jSessionId != null) {
             // already authenticated -> send fake LoginEvent to trigger XSRF token fetch
-            getEventBus().fireEvent(new LoginEvent());
+            eventBus.fireEvent(new LoginEvent());
         }
         
         RES.getStyle().ensureInjected();
@@ -57,20 +61,8 @@ public class Sandbox implements EntryPoint, ResizeHandler, CompletionEvent.Handl
 
     }
 
-    public static boolean isAuthenticated() {
-        return jSessionId != null;
-    }
-
-    /**
-     * @return the eventBus
-     */
-    public static EventBus getEventBus() {
-        return eventBus;
-    }
-
     @Override
     public void onLogin(LoginEvent event) {
-        CompletionEvent.register(getEventBus(), this);
-        XSRF.init(getEventBus());
+        xsrf.init();
     }
 }
