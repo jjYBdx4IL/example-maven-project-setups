@@ -46,8 +46,10 @@ decoupled from the authorization state.
 
 GWT uses source maps for debugging client code directly inside your browser.
 These source maps do not support reverse mappings to the compiled javascript
-code (for whatever stupid reason), watches generally don't work, and browser
+code (for whatever stupid reason), watches generally don't work, and browsers
 currently do not allow to look up variables. This makes debugging static
-variables using the browser's development tools impossible. Solution: don't
-use static variables or buffer them locally in non-static variables so they
-can be inspected via the local scope...
+variables using the browser's development tools almost impossible or at least
+extremely tedious. Solution: don't
+use static variables at all or buffer them locally in non-static variables so they
+can be inspected via the local scope. If you need global singleton variables,
+like the event bus, provide them via Gin instead of accessing them statically.
