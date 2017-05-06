@@ -2,6 +2,7 @@ package com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client;
 
 import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client.events.CompletionEvent;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.HasRpcToken;
 import com.google.gwt.user.client.rpc.RpcTokenException;
@@ -10,7 +11,6 @@ import com.google.gwt.user.client.rpc.XsrfToken;
 import com.google.gwt.user.client.rpc.XsrfTokenService;
 import com.google.gwt.user.client.rpc.XsrfTokenServiceAsync;
 import com.google.inject.Inject;
-import com.google.web.bindery.event.shared.EventBus;
 
 /**
  *

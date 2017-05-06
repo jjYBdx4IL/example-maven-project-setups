@@ -1,6 +1,7 @@
 package com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client.gin;
 
 import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client.MainPanel;
+import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client.XSRF;
 import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client.rpcdemo.RpcDemo;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.EventBus;
@@ -18,4 +19,6 @@ public interface Injector extends Ginjector {
     public EventBus getEventBus();
     public RpcDemo getRpcDemo();
     public MainPanel getMainPanel();
+
+    public XSRF getXSRF();
 }
