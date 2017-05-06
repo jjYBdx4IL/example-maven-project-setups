@@ -1,0 +1,27 @@
+## assumptions
+
+we have a dedicated web server machine. That host is called gruust.stream
+in this example. The jetty instance will run as user 'web' on that machine.
+We have SSH access to the web account on that machine.
+
+## allow port < 1024 access to regular user on web server machine:
+
+apt-get install authbind
+touch /etc/authbind/byport/80 /etfc/authbind/byport/443
+chmod 777 /etc/authbind/byport/80 /etfc/authbind/byport/443
+
+## start jetty on server start
+
+Add this to /etc/rc.local (on debian based machines):
+
+    for f in /home/web/*/autostart.sh; do
+        su - web -c "$f start"
+    done
+
+## deploy update
+
+mvn clean install
+mvn antrun:run@go-live -Ddeployment.sshacct=web@gruust.stream
+
+
+
