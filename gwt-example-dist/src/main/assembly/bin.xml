@@ -130,7 +130,7 @@
             </excludes>
             <scope>runtime</scope>
             <useTransitiveDependencies>true</useTransitiveDependencies>
-            <useProjectArtifact>false</useProjectArtifact>
+            <useProjectArtifact>true</useProjectArtifact>
         </dependencySet>
         <dependencySet>
             <outputDirectory>${project.artifactId}/apps/root</outputDirectory>
