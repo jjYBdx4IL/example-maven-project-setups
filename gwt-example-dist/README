@@ -23,5 +23,8 @@ Add this to /etc/rc.local (on debian based machines):
 mvn clean install
 mvn antrun:run@go-live -Ddeployment.sshacct=web@gruust.stream
 
+## JDK
 
+The jdk is expected to be installed at /opt/jdk8 on the server. I have
+also installed JCE (Java Cryptography Extension) for strong HTTPS support.
 

@@ -254,7 +254,7 @@
                     <plugin>
                         <groupId>org.eclipse.jetty</groupId>
                         <artifactId>jetty-maven-plugin</artifactId>
-                        <version>9.2.21.v20170120</version>
+                        <version>${jetty.version}</version>
                         <configuration>
                             <contextXml>${basedir}/src/main/webapp/WEB-INF/jetty-context.xml</contextXml>
                             <webAppSourceDirectory>${webappDirectory}</webAppSourceDirectory>
@@ -374,6 +374,11 @@
             </dependency>
             <dependency>
                 <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-jsp</artifactId>
+                <version>${jetty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-servlet</artifactId>
                 <version>${jetty.version}</version>
             </dependency>
@@ -385,6 +390,11 @@
             <dependency>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-webapp</artifactId>
+                <version>${jetty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.jetty.websocket</groupId>
+                <artifactId>websocket-client</artifactId>
                 <version>${jetty.version}</version>
             </dependency>
         </dependencies>
