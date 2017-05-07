@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!DOCTYPE Configure PUBLIC "-//Jetty//Configure//EN" "http://www.eclipse.org/jetty/configure_9_0.dtd">
+<!DOCTYPE Configure PUBLIC "-//Jetty//Configure//EN" "http://www.eclipse.org/jetty/configure_9_3.dtd">
 
 <Configure id="Server" class="org.eclipse.jetty.server.Server">
     
@@ -20,7 +20,7 @@
     <New id="httpConfig" class="org.eclipse.jetty.server.HttpConfiguration">
         <Set name="secureScheme">https</Set>
         <Set name="securePort">
-            <Property name="jetty.tls.port" default="8443" />
+            <Property name="jetty.tls.port" default="443" />
         </Set>
         <Set name="outputBufferSize">32768</Set>
         <Set name="requestHeaderSize">8192</Set>
@@ -78,15 +78,41 @@
     <Set name="dumpAfterStart">true</Set>
     <Set name="dumpBeforeStop">false</Set>
 
+    <Array id="plusConfig" type="java.lang.String">
+        <Item>org.eclipse.jetty.webapp.WebInfConfiguration</Item>
+        <Item>org.eclipse.jetty.webapp.WebXmlConfiguration</Item>
+        <Item>org.eclipse.jetty.webapp.MetaInfConfiguration</Item>
+        <Item>org.eclipse.jetty.webapp.FragmentConfiguration</Item>
+        <Item>org.eclipse.jetty.plus.webapp.EnvConfiguration</Item>
+        <Item>org.eclipse.jetty.plus.webapp.PlusConfiguration</Item>
+        <Item>org.eclipse.jetty.annotations.AnnotationConfiguration</Item>
+        <Item>org.eclipse.jetty.webapp.JettyWebXmlConfiguration</Item>
+        <!--<Item>org.eclipse.jetty.webapp.TagLibConfiguration</Item>-->
+    </Array>  
+  
     <Call name="addBean">
         <Arg>
             <New id="DeploymentManager" class="org.eclipse.jetty.deploy.DeploymentManager">
                 <Set name="contexts">
                     <Ref id="Contexts" />
                 </Set>
+                <!--                <Call name="setContextAttribute">
+                    <Arg>org.eclipse.jetty.server.webapp.ContainerIncludeJarPattern</Arg>
+                    <Arg>.*/jsp-api-[^/]*\.jar$|.*/jsp-[^/]*\.jar|.*/[^/]*servlet-api-[^/]*\.jar$|.*/javax.servlet.jsp.jstl-.*\.jar$|.*/[^/]*taglibs.*\.jar$</Arg>
+                </Call>-->
                 <Call name="setContextAttribute">
                     <Arg>org.eclipse.jetty.server.webapp.ContainerIncludeJarPattern</Arg>
-                    <Arg>.*/jsp-api-[^/]*\.jar$|.*/jsp-[^/]*\.jar$</Arg>
+                    <Arg>.*/[^g]+[^/]*jar$</Arg>
+                </Call>
+<!--                <Call name="setContextAttribute">
+                    <Arg>org.eclipse.jetty.webapp.configuration</Arg>
+                    <Arg><Ref id="plusConfig" /></Arg>
+                </Call>-->
+                <Call name="setContextAttribute">
+                    <Arg>org.apache.tomcat.InstanceManager</Arg>
+                    <Arg>
+                        <New class="org.apache.tomcat.SimpleInstanceManager"></New>
+                    </Arg>
                 </Call>
             </New>
         </Arg>
@@ -104,5 +130,12 @@
             </Arg>
         </Call>
     </Ref>
+    
+    <Call name="setAttribute">
+        <Arg>org.eclipse.jetty.webapp.configuration</Arg>
+        <Arg>
+            <Ref id="plusConfig" />
+        </Arg>
+    </Call>  
 </Configure>
 

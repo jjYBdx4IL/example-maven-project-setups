@@ -115,6 +115,7 @@
                 <include>*.so</include>
                 <include>*.jnilib</include>
                 <include>*.dll</include>
+                <include>*.jar</include>
             </includes>
             <fileMode>0755</fileMode>
         </fileSet> 
@@ -137,13 +138,13 @@
             <includes>
                 <include>${project.groupId}:${src.artifactId}:war</include>
             </includes>
-            <scope>runtime</scope>
+            <!--<scope>runtime</scope>-->
             <useProjectArtifact>false</useProjectArtifact>
-            <unpackOptions>
+<!--            <unpackOptions>
                 <excludes>
                     <exclude>WEB-INF/deploy/</exclude>
                 </excludes>
-            </unpackOptions>
+            </unpackOptions>-->
         </dependencySet>
     </dependencySets>
 </assembly>
