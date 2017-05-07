@@ -28,3 +28,21 @@ mvn antrun:run@go-live -Ddeployment.sshacct=web@gruust.stream
 The jdk is expected to be installed at /opt/jdk8 on the server. I have
 also installed JCE (Java Cryptography Extension) for strong HTTPS support.
 
+## HTTPS
+
+Use letsencrypt certbot to get free https certs. Shut down the server before
+you do that and use certbot's standalone method where it fires up its own
+web server.
+
+After that, change into /etc/letsencrypt/live/<your-domain> directory and do:
+
+    export JAVA_HOME=/opt/jdk8
+    export PATH=$JAVA_HOME/bin:$PATH
+    rm -f jetty.pkcs12
+    openssl pkcs12 -inkey privkey.pem -in cert.pem -export -out jetty.pkcs12 -passout pass:password
+    rm -f keystore
+    keytool -importkeystore -srckeystore jetty.pkcs12 -srcstoretype PKCS12 -destkeystore keystore -deststorepass password -srcstorepass password
+    mv -f keystore /home/web/.
+    chown web.web /home/web/keystore
+    chmod 600 /home/web/keystore
+
