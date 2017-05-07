@@ -1,8 +1,11 @@
 ## assumptions
 
-we have a dedicated web server machine. That host is called gruust.stream
+We have a dedicated web server machine running Debian 8. That host is called gruust.stream
 in this example. The jetty instance will run as user 'web' on that machine.
 We have SSH access to the web account on that machine.
+
+The client is assumed to have bash available, together with the usual
+Linux command line tools. Cygwin should be supported, too.
 
 ## allow port < 1024 access to regular user on web server machine:
 
