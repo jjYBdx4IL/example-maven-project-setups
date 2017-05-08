@@ -1,0 +1,260 @@
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="
+        http://maven.apache.org/POM/4.0.0
+            http://maven.apache.org/maven-v4_0_0.xsd
+            ">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.github.jjYBdx4IL.maven.examples</groupId>
+    <artifactId>gwt-example-it</artifactId>
+    <packaging>jar</packaging>
+    <version>1.0-SNAPSHOT</version>
+    <name>Maven Examples :: GWT Example :: Integration Tests</name>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        
+        <jetty.port.offset>8000</jetty.port.offset>
+        <jetty.port>8080</jetty.port>
+        <jetty.port.https>8443</jetty.port.https>
+        <testUrl>http://localhost:${jetty.port}/</testUrl>
+        <dist.artifactId>gwt-example-dist</dist.artifactId>
+        <installDir>${project.build.directory}/${dist.artifactId}</installDir>
+    </properties>
+
+    <!-- Plugin configuration -->
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <!-- unpack the distribution package -->
+                    <execution>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>${project.groupId}</groupId>
+                                    <artifactId>gwt-example-dist</artifactId>
+                                    <type>zip</type>
+                                    <classifier>bin</classifier>
+                                </artifactItem>
+                            </artifactItems>
+                            <outputDirectory>${project.build.directory}</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>2.20</version>
+            </plugin>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.20</version>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+        </plugins>
+        
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <configuration>
+                        <systemPropertyVariables>
+                            <testUrl>${testUrl}</testUrl>
+                        </systemPropertyVariables>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>gwt-example-dist</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+            <type>zip</type>
+            <classifier>bin</classifier>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>gwt-example-client</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.jjYBdx4IL</groupId>
+            <artifactId>github-test-utils</artifactId>
+            <version>1.0</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>1.7.25</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.25</version>
+        </dependency>
+    </dependencies>
+    
+    <profiles>
+        <profile>
+            <id>run-its</id>
+            <activation>
+                <property>
+                    <name>skipITs</name>
+                    <value>!true</value>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>stop-jetty-pre-clean</id>
+                                <phase>pre-clean</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target>
+                                        <taskdef resource="net/sf/antcontrib/antcontrib.properties" />
+                                        <if>
+                                            <available file="${installDir}/autostart.sh"/>
+                                            <then>
+                                                <echo>shutting down running jetty server</echo>
+                                                <exec executable="./autostart.sh" dir="${installDir}"
+                                                      spawn="false" failonerror="true">
+                                                    <arg value="stop" />
+                                                </exec>
+                                            </then>
+                                            <else>
+                                            </else>
+                                        </if>
+                                    </target>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>start-jetty-server</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target>
+                                        <echo>Setting port offset in ${installDir}/etc/wrapper.conf</echo>
+                                        <replaceregexp file="${installDir}/etc/wrapper.conf"
+                                                       match="(=-Djetty\.port\.offset)=.*" replace="\1=${jetty.port.offset}" byline="true" />
+
+                                        <!-- shut down running server - just in case -->
+                                        <exec executable="./autostart.sh" dir="${installDir}"
+                                              spawn="false" failonerror="true">
+                                            <arg value="stop" />
+                                        </exec>
+                                        <waitfor maxwait="3" maxwaitunit="minute" checkevery="1000">
+                                            <not>
+                                                <socket server="localhost" port="${jetty.port}" />
+                                            </not>
+                                        </waitfor>
+                                        <waitfor maxwait="3" maxwaitunit="minute" checkevery="1000">
+                                            <not>
+                                                <socket server="localhost" port="${jetty.port.https}" />
+                                            </not>
+                                        </waitfor>
+
+                                        <!-- ensure there is no server still running -->
+                                        <fail>
+                                            <condition>
+                                                <socket server="localhost" port="${jetty.port}" />
+                                            </condition>
+                                        </fail>
+                                        <exec executable="./autostart.sh" dir="${installDir}"
+                                              spawn="false" failonerror="true">
+                                            <arg value="start" />
+                                        </exec>
+                                        <echo>Waiting for server to come up at port ${jetty.port}</echo>
+                                        <waitfor maxwait="3" maxwaitunit="minute" checkevery="1000">
+                                            <http url="${testUrl}" errorsBeginAt="300" />
+                                        </waitfor>
+                                        <waitfor maxwait="3" maxwaitunit="minute" checkevery="1000">
+                                            <socket server="localhost" port="${jetty.port.https}" />
+                                        </waitfor>
+                                    </target>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>shutdown-jetty-server</id>
+                                <phase>post-integration-test</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target>
+                                        <exec executable="./autostart.sh" dir="${installDir}"
+                                              spawn="false" failonerror="true">
+                                            <arg value="stop" />
+                                        </exec>
+                                        <apply executable="bzip2">
+                                            <arg value="-9v" />
+                                            <fileset dir="${installDir}/var/log">
+                                                <patternset>
+                                                    <include name="*.log" />
+                                                </patternset>
+                                            </fileset>
+                                        </apply>
+                                        <fail>
+                                            <condition>
+                                                <socket server="localhost" port="${jetty.port}" />
+                                            </condition>
+                                        </fail>
+                                        <fail>
+                                            <condition>
+                                                <socket server="localhost" port="${jetty.port.https}" />
+                                            </condition>
+                                        </fail>
+                                    </target>
+                                </configuration>
+                            </execution>
+                        </executions>
+                        <dependencies>
+                            <dependency>
+                                <groupId>ant-contrib</groupId>
+                                <artifactId>ant-contrib</artifactId>
+                                <version>20020829</version>
+                            </dependency>
+                        </dependencies>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+</project>

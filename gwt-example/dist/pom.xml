@@ -1,0 +1,294 @@
+<project
+    xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+        http://maven.apache.org/POM/4.0.0
+            http://maven.apache.org/maven-v4_0_0.xsd
+            ">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.github.jjYBdx4IL.maven.examples</groupId>
+    <artifactId>gwt-example-dist</artifactId>
+    <packaging>jar</packaging>
+    <name>Maven Examples :: GWT Example :: Distribution</name>
+    <version>1.0-SNAPSHOT</version>
+    
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        
+        <jetty.version>9.4.4.v20170414</jetty.version>
+        <src.artifactId>gwt-example</src.artifactId>
+    </properties>
+    
+    <dependencies>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>apache-jsp</artifactId>
+            <version>${jetty.version}</version>
+            <!--<scope>runtime</scope>-->
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>apache-jstl</artifactId>
+            <version>${jetty.version}</version>
+            <scope>runtime</scope>
+            <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-io</artifactId>
+            <version>${jetty.version}</version>
+            <!--<scope>runtime</scope>-->
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-server</artifactId>
+            <version>${jetty.version}</version>
+            <!--<scope>runtime</scope>-->
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-servlet</artifactId>
+            <version>${jetty.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-webapp</artifactId>
+            <version>${jetty.version}</version>
+            <!--<scope>runtime</scope>-->
+        </dependency>
+        
+        <!-- Runtime dependencies that need to be included in the generated binaries -->
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-annotations</artifactId>
+            <version>${jetty.version}</version>
+            <!--<scope>runtime</scope>-->
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-jndi</artifactId>
+            <version>${jetty.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-start</artifactId>
+            <version>${jetty.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-jmx</artifactId>
+            <version>${jetty.version}</version>
+            <!--<scope>runtime</scope>-->
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-plus</artifactId>
+            <version>${jetty.version}</version>
+            <!--<scope>runtime</scope>-->
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-deploy</artifactId>
+            <version>${jetty.version}</version>
+            <!--<scope>runtime</scope>-->
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-util</artifactId>
+            <version>${jetty.version}</version>
+            <!--<scope>runtime</scope>-->
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-http</artifactId>
+            <version>${jetty.version}</version>
+            <!--<scope>runtime</scope>-->
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-continuation</artifactId>
+            <version>${jetty.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+
+<!--        <dependency>
+            <groupId>jstl</groupId>
+            <artifactId>jstl</artifactId>
+            <version>1.2</version>
+            <scope>runtime</scope>
+        </dependency>-->
+        <dependency>
+            <groupId>javax.servlet.jsp</groupId>
+            <artifactId>javax.servlet.jsp-api</artifactId>
+            <version>2.3.1</version>
+            <scope>runtime</scope>
+        </dependency>
+<!--        <dependency>
+            <groupId>org.glassfish.web</groupId>
+            <artifactId>javax.servlet.jsp</artifactId>
+            <version>2.3.2</version>
+            <scope>runtime</scope>
+        </dependency>-->
+        <dependency>
+            <groupId>javax.servlet.jsp.jstl</groupId>
+            <artifactId>javax.servlet.jsp.jstl-api</artifactId>
+            <version>1.2.1</version>
+            <scope>runtime</scope>
+        </dependency>
+<!--        <dependency>
+            <groupId>org.eclipse.jetty.orbit</groupId>
+            <artifactId>javax.servlet.jsp.jstl</artifactId>
+            <version>1.2.0.v201105211821</version>
+            <scope>runtime</scope>
+        </dependency>-->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.1.0</version>
+            <scope>runtime</scope>
+        </dependency>        
+<!--        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jstl</artifactId>
+            <version>1.2</version>
+            <scope>runtime</scope>
+        </dependency>        -->
+<!--        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>3.0-alpha-1</version>
+            <scope>runtime</scope>
+        </dependency>        -->
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>1.7.25</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.25</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.jjYBdx4IL.maven.examples</groupId>
+            <artifactId>gwt-example</artifactId>
+            <version>${project.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.jjYBdx4IL.maven.examples</groupId>
+            <artifactId>gwt-example</artifactId>
+            <version>${project.version}</version>
+            <scope>runtime</scope>
+            <type>war</type>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.8</version>
+                <executions>
+                    <execution>
+                        <phase>process-resources</phase>
+                        <configuration>
+                            <target>
+                                <!-- prepare distro -->
+                                <mkdir dir="target/generated-resources/appassembler/jsw/daemon/data/log" />
+                                <mkdir dir="target/generated-resources/appassembler/jsw/daemon/data/db" />
+                                <mkdir dir="target/generated-resources/appassembler/jsw/daemon/temp" />
+                                <mkdir dir="target/generated-resources/appassembler/jsw/daemon/apps" />
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>go-live</id>
+                        <phase>deploy</phase>
+                        <configuration>
+                            <target>
+                                <!-- go live! -->
+                                <exec executable="bash" failonerror="true">
+                                    <arg value="${basedir}/deploy2server.sh"/>
+                                    <arg value="${project.build.directory}/${project.artifactId}-${project.version}-bin.zip"/>
+                                    <arg value="${project.artifactId}"/>
+                                    <arg value="${src.artifactId}"/>
+                                    <arg value="${deployment.sshacct}"/>
+                                </exec>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <descriptors>src/main/assembly/bin.xml</descriptors>
+                    <finalName>${project.artifactId}-${project.version}</finalName>
+                </configuration>
+            </plugin>
+            
+            <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.0.2</version>
+                <configuration>
+                    <archive>
+                        <!-- https://maven.apache.org/shared/maven-archiver/index.html -->
+                        <manifest>
+                            <mainClass>com.github.jjYBdx4IL.maven.examples.gwt.EmbeddedMain</mainClass>
+                            <addClasspath>true</addClasspath>
+                            <classpathLayoutType>repository</classpathLayoutType>
+                            <!--<classpathPrefix>lib/</classpathPrefix>-->
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+            
+            <plugin>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <!--<prependGroupId>true</prependGroupId>-->
+                            <useRepositoryLayout>true</useRepositoryLayout>
+                            <includeScope>runtime</includeScope>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            
+        </plugins>
+    </build>
+</project>

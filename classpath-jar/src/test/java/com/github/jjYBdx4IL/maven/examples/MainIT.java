@@ -30,7 +30,6 @@ public class MainIT {
         LOG.info("classpathJarFile: " + classpathJarFile);
         assertTrue(new File(classpathJarFile).exists());
         ProcRunner runner = new ProcRunner("java", "-jar", classpathJarFile, Main.class.getName());
-//        runner.setWorkDir(new File(System.getProperty("basedir"), "target/dependency"));
         int exitCode = runner.run(60000L);
         assertEquals(runner.getOutputBlob(), 0, exitCode);
         assertThat(runner.getOutputBlob(), matchesPattern(".*started\\r?\\n$"));

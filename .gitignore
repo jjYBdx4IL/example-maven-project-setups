@@ -10,3 +10,8 @@
 /gwt-example/target/
 /gwt-example/a/
 /gwt-example-dist/target/
+/gwt-example/dist/target/
+/gwt-example/client/target/
+/gwt-example/it/target/
+/classpath-jar/target/
+/classpath-jar/nbproject/
