@@ -25,20 +25,20 @@
         <module>antrun-foreach</module>
         <module>antrun-buildfile-params</module>
         <module>antrun-set-maven-props</module>
+	<module>classpath-jar</module>
+        <module>compile-time-annotation-processing</module>
+        <module>download-plugin-example</module>
 	<module>gwt-example</module>
-	<module>gwt-example-dist</module>
-        <module>nar-maven-plugin-jni-example</module>
+        <module>izpack-example</module>
+        <module>javacpp-opencv-example</module>
+	<module>jna-jni-example</module>
         <!-- intentionally broken: -->
         <!--<module>java6only</module>-->
         <module>launch4j-plugin</module>
         <module>launch4j-example</module>
-        <module>izpack-example</module>
-        <module>javacpp-opencv-example</module>
-        <module>download-plugin-example</module>
-        <module>multimodule-archetype-example</module>
-        <module>compile-time-annotation-processing</module>
         <module>maven-jnaerator-example</module>
-        <module>jna-jni-example</module>
+        <module>multimodule-archetype-example</module>
+        <module>nar-maven-plugin-jni-example</module>
     </modules>
 
     <build>
