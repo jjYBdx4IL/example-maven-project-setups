@@ -61,14 +61,6 @@
             </excludes>
         </fileSet>
         <fileSet>
-            <directory>target/generated-resources/appassembler/jsw/daemon/data/log</directory>
-            <outputDirectory>${project.artifactId}/data/log</outputDirectory>
-        </fileSet>         
-        <fileSet>
-            <directory>target/generated-resources/appassembler/jsw/daemon/data/db</directory>
-            <outputDirectory>${project.artifactId}/data/db</outputDirectory>
-        </fileSet>         
-        <fileSet>
             <directory>target/generated-resources/appassembler/jsw/daemon/temp</directory>
             <outputDirectory>${project.artifactId}/temp</outputDirectory>
         </fileSet>         

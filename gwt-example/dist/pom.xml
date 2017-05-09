@@ -205,8 +205,6 @@
                         <configuration>
                             <target>
                                 <!-- prepare distro -->
-                                <mkdir dir="target/generated-resources/appassembler/jsw/daemon/data/log" />
-                                <mkdir dir="target/generated-resources/appassembler/jsw/daemon/data/db" />
                                 <mkdir dir="target/generated-resources/appassembler/jsw/daemon/temp" />
                                 <mkdir dir="target/generated-resources/appassembler/jsw/daemon/apps" />
                             </target>

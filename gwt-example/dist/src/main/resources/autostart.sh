@@ -9,7 +9,10 @@ if [[ -n $DEBUG ]]; then
     set -x
 fi
 
-scriptDir="$(dirname "$0")"
+export JAVA_HOME=/opt/jdk8/jre
+export PATH=$JAVA_HOME/bin:$PATH
+
+scriptDir="$(readlink -f "$(dirname "$0")")"
 startJar="lib/${project.build.finalName}.${project.packaging}"
 # this is used to verify that a process is really OUR process before
 # terminating it:
@@ -22,17 +25,23 @@ LOGFILE=$scriptDir/data/log/wrapper.log
 
 cd $scriptDir
 
+install -d data/log
+install -d data/db
+
 export LC_ALL=C
 export LANG=C
 export TZ=UTC
 
 function check_started() {
-    grep -l "PROCIDTAG=$PROCIDTAG" /proc/*/environ | grep -v /proc/$BASHPID/environ >&/dev/null
+    (
+        set +o pipefail
+        grep -l "PROCIDTAG=$PROCIDTAG" /proc/*/environ 2>/dev/null | grep proc >&/dev/null
+    )
 }
 
 function get_pids() {
     local f
-    for f in `grep -l "PROCIDTAG=$PROCIDTAG" /proc/*/environ`; do
+    for f in `grep -l "PROCIDTAG=$PROCIDTAG" /proc/*/environ 2>/dev/null || :`; do
         if [[ $f =~ /proc/(.+)/environ ]]; then
             echo " ${BASH_REMATCH[1]}"
         fi
@@ -78,7 +87,9 @@ if [[ $cmd == "start" ]]; then
     fi
 
     export PROCIDTAG
-    exec $authbind java -jar $startJar "$@" >& $LOGFILE &
+    (
+        exec $authbind java -jar $startJar
+    ) >& $LOGFILE &
     echo "started" >&2
 elif [[ $cmd == "stop" ]]; then
     if ! check_started; then
