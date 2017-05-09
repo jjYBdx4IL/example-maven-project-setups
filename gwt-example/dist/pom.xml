@@ -21,7 +21,7 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         
         <jetty.version>9.4.4.v20170414</jetty.version>
-        <src.artifactId>gwt-example</src.artifactId>
+        <src.artifactId>gwt-example-client</src.artifactId>
     </properties>
     
     <dependencies>
@@ -181,13 +181,13 @@
 
         <dependency>
             <groupId>com.github.jjYBdx4IL.maven.examples</groupId>
-            <artifactId>gwt-example</artifactId>
+            <artifactId>gwt-example-client</artifactId>
             <version>${project.version}</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>com.github.jjYBdx4IL.maven.examples</groupId>
-            <artifactId>gwt-example</artifactId>
+            <artifactId>gwt-example-client</artifactId>
             <version>${project.version}</version>
             <scope>runtime</scope>
             <type>war</type>

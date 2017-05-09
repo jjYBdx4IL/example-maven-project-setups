@@ -86,9 +86,12 @@
         <dependencySet>
             <outputDirectory>${project.artifactId}/lib</outputDirectory>
             <unpack>false</unpack>
-            <excludes>
+            <includes>
+                <include>${project.groupId}:${project.artifactId}:jar</include>
+            </includes>
+<!--            <excludes>
                 <exclude>*:*:war</exclude>
-            </excludes>
+            </excludes>-->
             <scope>runtime</scope>
             <useTransitiveDependencies>false</useTransitiveDependencies>
             <useProjectArtifact>true</useProjectArtifact>
