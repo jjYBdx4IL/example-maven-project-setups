@@ -6,22 +6,23 @@ import com.github.jjYBdx4IL.test.selenium.WebElementNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import static org.junit.Assert.*;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 // CHECKSTYLE IGNORE MagicNumber FOR NEXT 10000 LINES
 public class SeleniumIT extends SeleniumTestBase {
 
-    private static final Logger log = Logger.getLogger(SeleniumIT.class.getName());
+    private static final Logger LOG = LoggerFactory.getLogger(SeleniumIT.class);
 
     private String getSandboxLocation() {
         String location = System.getProperty("sandbox.location");
-        log.debug("sandbox location = " + location);
+        LOG.debug("sandbox location = " + location);
         assertNotNull(location);
         assertTrue(!location.isEmpty());
         return location;
@@ -62,18 +63,18 @@ public class SeleniumIT extends SeleniumTestBase {
         takeScreenshot(); // #628cd5
         click("xpath://div[text()='123 Fourth Avenue']");
         takeScreenshot();
-        log.info("active element: " + activeElement().getText());
-        log.info("active element: " + getXPathForActiveElement());
+        LOG.info("active element: " + activeElement().getText());
+        LOG.info("active element: " + getXPathForActiveElement());
         assertEquals("123 Fourth Avenue", activeElement().getText());
         findElement("xpath://tr/td/div[text()='123 Fourth Avenue']").sendKeys(Keys.DOWN);
         takeScreenshot();
-        log.info("active element 2: " + activeElement().getText());
-        log.info("active element 2: " + getXPathForActiveElement());
+        LOG.info("active element 2: " + activeElement().getText());
+        LOG.info("active element 2: " + getXPathForActiveElement());
         assertEquals("22 Lance Ln", activeElement().getText());
         findElement("xpath://tr/td/div[text()='22 Lance Ln']").sendKeys(Keys.DOWN);
         takeScreenshot();
-        log.info("active element 3: " + activeElement().getText());
-        log.info("active element 3: " + getXPathForActiveElement());
+        LOG.info("active element 3: " + activeElement().getText());
+        LOG.info("active element 3: " + getXPathForActiveElement());
         assertEquals("1600 Pennsylvania Avenue", activeElement().getText());
         click("xpath://div[text()='2001 January 1, Monday']");
         takeScreenshot();
@@ -84,8 +85,8 @@ public class SeleniumIT extends SeleniumTestBase {
         findElement("xpath://tr/td/div[text()='123 Fourth Avenue']").sendKeys(Keys.DOWN);
         findElement("xpath://tr/td/div[text()='123 Fourth Avenue']").sendKeys(Keys.DOWN);
         takeScreenshot();
-        log.info("active element 2: " + activeElement().getText());
-        log.info("active element 2: " + getXPathForActiveElement());
+        LOG.info("active element 2: " + activeElement().getText());
+        LOG.info("active element 2: " + getXPathForActiveElement());
         // bug: leaving DatePicker dialog by clicking on a table row disables keyboard navigation:
         assertEquals("123 Fourth Avenue", activeElement().getText());
     }

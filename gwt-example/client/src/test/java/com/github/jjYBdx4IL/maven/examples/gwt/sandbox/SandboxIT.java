@@ -3,7 +3,6 @@ package com.github.jjYBdx4IL.maven.examples.gwt.sandbox;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -13,7 +12,6 @@ import static org.junit.Assert.*;
 
 public class SandboxIT {
 
-    private static final Logger logger = Logger.getLogger(SandboxIT.class.getName());
     private static final String SERVER_URL = "http://localhost:" + System.getProperty("jetty.port", "8080") + "/";
 
     public SandboxIT() {

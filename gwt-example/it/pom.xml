@@ -18,16 +18,17 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         
-        <jetty.port.offset>8000</jetty.port.offset>
-        <jetty.port>8080</jetty.port>
-        <jetty.port.https>8443</jetty.port.https>
-        <testUrl>http://localhost:${jetty.port}/</testUrl>
+<!--        <jetty.port.offset>8000</jetty.port.offset>-->
+        <jetty.port>80</jetty.port>
+        <jetty.port.https>443</jetty.port.https>
+        <testUrl>http://localhost:${jetty.port}/sandbox.jsp</testUrl>
         <dist.artifactId>gwt-example-dist</dist.artifactId>
         <installDir>${project.build.directory}/${dist.artifactId}</installDir>
     </properties>
 
     <!-- Plugin configuration -->
     <build>
+        <testSourceDirectory>${project.build.directory}/generated-sources/tests</testSourceDirectory>
         <plugins>
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
@@ -50,11 +51,36 @@
                             <outputDirectory>${project.build.directory}</outputDirectory>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>unpack-test-sources</id>
+                        <phase>generate-test-sources</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>${project.groupId}</groupId>
+                                    <artifactId>gwt-example-client</artifactId>
+                                    <type>jar</type>
+                                    <classifier>test-sources</classifier>
+                                </artifactItem>
+                            </artifactItems>
+                            <outputDirectory>${project.build.directory}/generated-sources/tests</outputDirectory>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
             <plugin>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <version>2.20</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -71,7 +97,7 @@
                     <artifactId>maven-failsafe-plugin</artifactId>
                     <configuration>
                         <systemPropertyVariables>
-                            <testUrl>${testUrl}</testUrl>
+                            <sandbox.location>${testUrl}</sandbox.location>
                         </systemPropertyVariables>
                     </configuration>
                 </plugin>
@@ -100,17 +126,21 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>gwt-example-client</artifactId>
+            <version>${project.version}</version>
+            <type>test-jar</type>
+        </dependency>
+        <dependency>
             <groupId>com.github.jjYBdx4IL</groupId>
             <artifactId>github-test-utils</artifactId>
             <version>1.0</version>
-            <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.12</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -137,6 +167,7 @@
                 <plugins>
                     <plugin>
                         <artifactId>maven-antrun-plugin</artifactId>
+                        <version>1.8</version>
                         <executions>
                             <execution>
                                 <id>stop-jetty-pre-clean</id>
@@ -151,8 +182,9 @@
                                             <available file="${installDir}/autostart.sh"/>
                                             <then>
                                                 <echo>shutting down running jetty server</echo>
-                                                <exec executable="./autostart.sh" dir="${installDir}"
+                                                <exec executable="bash" dir="${installDir}"
                                                       spawn="false" failonerror="true">
+                                                    <arg value="./autostart.sh" />
                                                     <arg value="stop" />
                                                 </exec>
                                             </then>
@@ -170,13 +202,10 @@
                                 </goals>
                                 <configuration>
                                     <target>
-                                        <echo>Setting port offset in ${installDir}/etc/wrapper.conf</echo>
-                                        <replaceregexp file="${installDir}/etc/wrapper.conf"
-                                                       match="(=-Djetty\.port\.offset)=.*" replace="\1=${jetty.port.offset}" byline="true" />
-
                                         <!-- shut down running server - just in case -->
-                                        <exec executable="./autostart.sh" dir="${installDir}"
+                                        <exec executable="bash" dir="${installDir}"
                                               spawn="false" failonerror="true">
+                                            <arg value="./autostart.sh" />
                                             <arg value="stop" />
                                         </exec>
                                         <waitfor maxwait="3" maxwaitunit="minute" checkevery="1000">
@@ -184,11 +213,11 @@
                                                 <socket server="localhost" port="${jetty.port}" />
                                             </not>
                                         </waitfor>
-                                        <waitfor maxwait="3" maxwaitunit="minute" checkevery="1000">
+<!--                                        <waitfor maxwait="3" maxwaitunit="minute" checkevery="1000">
                                             <not>
                                                 <socket server="localhost" port="${jetty.port.https}" />
                                             </not>
-                                        </waitfor>
+                                        </waitfor>-->
 
                                         <!-- ensure there is no server still running -->
                                         <fail>
@@ -196,17 +225,18 @@
                                                 <socket server="localhost" port="${jetty.port}" />
                                             </condition>
                                         </fail>
-                                        <exec executable="./autostart.sh" dir="${installDir}"
+                                        <exec executable="bash" dir="${installDir}"
                                               spawn="false" failonerror="true">
+                                            <arg value="./autostart.sh" />
                                             <arg value="start" />
                                         </exec>
                                         <echo>Waiting for server to come up at port ${jetty.port}</echo>
                                         <waitfor maxwait="3" maxwaitunit="minute" checkevery="1000">
                                             <http url="${testUrl}" errorsBeginAt="300" />
                                         </waitfor>
-                                        <waitfor maxwait="3" maxwaitunit="minute" checkevery="1000">
+<!--                                        <waitfor maxwait="3" maxwaitunit="minute" checkevery="1000">
                                             <socket server="localhost" port="${jetty.port.https}" />
-                                        </waitfor>
+                                        </waitfor>-->
                                     </target>
                                 </configuration>
                             </execution>
@@ -218,28 +248,29 @@
                                 </goals>
                                 <configuration>
                                     <target>
-                                        <exec executable="./autostart.sh" dir="${installDir}"
+                                        <exec executable="bash" dir="${installDir}"
                                               spawn="false" failonerror="true">
+                                            <arg value="./autostart.sh" />
                                             <arg value="stop" />
                                         </exec>
-                                        <apply executable="bzip2">
+<!--                                        <apply executable="bzip2">
                                             <arg value="-9v" />
-                                            <fileset dir="${installDir}/var/log">
+                                            <fileset dir="${installDir}/data/log">
                                                 <patternset>
                                                     <include name="*.log" />
                                                 </patternset>
                                             </fileset>
-                                        </apply>
+                                        </apply>-->
                                         <fail>
                                             <condition>
                                                 <socket server="localhost" port="${jetty.port}" />
                                             </condition>
                                         </fail>
-                                        <fail>
+<!--                                        <fail>
                                             <condition>
                                                 <socket server="localhost" port="${jetty.port.https}" />
                                             </condition>
-                                        </fail>
+                                        </fail>-->
                                     </target>
                                 </configuration>
                             </execution>
