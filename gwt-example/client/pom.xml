@@ -338,6 +338,12 @@
         </dependency>
         
         <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.5</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>com.google.gwt.inject</groupId>
             <artifactId>gin</artifactId>
             <version>2.1.2</version>
@@ -354,6 +360,11 @@
             <version>${gwt.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.sksamuel.gwt</groupId>
+            <artifactId>gwt-websockets</artifactId>
+            <version>1.0.4</version>
+        </dependency>        
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.12</version>
@@ -369,12 +380,6 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>1.7.25</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>2.5</version>
             <scope>test</scope>
         </dependency>
 

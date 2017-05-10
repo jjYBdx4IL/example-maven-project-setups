@@ -14,6 +14,7 @@ public class ServerChatSocket extends WebSocketAdapter {
     private static final Logger LOG = LoggerFactory.getLogger(ServerChatSocket.class);
 
     private final ChatServer chatServer;
+    private Session session = null;
 
     public ServerChatSocket(ChatServer chatServer) {
         LOG.info("ServerChatSocket instance created with chat server instance " + chatServer);
@@ -25,6 +26,7 @@ public class ServerChatSocket extends WebSocketAdapter {
         super.onWebSocketConnect(sess);
         chatServer.add(Message.createConnect(sess));
         LOG.info("Socket Connected: " + sess);
+        this.session = sess;
     }
 
     @Override
@@ -38,14 +40,14 @@ public class ServerChatSocket extends WebSocketAdapter {
     public void onWebSocketClose(int statusCode, String reason) {
         super.onWebSocketClose(statusCode, reason);
         LOG.info("Socket Closed: [" + statusCode + "] " + reason);
-        chatServer.add(Message.createDisonnect(getSession()));
+        chatServer.add(Message.createDisonnect(this.session));
     }
 
     @Override
     public void onWebSocketError(Throwable cause) {
         super.onWebSocketError(cause);
         LOG.error("", cause);
-        chatServer.add(Message.createDisonnect(getSession()));
+        chatServer.add(Message.createDisonnect(this.session));
     }
 
 }

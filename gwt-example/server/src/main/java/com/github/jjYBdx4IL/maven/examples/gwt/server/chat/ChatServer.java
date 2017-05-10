@@ -23,7 +23,8 @@ public class ChatServer implements Runnable {
     private final LinkedBlockingQueue<Message> highprio = new LinkedBlockingQueue<>();
     private final CountDownLatch shutdownLatch = new CountDownLatch(1);
     
-    private int nTextMessages = 0;
+    private long nTextMessagesReceived = 0;
+    private long nTextMessagesSent = 0;
 
     public ChatServer() {
     }
@@ -52,7 +53,8 @@ public class ChatServer implements Runnable {
     
                             @Override
                             public void writeSuccess() {
-                                LOG.info("write success");
+                                nTextMessagesSent++;
+                                LOG.info("nTextMessagesSent: " + getnTextMessagesSent());
                             }
                         });
             } catch (WebSocketException ex) {
@@ -82,8 +84,8 @@ public class ChatServer implements Runnable {
                     shutdown = true;
                     continue;
                 case MSG:
-                    nTextMessages++;
-                    LOG.info("nTextMessages: " + nTextMessages);
+                    nTextMessagesReceived++;
+                    LOG.info("nTextMessages: " + getnTextMessagesReceived());
                     send(message);
                     break;
                 case CONNECT:
@@ -128,4 +130,31 @@ public class ChatServer implements Runnable {
         }
         LOG.info("wait4Shutdown done");
     }
+
+    /**
+     * Only for testing. Shut down the server first, there is no explicit synchronization.
+     * 
+     * @return the nTextMessagesReceived
+     */
+    protected long getnTextMessagesReceived() {
+        return nTextMessagesReceived;
+    }
+
+    /**
+     * Only for testing. Shut down the server first, there is no explicit synchronization.
+     * 
+     * @return the nTextMessagesSent
+     */
+    protected long getnTextMessagesSent() {
+        return nTextMessagesSent;
+    }
+    
+    /**
+     * Only for testing. Shut down the server first, there is no explicit synchronization.
+     */
+    protected Collection<Session> getSessions() {
+        return sessions;
+    }
+
+    
 }

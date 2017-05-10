@@ -1,8 +1,6 @@
 package com.github.jjYBdx4IL.maven.examples.gwt;
 
-import com.github.jjYBdx4IL.maven.examples.gwt.server.chat.ChatCreator;
 import com.github.jjYBdx4IL.maven.examples.gwt.server.chat.ChatHandler;
-import com.github.jjYBdx4IL.maven.examples.gwt.server.chat.ChatServer;
 import java.lang.management.ManagementFactory;
 import java.nio.file.Paths;
 import org.apache.tomcat.SimpleInstanceManager;
@@ -27,16 +25,12 @@ import org.eclipse.jetty.server.handler.ContextHandler;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
 import org.eclipse.jetty.server.handler.DefaultHandler;
 import org.eclipse.jetty.server.handler.HandlerCollection;
-import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.RequestLogHandler;
 import org.eclipse.jetty.server.handler.StatisticsHandler;
-import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.eclipse.jetty.util.thread.QueuedThreadPool;
 import org.eclipse.jetty.util.thread.ScheduledExecutorScheduler;
 import org.eclipse.jetty.webapp.Configuration;
-import org.eclipse.jetty.websocket.server.WebSocketUpgradeFilter;
-import org.eclipse.jetty.websocket.server.pathmap.ServletPathSpec;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

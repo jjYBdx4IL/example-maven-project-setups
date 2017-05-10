@@ -10,7 +10,8 @@
     <inherits name='com.google.gwt.place.Place'/>
     <inherits name='com.google.gwt.activity.Activity'/>
     <inherits name="com.google.gwt.uibinder.UiBinder"/>
-    <inherits name='org.vaadin.gwtgraphics.GWTGraphics'/> 
+    <inherits name='org.vaadin.gwtgraphics.GWTGraphics'/>
+    <inherits name="com.sksamuel.gwt.GwtWebsockets" />
     
     <inherits name="com.google.gwt.i18n.I18N"/>
     <!--<extend-property name="locale" values="de,en,fr,it,es,nl"/>-->

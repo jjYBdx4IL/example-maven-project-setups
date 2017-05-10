@@ -1,6 +1,7 @@
 package com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client;
 
 
+import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client.chat.ChatDemo;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
@@ -8,7 +9,6 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.TabLayoutPanel;
 import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client.datagrid.CellTableExample;
 import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client.datagrid.CellTableFieldUpdaterComplexExample;
 import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client.datagrid.CellTableFieldUpdaterExample;
@@ -17,26 +17,28 @@ import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client.eventbus.SimpleEve
 import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client.handlermanager.HandlerManagerDemo;
 import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client.keyevents.KeyEventDemo;
 import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client.rpcdemo.RpcDemo;
+import com.google.gwt.user.client.ui.StackLayoutPanel;
 import com.google.inject.Inject;
 import java.util.logging.Logger;
 
 public class MainPanel extends Composite implements ValueChangeHandler<String> {
 
     private static final Logger logger = Logger.getLogger(MainPanel.class.getName());
-    TabLayoutPanel tabLayoutPanel;
+    private final StackLayoutPanel layoutPanel = new StackLayoutPanel(Unit.EM);
+    private final double headerSize = 3.0d;
 
     @Inject
     public MainPanel(final RpcDemo rpcDemo) {
-        tabLayoutPanel = new TabLayoutPanel(1.5, Unit.EM);
-        tabLayoutPanel.add(rpcDemo, "RpcDemo");
-        tabLayoutPanel.add(new StackOverflow15161741(), "StackOverflow15161741");
-        tabLayoutPanel.add(new SimpleEventBusDemo(), "SimpleEventBusDemo");
-        tabLayoutPanel.add(new HandlerManagerDemo(), "HandlerManagerDemo");
-        tabLayoutPanel.add(new KeyEventDemo(), "KeyEventDemo");
-        tabLayoutPanel.add(new CellTableExample(), "CellTableExample");
-        tabLayoutPanel.add(new CellTableFieldUpdaterExample(), "CellTableFieldUpdaterExample");
-        tabLayoutPanel.add(new CellTableFieldUpdaterComplexExample(), "CellTableFieldUpdaterComplexExample");
-        this.initWidget(tabLayoutPanel);
+        layoutPanel.add(rpcDemo, "RpcDemo", headerSize);
+        layoutPanel.add(new StackOverflow15161741(), "StackOverflow15161741", headerSize);
+        layoutPanel.add(new SimpleEventBusDemo(), "SimpleEventBusDemo", headerSize);
+        layoutPanel.add(new HandlerManagerDemo(), "HandlerManagerDemo", headerSize);
+        layoutPanel.add(new KeyEventDemo(), "KeyEventDemo", headerSize);
+        layoutPanel.add(new CellTableExample(), "CellTableExample", headerSize);
+        layoutPanel.add(new CellTableFieldUpdaterExample(), "CellTableFieldUpdaterExample", headerSize);
+        layoutPanel.add(new CellTableFieldUpdaterComplexExample(), "CellTableFieldUpdaterComplexExample", headerSize);
+        layoutPanel.add(new ChatDemo(), "ChatDemo", headerSize);
+        this.initWidget(layoutPanel);
 
         String initToken = History.getToken();
         logger.info("initToken = " + initToken);
@@ -47,9 +49,9 @@ public class MainPanel extends Composite implements ValueChangeHandler<String> {
             tabIdx = 0;
         }
         logger.info("tabIdx = "+tabIdx);
-        tabLayoutPanel.selectTab(tabIdx);
+        layoutPanel.showWidget(tabIdx);
 
-        tabLayoutPanel.addSelectionHandler(new SelectionHandler<Integer>() {
+        layoutPanel.addSelectionHandler(new SelectionHandler<Integer>() {
             @Override
             public void onSelection(SelectionEvent<Integer> event) {
                 History.newItem(Integer.toString(event.getSelectedItem()));
@@ -84,6 +86,6 @@ public class MainPanel extends Composite implements ValueChangeHandler<String> {
         }
 
         logger.info("tabIdx = "+tabIdx);
-        tabLayoutPanel.selectTab(tabIdx);
+        layoutPanel.showWidget(tabIdx);
     }
 }
