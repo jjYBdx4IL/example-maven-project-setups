@@ -23,7 +23,8 @@
     <modules>
         <module>client</module>
         <module>dist</module>
-        <module>it</module>
+	<module>it</module>
+	<module>server</module>
     </modules>
 
 </project>

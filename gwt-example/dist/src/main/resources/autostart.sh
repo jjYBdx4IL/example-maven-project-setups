@@ -88,7 +88,10 @@ if [[ $cmd == "start" ]]; then
 
     export PROCIDTAG
     (
-        exec $authbind java -jar $startJar
+        while true; do
+            $authbind java -jar $startJar || :
+            sleep 10
+        done
     ) >& $LOGFILE &
     echo "started" >&2
 elif [[ $cmd == "stop" ]]; then

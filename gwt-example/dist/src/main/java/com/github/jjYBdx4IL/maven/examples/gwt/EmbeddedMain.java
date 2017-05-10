@@ -1,5 +1,8 @@
 package com.github.jjYBdx4IL.maven.examples.gwt;
 
+import com.github.jjYBdx4IL.maven.examples.gwt.server.chat.ChatCreator;
+import com.github.jjYBdx4IL.maven.examples.gwt.server.chat.ChatHandler;
+import com.github.jjYBdx4IL.maven.examples.gwt.server.chat.ChatServer;
 import java.lang.management.ManagementFactory;
 import java.nio.file.Paths;
 import org.apache.tomcat.SimpleInstanceManager;
@@ -20,15 +23,20 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnectionStatistics;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.SslConnectionFactory;
+import org.eclipse.jetty.server.handler.ContextHandler;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
 import org.eclipse.jetty.server.handler.DefaultHandler;
 import org.eclipse.jetty.server.handler.HandlerCollection;
+import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.RequestLogHandler;
 import org.eclipse.jetty.server.handler.StatisticsHandler;
+import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.eclipse.jetty.util.thread.QueuedThreadPool;
 import org.eclipse.jetty.util.thread.ScheduledExecutorScheduler;
 import org.eclipse.jetty.webapp.Configuration;
+import org.eclipse.jetty.websocket.server.WebSocketUpgradeFilter;
+import org.eclipse.jetty.websocket.server.pathmap.ServletPathSpec;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,7 +69,7 @@ public class EmbeddedMain {
     public void run() throws Exception {
         LOG.info("cwd = " + cwd);
         LOG.info("port offset = " + portOffset);
-        
+
         System.setProperty("jetty.home", cwd);
         System.setProperty("jetty.base", cwd);
 
@@ -69,7 +77,7 @@ public class EmbeddedMain {
         threadPool.setMaxThreads(500);
 
         Server server = new Server(threadPool);
-        
+
         server.addBean(new ScheduledExecutorScheduler());
 
         HttpConfiguration http_config = new HttpConfiguration();
@@ -81,9 +89,14 @@ public class EmbeddedMain {
         http_config.setSendServerVersion(false);
         http_config.setSendDateHeader(false);
 
+        ContextHandler chatContextHandler = new ContextHandler("/events/");
+        ChatHandler chatHandler = new ChatHandler();
+        chatContextHandler.setHandler(chatHandler);
+        
+        ContextHandlerCollection contexts = new ContextHandlerCollection(chatContextHandler);
         HandlerCollection handlers = new HandlerCollection();
-        ContextHandlerCollection contexts = new ContextHandlerCollection();
         handlers.setHandlers(new Handler[]{contexts, new DefaultHandler()});
+        
         server.setHandler(handlers);
 
         server.setDumpAfterStart(true);
