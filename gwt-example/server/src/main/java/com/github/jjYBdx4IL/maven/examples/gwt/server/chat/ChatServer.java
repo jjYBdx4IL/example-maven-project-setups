@@ -1,10 +1,13 @@
 package com.github.jjYBdx4IL.maven.examples.gwt.server.chat;
 
+import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.api.ChatMessage;
+import com.google.gwt.user.client.rpc.SerializationException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
 
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.WebSocketException;
@@ -22,7 +25,7 @@ public class ChatServer implements Runnable {
     // user load
     private final LinkedBlockingQueue<Message> highprio = new LinkedBlockingQueue<>();
     private final CountDownLatch shutdownLatch = new CountDownLatch(1);
-    
+
     private long nTextMessagesReceived = 0;
     private long nTextMessagesSent = 0;
 
@@ -41,29 +44,46 @@ public class ChatServer implements Runnable {
         LOG.info("messages in queue: " + userqueue.size());
     }
 
+    private ChatMessage createReply(ChatMessage message) {
+        String room = message.getRoom();
+        if (room == null) {
+            room = "lobby";
+        }
+        String text = "Received TEXT message: >>>" + message.toString() + "<<<";
+        ChatMessage reply = new ChatMessage(room, text);
+        return reply;
+    }
+    
     private void send(Message message) {
+        ChatMessage reply = createReply(message.getChatMessage());
+        String serializedReply;
+        try {
+            serializedReply = GWTSerializationUtils.serializeMessage(reply);
+        } catch (SerializationException ex) {
+            LOG.error("failed to serialize: " + reply, ex);
+            return;
+        }
         for (Session sess : sessions) {
             try {
-                sess.getRemote().sendString("Received TEXT message: >>>" + message.getMessage() + "<<<",
-                        new WriteCallback() {
-                            @Override
-                            public void writeFailed(Throwable x) {
-                                LOG.warn("write failed");
-                            }
-    
-                            @Override
-                            public void writeSuccess() {
-                                nTextMessagesSent++;
-                                LOG.info("nTextMessagesSent: " + getnTextMessagesSent());
-                            }
-                        });
+                sess.getRemote().sendString(serializedReply, new WriteCallback() {
+                    @Override
+                    public void writeFailed(Throwable x) {
+                        LOG.warn("write failed");
+                    }
+
+                    @Override
+                    public void writeSuccess() {
+                        nTextMessagesSent++;
+                        LOG.info("nTextMessagesSent: " + getnTextMessagesSent());
+                    }
+                });
             } catch (WebSocketException ex) {
                 LOG.error("", ex);
                 add(Message.createDisonnect(sess));
             }
         }
     }
-    
+
     @Override
     public void run() {
         LOG.info("chat server thread started");
@@ -133,7 +153,7 @@ public class ChatServer implements Runnable {
 
     /**
      * Only for testing. Shut down the server first, there is no explicit synchronization.
-     * 
+     *
      * @return the nTextMessagesReceived
      */
     protected long getnTextMessagesReceived() {
@@ -142,13 +162,13 @@ public class ChatServer implements Runnable {
 
     /**
      * Only for testing. Shut down the server first, there is no explicit synchronization.
-     * 
+     *
      * @return the nTextMessagesSent
      */
     protected long getnTextMessagesSent() {
         return nTextMessagesSent;
     }
-    
+
     /**
      * Only for testing. Shut down the server first, there is no explicit synchronization.
      */
@@ -156,5 +176,4 @@ public class ChatServer implements Runnable {
         return sessions;
     }
 
-    
 }

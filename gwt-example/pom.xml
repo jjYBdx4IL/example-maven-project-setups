@@ -21,6 +21,7 @@
     </properties>
 
     <modules>
+	<module>api</module>
         <module>client</module>
         <module>dist</module>
 	<module>it</module>

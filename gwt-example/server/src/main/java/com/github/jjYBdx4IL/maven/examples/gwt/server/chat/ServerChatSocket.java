@@ -1,5 +1,10 @@
 package com.github.jjYBdx4IL.maven.examples.gwt.server.chat;
 
+import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.api.ChatMessage;
+import com.google.gwt.user.client.rpc.SerializationException;
+import com.google.gwt.user.server.rpc.impl.ServerSerializationStreamReader;
+import com.google.gwt.user.server.rpc.impl.ServerSerializationStreamWriter;
+import java.util.logging.Level;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.WebSocketAdapter;
 import org.slf4j.Logger;
@@ -33,7 +38,11 @@ public class ServerChatSocket extends WebSocketAdapter {
     public void onWebSocketText(String message) {
         super.onWebSocketText(message);
         LOG.info("Received TEXT message: " + message);
-        chatServer.add(Message.createMsg(message));
+        try {
+            chatServer.add(Message.createMsg(GWTSerializationUtils.deserializeMessage(message)));
+        } catch (SerializationException ex) {
+            LOG.error("failed to deserialize message >>>" + message + "<<<", ex);
+        }
     }
 
     @Override

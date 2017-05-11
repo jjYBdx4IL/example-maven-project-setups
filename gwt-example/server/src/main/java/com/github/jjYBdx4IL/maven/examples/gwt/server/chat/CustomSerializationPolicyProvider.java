@@ -1,0 +1,25 @@
+package com.github.jjYBdx4IL.maven.examples.gwt.server.chat;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.google.gwt.user.server.rpc.SerializationPolicy;
+import com.google.gwt.user.server.rpc.SerializationPolicyProvider;
+
+/**
+ * https://www.slideshare.net/gwtcon/gwt20-websocket20and20data20serialization
+ * 
+ * @author jjYBdx4IL
+ */
+public class CustomSerializationPolicyProvider implements SerializationPolicyProvider {
+
+    private static final Logger LOG = LoggerFactory.getLogger(CustomSerializationPolicyProvider.class);
+    
+    @Override
+    public SerializationPolicy getSerializationPolicy(String moduleBaseURL, String serializationPolicyStrongName) {
+        LOG.info("getSerializationPolicy");
+        return new SimpleSerializationPolicy();
+    }
+
+ }
+

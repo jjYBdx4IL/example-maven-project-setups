@@ -1,5 +1,6 @@
 package com.github.jjYBdx4IL.maven.examples.gwt.server.chat;
 
+import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.api.ChatMessage;
 import org.eclipse.jetty.websocket.api.Session;
 
 /**
@@ -9,12 +10,12 @@ import org.eclipse.jetty.websocket.api.Session;
 public class Message {
 
     private final MessageType messageType;
-    private final String message;
+    private final ChatMessage chatMessage; // chat message object exchanged with clients
     private final Session session;
 
-    public Message(MessageType messageType, String message, Session session) {
+    public Message(MessageType messageType, ChatMessage message, Session session) {
         this.messageType = messageType;
-        this.message = message;
+        this.chatMessage = message;
         this.session = session;
         switch (messageType) {
             case MSG:
@@ -31,7 +32,7 @@ public class Message {
         }
     }
     
-    public static Message createMsg(String message) {
+    public static Message createMsg(ChatMessage message) {
         return new Message(MessageType.MSG, message, null);
     }
     
@@ -62,8 +63,8 @@ public class Message {
     /**
      * @return the message
      */
-    public String getMessage() {
-        return message;
+    public ChatMessage getChatMessage() {
+        return chatMessage;
     }
 
     /**
@@ -75,7 +76,7 @@ public class Message {
 
     @Override
     public String toString() {
-        return "Message{" + "messageType=" + messageType + ", message=" + message + ", session=" + session + '}';
+        return "Message{" + "messageType=" + messageType + ", message=" + chatMessage + ", session=" + session + '}';
     }    
     
 }
