@@ -35,7 +35,8 @@
         <!-- intentionally broken: -->
         <!--<module>java6only</module>-->
         <module>launch4j-plugin</module>
-        <module>launch4j-example</module>
+	<module>launch4j-example</module>
+	<module>log4j-runtime-configuration</module>
         <module>maven-jnaerator-example</module>
         <module>multimodule-archetype-example</module>
         <module>nar-maven-plugin-jni-example</module>

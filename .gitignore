@@ -17,3 +17,6 @@
 /classpath-jar/nbproject/
 /gwt-example/server/target/
 /gwt-example/api/target/
+/gwt-example/api/bin/target/
+/gwt-example/server/bin/target/
+/log4j-runtime-configuration/target/
