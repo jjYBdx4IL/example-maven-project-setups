@@ -13,6 +13,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * Beware! This method adds the appender to the root looger. If there are other logger
+ * elements specified in your log4j configuration (file), you need to set their
+ * additivity attribute to true.
  *
  * @author jjYBdx4IL
  */
@@ -43,6 +46,7 @@ public class Log4JUtilsTest {
         
         String logFileContents = FileUtils.readFileToString(logFile);
         assertNotNull(logFileContents);
+        assertFalse(logFileContents.contains("test1"));
         assertTrue(logFileContents.contains("test2"));
     }
 }

@@ -8,6 +8,11 @@
         </layout>
     </appender>
     
+    <logger name="com.github.jjYBdx4IL.maven.examples.log4j" additivity="true">  
+        <level value="debug"></level>
+        <appender-ref ref="stdout" />
+    </logger>
+    
     <root>
         <priority value="info" />
         <appender-ref ref="stdout" />
