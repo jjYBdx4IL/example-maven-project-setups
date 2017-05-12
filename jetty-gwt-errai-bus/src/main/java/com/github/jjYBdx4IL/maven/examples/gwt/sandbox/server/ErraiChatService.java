@@ -1,7 +1,6 @@
 package com.github.jjYBdx4IL.maven.examples.gwt.sandbox.server;
 
 import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client.chat.PojoMessage;
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.inject.Inject;
@@ -17,7 +16,7 @@ import org.jboss.errai.bus.server.annotations.Service;
  * @author jjYBdx4IL
  */
 @Service
-public class ErraiChatService extends RemoteServiceServlet implements MessageCallback {
+public class ErraiChatService implements MessageCallback {
 
     private static final Logger LOG = Logger.getLogger(ErraiChatService.class.getName());
     private static final long serialVersionUID = 1L;
