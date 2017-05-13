@@ -30,7 +30,8 @@
         <module>download-plugin-example</module>
 	<module>gwt-example</module>
         <module>izpack-example</module>
-        <module>javacpp-opencv-example</module>
+	<module>javacpp-opencv-example</module>
+	<module>jetty-gwt-errai-bus</module>
 	<module>jna-jni-example</module>
         <!-- intentionally broken: -->
         <!--<module>java6only</module>-->
