@@ -21,3 +21,4 @@
 /gwt-example/server/bin/target/
 /log4j-runtime-configuration/target/
 /jetty-gwt-errai-bus/target/
+/stjs-example/target/
