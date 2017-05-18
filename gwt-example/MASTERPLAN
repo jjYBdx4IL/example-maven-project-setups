@@ -1,0 +1,9 @@
+Want to run embedded jetty server with auto-reload for development. That embedded jetty server should be as close
+to the final deployed server as possible, ie. including websockets but without SSL (cert).
+
+Maybe remove webapp stuff entirely.
+
+Work around the issue that GWT dev mode with noserver enabled does not generate .gwt.rpc files needed for GWT-RPC
+client-server communication by adding a reverse-proxy servlet for the path '/sandbox' that fetches the generated GWT
+stuff from the GWT development server instance. Basically, we want to run GWT noserver mode without telling GWT
+about it. I think this is the best, most efficient and most flexible way of working with GWT. 
