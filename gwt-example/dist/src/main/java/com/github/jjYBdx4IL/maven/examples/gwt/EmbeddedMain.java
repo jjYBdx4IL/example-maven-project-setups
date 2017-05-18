@@ -142,14 +142,14 @@ public class EmbeddedMain {
         deployer.setContextAttribute("org.apache.tomcat.InstanceManager",
                 new SimpleInstanceManager());
 
-        WebAppProvider webapp_provider = new WebAppProvider();
-        webapp_provider.setMonitoredDirName(cwd + "/apps");
+        WebAppProvider webAppProvider = new WebAppProvider();
+        webAppProvider.setMonitoredDirName(cwd + "/apps");
         //webapp_provider.setDefaultsDescriptor(jetty_home + "/etc/webdefault.xml");
-        webapp_provider.setScanInterval(0);
-        webapp_provider.setExtractWars(false);
-        webapp_provider.setConfigurationManager(new PropertiesConfigurationManager());
+        webAppProvider.setScanInterval(0);
+        webAppProvider.setExtractWars(false);
+        webAppProvider.setConfigurationManager(new PropertiesConfigurationManager());
 
-        deployer.addAppProvider(webapp_provider);
+        deployer.addAppProvider(webAppProvider);
         server.addBean(deployer);
 
         // === setup jetty plus ==
