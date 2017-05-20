@@ -234,13 +234,14 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
+            <scope>provided</scope>
         </dependency>
         <!-- To run websockets in embedded server -->
-        <dependency>
+        <!--        <dependency>
             <groupId>org.eclipse.jetty.websocket</groupId>
             <artifactId>websocket-api</artifactId>
             <version>${jetty.version}</version>
-        </dependency>
+        </dependency>-->
         <!-- To run websockets client -->
         <dependency>
             <groupId>org.eclipse.jetty.websocket</groupId>

@@ -20,7 +20,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         
-        <jetty.version>9.4.4.v20170414</jetty.version>
+        <jetty.version>9.4.5.v20170502</jetty.version>
         <src.artifactId>gwt-example-client</src.artifactId>
     </properties>
     
@@ -68,7 +68,6 @@
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-annotations</artifactId>
             <version>${jetty.version}</version>
-            <!--<scope>runtime</scope>-->
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
@@ -86,37 +85,41 @@
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-jmx</artifactId>
             <version>${jetty.version}</version>
-            <!--<scope>runtime</scope>-->
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-plus</artifactId>
             <version>${jetty.version}</version>
-            <!--<scope>runtime</scope>-->
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-deploy</artifactId>
             <version>${jetty.version}</version>
-            <!--<scope>runtime</scope>-->
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-util</artifactId>
             <version>${jetty.version}</version>
-            <!--<scope>runtime</scope>-->
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-http</artifactId>
             <version>${jetty.version}</version>
-            <!--<scope>runtime</scope>-->
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-continuation</artifactId>
             <version>${jetty.version}</version>
-            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-proxy</artifactId>
+            <version>${jetty.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty.websocket</groupId>
+            <artifactId>websocket-server</artifactId>
+            <version>${jetty.version}</version>
         </dependency>
 
         <!--        <dependency>
@@ -173,18 +176,18 @@
             <artifactId>slf4j-simple</artifactId>
             <version>1.7.25</version>
         </dependency>
-        <dependency>
+<!--        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>1.7.25</version>
-        </dependency>
+        </dependency>-->
 
-        <dependency>
+<!--        <dependency>
             <groupId>com.github.jjYBdx4IL.maven.examples</groupId>
             <artifactId>gwt-example-client</artifactId>
             <version>${project.version}</version>
             <scope>runtime</scope>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>com.github.jjYBdx4IL.maven.examples</groupId>
             <artifactId>gwt-example-client</artifactId>
@@ -192,10 +195,17 @@
             <scope>runtime</scope>
             <type>war</type>
         </dependency>
+<!--        <dependency>
+            <groupId>com.github.jjYBdx4IL.maven.examples</groupId>
+            <artifactId>gwt-example-server</artifactId>
+            <version>${project.version}</version>
+        </dependency>-->
         <dependency>
             <groupId>com.github.jjYBdx4IL.maven.examples</groupId>
             <artifactId>gwt-example-server</artifactId>
             <version>${project.version}</version>
+            <scope>runtime</scope>
+            <type>war</type>
         </dependency>
     </dependencies>
 
@@ -315,7 +325,7 @@
                     <archive>
                         <!-- https://maven.apache.org/shared/maven-archiver/index.html -->
                         <manifest>
-                            <mainClass>com.github.jjYBdx4IL.maven.examples.gwt.EmbeddedMain</mainClass>
+                            <mainClass>com.github.jjYBdx4IL.maven.examples.gwt.server.EmbeddedMain</mainClass>
                             <addClasspath>true</addClasspath>
                             <classpathLayoutType>repository</classpathLayoutType>
                             <!--<classpathPrefix>lib/</classpathPrefix>-->

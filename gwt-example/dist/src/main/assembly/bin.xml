@@ -92,7 +92,8 @@
             <outputDirectory>${project.artifactId}/apps/root</outputDirectory>
             <unpack>true</unpack>
             <includes>
-                <include>${project.groupId}:${src.artifactId}:war</include>
+<!--                <include>${project.groupId}:${src.artifactId}:war</include>-->
+                <include>${project.groupId}:*:war</include>
             </includes>
             <!--<scope>runtime</scope>-->
             <useProjectArtifact>false</useProjectArtifact>
@@ -104,3 +105,4 @@
         </dependencySet>
     </dependencySets>
 </assembly>
+

@@ -60,6 +60,7 @@
                 <artifactId>jetty-maven-plugin</artifactId>
                 <version>${jetty.version}</version>
                 <configuration>
+                    <useProvidedScope>false</useProvidedScope>
                     <scanIntervalSeconds>1</scanIntervalSeconds>
                     <webApp>
                         <resourceBases>
@@ -69,6 +70,7 @@
                             <!-- Do NOT use the gwt dev mode server's 'noserver' option or .gwt.rpc files won't get generated! -->
                             <!--<resourceBase>${project.basedir}/../client/target/gwt-example-client-${project.version}</resourceBase>-->
                         </resourceBases>
+                        <overrideDescriptor>${project.basedir}/src/main/webapp/WEB-INF/web.devel.xml</overrideDescriptor>
                     </webApp>
                     <systemProperties>
                         <systemProperty>
@@ -103,7 +105,46 @@
                         </systemProperty>
                     </systemProperties>-->
                 </configuration>
-            </plugin>            
+            </plugin>
+            
+            <plugin>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.0.0</version>
+                <configuration>
+                    <packagingExcludes>**/*.cache.ttf,**/hosted.html,WEB-INF/web.devel.xml</packagingExcludes>
+                    <!--<packagingExcludes>**/*.cache.ttf,**/hosted.html,WEB-INF/</packagingExcludes>-->
+                    <!--<archiveClasses>true</archiveClasses>-->
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.0.2</version>
+                <executions>
+                    <execution>
+                        <id>make-a-jar</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>make-a-test-jar</id>
+                        <goals>
+                            <goal>test-jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <excludes>
+                        <exclude>**/jetty.xml</exclude>
+                        <exclude>**/log4j.xml</exclude>
+                        <exclude>**/application-context.xml</exclude>
+                        <exclude>**/application-properties.xml</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+            
         </plugins>
 
         <pluginManagement>
@@ -271,11 +312,11 @@
             <artifactId>jetty-io</artifactId>
             <version>${jetty.version}</version>
         </dependency>-->
-        <dependency>
+        <!--        <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-server</artifactId>
             <version>${jetty.version}</version>
-        </dependency>
+        </dependency>-->
         <!--        <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-servlet</artifactId>
@@ -288,64 +329,61 @@
         </dependency>-->
         
         <!-- Runtime dependencies that need to be included in the generated binaries -->
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-annotations</artifactId>
-            <version>${jetty.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-jndi</artifactId>
-            <version>${jetty.version}</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-proxy</artifactId>
-            <version>${jetty.version}</version>
-            <scope>runtime</scope>
-        </dependency>
+        <!--        <dependency>
+                    <groupId>org.eclipse.jetty</groupId>
+                    <artifactId>jetty-annotations</artifactId>
+                    <version>${jetty.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.eclipse.jetty</groupId>
+                    <artifactId>jetty-jndi</artifactId>
+                    <version>${jetty.version}</version>
+                    <scope>runtime</scope>
+                </dependency>
+        -->        
+        <!--
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-start</artifactId>
             <version>${jetty.version}</version>
             <scope>runtime</scope>
-        </dependency>
-        <dependency>
+        </dependency>-->
+        <!--        <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-jmx</artifactId>
             <version>${jetty.version}</version>
-            <!--<scope>runtime</scope>-->
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-plus</artifactId>
             <version>${jetty.version}</version>
-            <!--<scope>runtime</scope>-->
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-deploy</artifactId>
             <version>${jetty.version}</version>
-            <!--<scope>runtime</scope>-->
-        </dependency>
-        <dependency>
+        </dependency>-->
+        <!--        <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-util</artifactId>
-            <!--<scope>runtime</scope>-->
-        </dependency>
+        </dependency>-->
         <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-proxy</artifactId>
+            <version>${jetty.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <!--        <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-http</artifactId>
             <version>${jetty.version}</version>
-            <!--<scope>runtime</scope>-->
-        </dependency>
-        <dependency>
+        </dependency>-->
+        <!--        <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-continuation</artifactId>
             <version>${jetty.version}</version>
             <scope>runtime</scope>
-        </dependency>
+        </dependency>-->
 
         <!--        <dependency>
             <groupId>jstl</groupId>
@@ -353,36 +391,33 @@
             <version>1.2</version>
             <scope>runtime</scope>
         </dependency>-->
-        <dependency>
+        <!--        <dependency>
             <groupId>javax.servlet.jsp</groupId>
             <artifactId>javax.servlet.jsp-api</artifactId>
             <version>2.3.1</version>
-            <!--<scope>runtime</scope>-->
-        </dependency>
+        </dependency>-->
         <!--        <dependency>
             <groupId>org.glassfish.web</groupId>
             <artifactId>javax.servlet.jsp</artifactId>
             <version>2.3.2</version>
             <scope>runtime</scope>
         </dependency>-->
-        <dependency>
+        <!--        <dependency>
             <groupId>javax.servlet.jsp.jstl</groupId>
             <artifactId>javax.servlet.jsp.jstl-api</artifactId>
             <version>1.2.1</version>
-            <!--<scope>runtime</scope>-->
-        </dependency>
+        </dependency>-->
         <!--        <dependency>
             <groupId>org.eclipse.jetty.orbit</groupId>
             <artifactId>javax.servlet.jsp.jstl</artifactId>
             <version>1.2.0.v201105211821</version>
             <scope>runtime</scope>
         </dependency>-->
-        <dependency>
+        <!--        <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
             <version>3.1.0</version>
-            <!--<scope>runtime</scope>-->
-        </dependency>        
+        </dependency>        -->
         <!--        <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>jstl</artifactId>
@@ -417,23 +452,23 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
             <version>1.7.25</version>
-            <scope>runtime</scope>
+            <scope>provided</scope>
         </dependency>
-        <dependency>
+        <!--                    <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-        </dependency>
+            <scope>provided</scope>
+        </dependency>-->
         <!-- To run websockets in embedded server -->
         <dependency>
             <groupId>org.eclipse.jetty.websocket</groupId>
             <artifactId>websocket-server</artifactId>
-            <version>${jetty.version}</version>
+            <scope>provided</scope>
         </dependency>
         <!-- To run websockets client -->
         <dependency>
             <groupId>org.eclipse.jetty.websocket</groupId>
             <artifactId>websocket-client</artifactId>
-            <version>${jetty.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -441,7 +476,6 @@
             <artifactId>gwt-dev</artifactId>
             <version>2.8.1</version>
             <scope>test</scope>
-            <type>jar</type>
         </dependency>
     </dependencies>
 

@@ -1,6 +1,5 @@
 package com.github.jjYBdx4IL.maven.examples.gwt.server;
 
-import com.github.jjYBdx4IL.maven.examples.gwt.server.chat.ChatHandler;
 import java.lang.management.ManagementFactory;
 import java.nio.file.Paths;
 import org.apache.tomcat.SimpleInstanceManager;
@@ -21,7 +20,6 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnectionStatistics;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.SslConnectionFactory;
-import org.eclipse.jetty.server.handler.ContextHandler;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
 import org.eclipse.jetty.server.handler.DefaultHandler;
 import org.eclipse.jetty.server.handler.HandlerCollection;
@@ -83,11 +81,7 @@ public class EmbeddedMain {
         http_config.setSendServerVersion(false);
         http_config.setSendDateHeader(false);
 
-        ContextHandler chatContextHandler = new ContextHandler("/events/");
-        ChatHandler chatHandler = new ChatHandler();
-        chatContextHandler.setHandler(chatHandler);
-        
-        ContextHandlerCollection contexts = new ContextHandlerCollection(chatContextHandler);
+        ContextHandlerCollection contexts = new ContextHandlerCollection();
         HandlerCollection handlers = new HandlerCollection();
         handlers.setHandlers(new Handler[]{contexts, new DefaultHandler()});
         

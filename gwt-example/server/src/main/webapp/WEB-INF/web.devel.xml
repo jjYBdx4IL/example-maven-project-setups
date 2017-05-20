@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<web-app metadata-complete="true" version="2.5" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee                 http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+
+    <!-- grab .gwt.rpc files from gwt dev mode server -->
+    <servlet>
+        <servlet-name>reverseProxy</servlet-name>
+        <servlet-class>
+            org.eclipse.jetty.proxy.ProxyServlet$Transparent
+        </servlet-class>
+        <load-on-startup>1</load-on-startup>
+        <init-param>
+            <param-name>proxyTo</param-name>
+            <param-value>http://127.0.0.1:8888/</param-value>
+        </init-param>
+        <async-supported>true</async-supported>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>reverseProxy</servlet-name>
+        <url-pattern>/sandbox/*</url-pattern>
+    </servlet-mapping>
+
+</web-app>
