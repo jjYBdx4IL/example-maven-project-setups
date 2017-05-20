@@ -504,18 +504,6 @@
             <version>1.0</version>
         </dependency>
         <dependency>
-            <groupId>com.github.jjYBdx4IL</groupId>
-            <artifactId>github-utils</artifactId>
-            <version>1.2-SNAPSHOT</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.github.jjYBdx4IL</groupId>
-            <artifactId>github-test-utils</artifactId>
-            <version>1.1-SNAPSHOT</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>gwt-example-api</artifactId>
             <version>${project.version}</version>
@@ -537,12 +525,6 @@
             <version>${gwt.version}</version>
             <scope>provided</scope>
         </dependency>
-        <!--        <dependency>
-            <groupId>com.github.nmorel.gwtjackson</groupId>
-            <artifactId>gwt-jackson</artifactId>
-            <version>0.14.2</version>
-            <scope>provided</scope>
-        </dependency>        -->
         <dependency>
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-servlet</artifactId>
@@ -553,23 +535,6 @@
             <artifactId>gwt-websockets</artifactId>
             <version>1.0.4</version>
         </dependency>        
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>1.7.25</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
     
     <dependencyManagement>
@@ -754,26 +719,6 @@
                 <groupId>com.rometools</groupId>
                 <artifactId>rome</artifactId>
                 <version>1.7.2</version>
-            </dependency>
-            <dependency>
-                <groupId>org.seleniumhq.selenium</groupId>
-                <artifactId>selenium-java</artifactId>
-                <version>2.53.1</version>
-            </dependency>
-            <dependency>
-                <groupId>org.seleniumhq.selenium</groupId>
-                <artifactId>selenium-api</artifactId>
-                <version>2.53.1</version>
-            </dependency>
-            <dependency>
-                <groupId>org.seleniumhq.selenium</groupId>
-                <artifactId>selenium-remote-driver</artifactId>
-                <version>2.53.1</version>
-            </dependency>
-            <dependency>
-                <groupId>org.seleniumhq.selenium</groupId>
-                <artifactId>selenium-server</artifactId>
-                <version>2.53.1</version>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
