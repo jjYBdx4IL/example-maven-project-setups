@@ -113,7 +113,7 @@
                 <configuration>
                     <packagingExcludes>**/*.cache.ttf,**/hosted.html,WEB-INF/web.devel.xml</packagingExcludes>
                     <!--<packagingExcludes>**/*.cache.ttf,**/hosted.html,WEB-INF/</packagingExcludes>-->
-                    <!--<archiveClasses>true</archiveClasses>-->
+                    <archiveClasses>true</archiveClasses>
                 </configuration>
             </plugin>
 
