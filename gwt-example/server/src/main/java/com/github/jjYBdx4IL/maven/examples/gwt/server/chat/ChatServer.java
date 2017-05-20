@@ -65,6 +65,7 @@ public class ChatServer implements Runnable {
         }
         for (Session sess : sessions) {
             try {
+                LOG.info("sending " + serializedReply + " to " + sess.getRemoteAddress());
                 sess.getRemote().sendString(serializedReply, new WriteCallback() {
                     @Override
                     public void writeFailed(Throwable x) {

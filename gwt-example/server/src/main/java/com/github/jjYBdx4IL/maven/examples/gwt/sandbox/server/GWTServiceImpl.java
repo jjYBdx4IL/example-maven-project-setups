@@ -1,13 +1,13 @@
 package com.github.jjYBdx4IL.maven.examples.gwt.sandbox.server;
 
-import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.shared.GWTService;
-import com.google.gwt.user.server.rpc.XsrfProtectedServiceServlet;
+import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.api.GWTService;
+import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import java.util.HashSet;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-public class GWTServiceImpl extends XsrfProtectedServiceServlet implements GWTService {
+public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 
     private static final String SESSION_ATTRNAME_USER = "username";
     private static final String SESSION_ATTRNAME_AUTHENTICATED = "authenticated";

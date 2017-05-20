@@ -4,8 +4,8 @@ package com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
-import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.shared.GWTService;
-import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.shared.GWTServiceAsync;
+import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.api.GWTService;
+import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.api.GWTServiceAsync;
 
 public interface ResourceBundle extends ClientBundle {
 

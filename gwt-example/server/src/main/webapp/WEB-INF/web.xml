@@ -2,54 +2,61 @@
 
 <web-app metadata-complete="true" version="2.5" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee                 http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
     <!-- Default page to serve -->
-<!--    <welcome-file-list>
+    <welcome-file-list>
         <welcome-file>index.html</welcome-file>
     </welcome-file-list>
+    
+    <context-param>
+        <param-name>gwt.xsrf.session_cookie_name</param-name>
+        <param-value>JSESSIONID</param-value>
+    </context-param>
+    
+    <!-- GWT RPC -->
     <servlet>
         <servlet-name>gwtServiceImpl</servlet-name>
         <servlet-class>com.github.jjYBdx4IL.maven.examples.gwt.sandbox.server.GWTServiceImpl</servlet-class>
+        <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet-mapping>
         <servlet-name>gwtServiceImpl</servlet-name>
         <url-pattern>/sandbox/gwtrpc</url-pattern>
-    </servlet-mapping>-->
-    
+    </servlet-mapping>
+   
     <!-- XSRF stuff -->
     <!-- www.gwtproject.org/doc/latest/DevGuideSecurityRpcXsrf.html -->
-<!--    <servlet>
+    <servlet>
         <servlet-name>xsrf</servlet-name>
         <servlet-class>
             com.google.gwt.user.server.rpc.XsrfTokenServiceServlet
         </servlet-class>
+        <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet-mapping>
         <servlet-name>xsrf</servlet-name>
         <url-pattern>/sandbox/xsrf</url-pattern>
     </servlet-mapping> 
-    <context-param>
-        <param-name>gwt.xsrf.session_cookie_name</param-name>
-        <param-value>JSESSIONID</param-value>
-    </context-param>
-    -->
-<!--    <servlet>
-        <servlet-name>testServlet</servlet-name>
+    
+    <!-- websocket servlet -->
+    <servlet>
+        <servlet-name>chatServlet</servlet-name>
         <servlet-class>
-            com.github.jjYBdx4IL.maven.examples.gwt.sandbox.server.TestServlet
+            com.github.jjYBdx4IL.maven.examples.gwt.server.chat.ChatServlet
         </servlet-class>
+        <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet-mapping>
-        <servlet-name>testServlet</servlet-name>
-        <url-pattern>/sandbox/testServlet</url-pattern>
-    </servlet-mapping> -->
-    
+        <servlet-name>chatServlet</servlet-name>
+        <url-pattern>/events/</url-pattern>
+    </servlet-mapping> 
     
     <!-- jetty session stuff -->
-<!--    <session-config>
+    <session-config>
         <session-timeout>1440</session-timeout>
     </session-config>    
     
+    <!-- don't show exceptions to remote -->
     <error-page>  
         <error-code>500</error-code>  
         <location>/error.jsp</location>  
-    </error-page> -->
+    </error-page> 
 </web-app>

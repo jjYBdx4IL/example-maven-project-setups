@@ -1,10 +1,6 @@
 package com.github.jjYBdx4IL.maven.examples.gwt.server.chat;
 
-import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.api.ChatMessage;
 import com.google.gwt.user.client.rpc.SerializationException;
-import com.google.gwt.user.server.rpc.impl.ServerSerializationStreamReader;
-import com.google.gwt.user.server.rpc.impl.ServerSerializationStreamWriter;
-import java.util.logging.Level;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.WebSocketAdapter;
 import org.slf4j.Logger;

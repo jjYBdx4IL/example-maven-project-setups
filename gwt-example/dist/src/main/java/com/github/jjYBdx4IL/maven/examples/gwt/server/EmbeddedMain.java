@@ -1,4 +1,4 @@
-package com.github.jjYBdx4IL.maven.examples.gwt;
+package com.github.jjYBdx4IL.maven.examples.gwt.server;
 
 import com.github.jjYBdx4IL.maven.examples.gwt.server.chat.ChatHandler;
 import java.lang.management.ManagementFactory;
@@ -145,7 +145,7 @@ public class EmbeddedMain {
         WebAppProvider webAppProvider = new WebAppProvider();
         webAppProvider.setMonitoredDirName(cwd + "/apps");
         //webapp_provider.setDefaultsDescriptor(jetty_home + "/etc/webdefault.xml");
-        webAppProvider.setScanInterval(0);
+        webAppProvider.setScanInterval(1);
         webAppProvider.setExtractWars(false);
         webAppProvider.setConfigurationManager(new PropertiesConfigurationManager());
 

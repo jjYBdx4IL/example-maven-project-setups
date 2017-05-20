@@ -1,4 +1,4 @@
-package com.github.jjYBdx4IL.maven.examples.gwt.sandbox.shared;
+package com.github.jjYBdx4IL.maven.examples.gwt.sandbox.api;
 
 
 import com.google.gwt.user.client.rpc.RemoteService;

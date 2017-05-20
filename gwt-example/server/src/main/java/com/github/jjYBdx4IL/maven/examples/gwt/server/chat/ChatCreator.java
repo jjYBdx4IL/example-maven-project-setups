@@ -14,6 +14,9 @@ public class ChatCreator implements WebSocketCreator
 
     public ChatCreator(ChatServer chatServer)
     {
+        if (chatServer == null) {
+            throw new NullPointerException();
+        }
         this.chatServer = chatServer;
     }
 

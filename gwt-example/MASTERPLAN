@@ -7,3 +7,33 @@ Work around the issue that GWT dev mode with noserver enabled does not generate 
 client-server communication by adding a reverse-proxy servlet for the path '/sandbox' that fetches the generated GWT
 stuff from the GWT development server instance. Basically, we want to run GWT noserver mode without telling GWT
 about it. I think this is the best, most efficient and most flexible way of working with GWT. 
+
+UPDATE
+
+The idea of using a reverse proxy servlet works for the client. The server, however, needs the .gwt.rpc
+files, too. It tries to load them via the WebAppContext's resource loader. So instead of using a reverse
+proxy that is only working for the client, we are now using jetty-maven-plugin's ability to overlay webapp
+directories and simply add the client's webapp output directory.
+
+As of now, do start up development servers, do:
+
+cd client && mvn gwt:run
+cd server && mvn jetty:run
+
+Then point your browser at localhost port 8080.
+
+The first command starts the codeserver at port 9876 with incremental compile support for fast frontend
+development, and GWT's internal jetty/tomcat instance at port 8888
+(which we won't use). The second command starts a fully updated jetty server instance with one webapp context
+at port 8080 that gets automatically reloaded when you make changes to the server code base. That server contains
+a GWT-RPC service implementation and a websocket chat service servlet.
+
+TODO
+
+Fix dist module.
+Write a generic websocket service layer to support formal service definitions in the style of interfaces/GWT?
+Remove XsrfTokenServiceServlet. It seems like it is XSRF-vulnerable itself.
+Replace 'mvn jetty:run' with embedded server? How do we detect changes? Can we use existing stuff or is this
+specific to jetty-maven-plugin?
+Completely switch over to websocket? Fallbacks?
+
