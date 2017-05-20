@@ -11,5 +11,8 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 @RemoteServiceRelativePath("/bla")
 public interface IChatMessagePseudoService extends RemoteService {
 
-    ChatMessage bla(ChatMessage bla);
+    // Types the client wants to receive must be listed as return types somewhere.
+    // Types the client wants to send must be listed as call parameters.
+    // The same applies vice versa to the server.
+    ChatMessage publish(ChatMessage message);
 }

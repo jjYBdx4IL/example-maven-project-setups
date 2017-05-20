@@ -1,5 +1,6 @@
 package com.github.jjYBdx4IL.maven.examples.gwt.server.chat;
 
+import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.api.IChatMessagePseudoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,7 +19,9 @@ public class CustomSerializationPolicyProvider implements SerializationPolicyPro
     @Override
     public SerializationPolicy getSerializationPolicy(String moduleBaseURL, String serializationPolicyStrongName) {
         LOG.info("getSerializationPolicy");
-        return new SimpleSerializationPolicy();
+        ConfigurableSerializationPolicy policy = new ConfigurableSerializationPolicy();
+        policy.addAllowedPackage(IChatMessagePseudoService.class.getPackage().getName());
+        return policy;
     }
 
  }

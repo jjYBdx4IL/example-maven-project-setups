@@ -28,6 +28,13 @@ development, and GWT's internal jetty/tomcat instance at port 8888
 at port 8080 that gets automatically reloaded when you make changes to the server code base. That server contains
 a GWT-RPC service implementation and a websocket chat service servlet.
 
+UPDATE
+
+Pointing the jetty:run server directly to the gwt dev mode-generated .gwt.rpc inside the client module
+produces concurrency issues where something is locking the nocach.js file and thereby preventing the
+gwt codeserver's compilations. I reverted back to the reverse proxy solution, but this time I found out
+that it is possible to configure the RemoteServiceServlet to access a running code server directly.
+
 TODO
 
 Fix dist module.

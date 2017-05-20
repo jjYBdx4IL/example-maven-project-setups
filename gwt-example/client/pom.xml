@@ -100,10 +100,10 @@
                     <runTarget>sandbox.jsp</runTarget>
                     <hostedWebapp>${webappDirectory}</hostedWebapp>
                     
-                    <style>OBFUSCATED</style>
-                    <draftCompile>false</draftCompile>
-                    <optimizationLevel>9</optimizationLevel>
-                    <productionMode>true</productionMode>
+                    <!--<style>OBFUSCATED</style>-->
+                    <!--<draftCompile>false</draftCompile>-->
+                    <!--<optimizationLevel>9</optimizationLevel>-->
+                    <!--<productionMode>true</productionMode>-->
                     <!--<style>DETAILED</style>-->
                     <!--<style>PRETTY</style>-->
                     <!--<draftCompile>true</draftCompile>-->
@@ -116,6 +116,9 @@
                     
                     <mode>htmlunit</mode>
                     <timeOut>${gwt.timeout}</timeOut>
+
+                    <!--<noServer>true</noServer>-->
+                    <!--<launcherDir>${webappDirectory}</launcherDir>-->
 
                     <i18nMessagesBundles>
                         <i18nMessagesBundle>com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client.ClientMessages</i18nMessagesBundle>
