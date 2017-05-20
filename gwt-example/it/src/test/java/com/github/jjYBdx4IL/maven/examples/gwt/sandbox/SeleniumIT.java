@@ -1,3 +1,18 @@
+/*
+ * Copyright (C) 2016 jjYBdx4IL (https://github.com/jjYBdx4IL)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.github.jjYBdx4IL.maven.examples.gwt.sandbox;
 
 import com.github.jjYBdx4IL.test.selenium.SeleniumTestBase;
@@ -7,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -15,12 +30,11 @@ import org.openqa.selenium.WebElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// CHECKSTYLE IGNORE MagicNumber FOR NEXT 10000 LINES
 public class SeleniumIT extends SeleniumTestBase {
 
     private static final Logger LOG = LoggerFactory.getLogger(SeleniumIT.class);
 
-    private String getSandboxLocation() {
+    public static String getSandboxLocation() {
         String location = System.getProperty("sandbox.location");
         LOG.debug("sandbox location = " + location);
         assertNotNull(location);
@@ -28,9 +42,9 @@ public class SeleniumIT extends SeleniumTestBase {
         return location;
     }
 
-    @BeforeClass
-    public static void initDriver() {
-        getDriver(Driver.CHROME);
+    @Before
+    public void before() {
+        getDriver(SeleniumTestBase.Driver.CHROME);
     }
 
     @Test
@@ -54,13 +68,14 @@ public class SeleniumIT extends SeleniumTestBase {
     }
 
     @Test
-    public void testBug2StackOverflow15161741() throws WebElementNotFoundException {
+    public void testBug2StackOverflow15161741() throws WebElementNotFoundException, InterruptedException {
         getDriver().get(getSandboxLocation());
         setTestName("testBug2StackOverflow15161741");
         takeScreenshot();
 
-        click("StackOverflow15161741");
-        takeScreenshot(); // #628cd5
+        WebElement el = click("StackOverflow15161741");
+        LOG.info("active element: " + activeElement().getText());
+        takeScreenshot();
         click("xpath://div[text()='123 Fourth Avenue']");
         takeScreenshot();
         LOG.info("active element: " + activeElement().getText());

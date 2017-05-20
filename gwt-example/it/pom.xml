@@ -6,6 +6,13 @@
             ">
     <modelVersion>4.0.0</modelVersion>
 
+    <parent>
+        <groupId>com.github.jjYBdx4IL</groupId>
+        <artifactId>github-parent</artifactId>
+        <version>1.1-SNAPSHOT</version>
+        <relativePath/>
+    </parent>
+
     <groupId>com.github.jjYBdx4IL.maven.examples</groupId>
     <artifactId>gwt-example-it</artifactId>
     <packaging>jar</packaging>
@@ -18,7 +25,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         
-<!--        <jetty.port.offset>8000</jetty.port.offset>-->
+        <!--        <jetty.port.offset>8000</jetty.port.offset>-->
         <jetty.port>80</jetty.port>
         <jetty.port.https>443</jetty.port.https>
         <testUrl>http://localhost:${jetty.port}/sandbox.jsp</testUrl>
@@ -28,7 +35,7 @@
 
     <!-- Plugin configuration -->
     <build>
-        <testSourceDirectory>${project.build.directory}/generated-sources/tests</testSourceDirectory>
+        <!--<testSourceDirectory>${project.build.directory}/generated-sources/tests</testSourceDirectory>-->
         <plugins>
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
@@ -51,7 +58,7 @@
                             <outputDirectory>${project.build.directory}</outputDirectory>
                         </configuration>
                     </execution>
-                    <execution>
+                    <!--                    <execution>
                         <id>unpack-test-sources</id>
                         <phase>generate-test-sources</phase>
                         <goals>
@@ -68,7 +75,7 @@
                             </artifactItems>
                             <outputDirectory>${project.build.directory}/generated-sources/tests</outputDirectory>
                         </configuration>
-                    </execution>
+                    </execution>-->
                 </executions>
             </plugin>
             <plugin>
@@ -89,12 +96,51 @@
                     <skip>true</skip>
                 </configuration>
             </plugin>
+            <plugin>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>1.4.1</version>
+                <executions>
+                    <execution>
+                        <id>enforce</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <phase>verify</phase>
+                    </execution>
+                </executions>
+                <configuration>
+                    <rules>
+                        <requireNoRepositories />
+                        <requirePluginVersions />
+                        <dependencyConvergence />
+                        <requireUpperBoundDeps />
+                        <requireReleaseDeps>
+                            <message>No Snapshots Allowed!</message>
+                            <onlyWhenRelease>true</onlyWhenRelease>
+                        </requireReleaseDeps>
+                        <requireJavaVersion>
+                            <version>[1.8,)</version>
+                        </requireJavaVersion>
+                        <requireMavenVersion>
+                            <version>[3.0,)</version>
+                        </requireMavenVersion>
+                    </rules>
+                </configuration>
+            </plugin>
         </plugins>
-        
+
         <pluginManagement>
-            <plugins>
+            <plugins>        
                 <plugin>
                     <artifactId>maven-failsafe-plugin</artifactId>
+                    <configuration>
+                        <systemPropertyVariables>
+                            <sandbox.location>${testUrl}</sandbox.location>
+                        </systemPropertyVariables>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-surefire-plugin</artifactId>
                     <configuration>
                         <systemPropertyVariables>
                             <sandbox.location>${testUrl}</sandbox.location>
@@ -110,7 +156,7 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>gwt-example-dist</artifactId>
             <version>${project.version}</version>
-            <scope>test</scope>
+            <scope>provided</scope>
             <type>zip</type>
             <classifier>bin</classifier>
             <exclusions>
@@ -120,21 +166,21 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <dependency>
+        <!--        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>gwt-example-client</artifactId>
             <version>${project.version}</version>
-        </dependency>
-        <dependency>
+        </dependency>-->
+        <!--        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>gwt-example-client</artifactId>
             <version>${project.version}</version>
             <type>test-jar</type>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>com.github.jjYBdx4IL</groupId>
             <artifactId>github-test-utils</artifactId>
-            <version>1.0</version>
+            <version>1.1-SNAPSHOT</version>
         </dependency>
 
         <dependency>
@@ -153,6 +199,31 @@
             <version>1.7.25</version>
         </dependency>
     </dependencies>
+    
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.ow2.asm</groupId>
+                <artifactId>asm</artifactId>
+                <version>5.1</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ow2.asm</groupId>
+                <artifactId>asm-commons</artifactId>
+                <version>5.1</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ow2.asm</groupId>
+                <artifactId>asm-tree</artifactId>
+                <version>5.1</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.jetty.websocket</groupId>
+                <artifactId>websocket-client</artifactId>
+                <version>9.4.5.v20170502</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
     
     <profiles>
         <profile>
@@ -213,7 +284,7 @@
                                                 <socket server="localhost" port="${jetty.port}" />
                                             </not>
                                         </waitfor>
-<!--                                        <waitfor maxwait="3" maxwaitunit="minute" checkevery="1000">
+                                        <!--                                        <waitfor maxwait="3" maxwaitunit="minute" checkevery="1000">
                                             <not>
                                                 <socket server="localhost" port="${jetty.port.https}" />
                                             </not>
@@ -234,7 +305,7 @@
                                         <waitfor maxwait="3" maxwaitunit="minute" checkevery="1000">
                                             <http url="${testUrl}" errorsBeginAt="300" />
                                         </waitfor>
-<!--                                        <waitfor maxwait="3" maxwaitunit="minute" checkevery="1000">
+                                        <!--                                        <waitfor maxwait="3" maxwaitunit="minute" checkevery="1000">
                                             <socket server="localhost" port="${jetty.port.https}" />
                                         </waitfor>-->
                                     </target>
@@ -253,7 +324,7 @@
                                             <arg value="./autostart.sh" />
                                             <arg value="stop" />
                                         </exec>
-<!--                                        <apply executable="bzip2">
+                                        <!--                                        <apply executable="bzip2">
                                             <arg value="-9v" />
                                             <fileset dir="${installDir}/data/log">
                                                 <patternset>
@@ -266,7 +337,7 @@
                                                 <socket server="localhost" port="${jetty.port}" />
                                             </condition>
                                         </fail>
-<!--                                        <fail>
+                                        <!--                                        <fail>
                                             <condition>
                                                 <socket server="localhost" port="${jetty.port.https}" />
                                             </condition>
