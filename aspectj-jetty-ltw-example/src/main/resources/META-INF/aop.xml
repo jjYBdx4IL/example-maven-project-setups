@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aspectj>
+
+    <aspects>
+        <!-- declare two existing aspects to the weaver -->
+        <aspect name="com.github.jjYBdx4IL.maven.examples.aspectj.ContentGeneratorAspect"/>
+        <!--<aspect name="com.MyAspect.Inner"/>-->
+
+        <!-- define a concrete aspect inline -->
+<!--        <concrete-aspect name="com.xyz.tracing.MyTracing"
+                               extends="tracing.AbstractTracing"
+                               precedence="com.xyz.first, *">
+            <pointcut name="tracingScope" expression="within(org.maw.*)"/>
+        </concrete-aspect>-->
+
+        <!-- Of the set of aspects declared to the weaver
+        use aspects matching the type pattern "com..*" for weaving. -->
+        <!--<include within="com..*"/>-->
+
+        <!-- Of the set of aspects declared to the weaver
+        do not use any aspects with the @CoolAspect annotation for weaving -->
+        <!--<exclude within="@CoolAspect *"/>-->
+
+    </aspects>
+
+    <weaver options="-verbose -showWeaveInfo">
+        <include within="com.github.jjYBdx4IL.maven.examples.aspectj.*"/>
+        
+        <!-- Weave types that are within the javax.* or org.aspectj.*
+        packages. Also weave all types in the foo package that do
+        not have the @NoWeave annotation. -->
+        <!--<include within="javax.*"/>-->
+        <!--<include within="org.aspectj.*"/>-->
+        <!--<include within="(!@NoWeave foo.*) AND foo.*"/>-->
+
+        <!-- Do not weave types within the "bar" pakage -->
+        <!--<exclude within="bar.*"/>-->
+
+        <!-- Dump all types within the "somepack" package,
+        both before are after they are woven,
+        to the "./_ajdump" folder on disk (for diagnostic purposes) -->
+        <!--<dump within="somepack.*" />-->
+    </weaver>
+
+</aspectj>
