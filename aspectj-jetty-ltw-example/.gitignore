@@ -1,1 +1,2 @@
-/.mvn/jvm.config
+/.mvn/
+/target/

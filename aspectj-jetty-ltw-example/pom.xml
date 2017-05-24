@@ -36,9 +36,6 @@
                 <version>9.4.5.v20170502</version>
                 <configuration>
                     <scanIntervalSeconds>1</scanIntervalSeconds>
-                    <jvmArgs>-javaagent:${org.aspectj:aspectjweaver:jar} -Daj.weaving.verbose=true</jvmArgs>
-                    <stopKey>123</stopKey>
-                    <stopPort>8081</stopPort>
                 </configuration>
             </plugin>
             
@@ -71,19 +68,18 @@
                 <version>1.6.0</version>
                 <executions>
                     <execution>
-                        <id>aspectj-jetty-run</id>
+                        <id>aspectj-maven-config</id>
                         <goals>
-                            <goal>exec</goal>
+                            <goal>java</goal>
                         </goals>
+                        <phase>process-classes</phase>
                     </execution>
                 </executions>
                 <configuration>
-                    <executable>mvn</executable>
-                    <environmentVariables>
-                        <MAVEN_OPTS>-javaagent:${org.aspectj:aspectjweaver:jar} -Daj.weaving.verbose=true</MAVEN_OPTS>
-                    </environmentVariables>
+                    <mainClass>com.github.jjYBdx4IL.maven.examples.aspectj.MavenConfigurator</mainClass>
                     <arguments>
-                        <argument>jetty:run</argument>
+                        <argument>${project.basedir}/.mvn/jvm.config</argument>
+                        <argument>${org.aspectj:aspectjweaver:jar}</argument>
                     </arguments>
                 </configuration>
             </plugin>            
