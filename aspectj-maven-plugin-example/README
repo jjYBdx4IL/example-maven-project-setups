@@ -1,0 +1,4 @@
+This example demonstrates how to do AspectJ compile-time weaving using the corresponding
+maven plugin.
+
+However, this has the disadvantage of not being able to use Netbeans' compile-on-save feature.
