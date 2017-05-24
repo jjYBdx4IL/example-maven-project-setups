@@ -1,5 +1,8 @@
 # aspectj-jetty-ltw-example
 
+Example maven project for using load-time-weaving (LTW) with AspectJ Weaver and Jetty WebApp including auto-reload on
+classpath changes.
+
 ## Usage
 
 Build and configure Maven to use AspectJ Weaver (.mvn/jvm.config):
