@@ -1,5 +1,6 @@
 package com.github.jjYBdx4IL.maven.examples.aspectj;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import org.slf4j.Logger;
@@ -23,7 +24,9 @@ public class MavenConfigurator {
     }
     
     private void run(String[] args) throws IOException {
-        try (PrintWriter pw = new PrintWriter(args[0])) {
+        File outputFile = new File(args[0]);
+        outputFile.getParentFile().mkdirs();
+        try (PrintWriter pw = new PrintWriter(outputFile)) {
             pw.append("-javaagent:" + args[1] + " ");
             pw.append("-Daj.weaving.verbose=true" + System.lineSeparator());
         }
