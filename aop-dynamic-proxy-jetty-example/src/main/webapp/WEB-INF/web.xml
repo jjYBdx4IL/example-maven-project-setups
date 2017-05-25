@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app metadata-complete="true" version="2.5" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee                 http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+    
+    <servlet>
+        <servlet-name>contentServlet</servlet-name>
+        <servlet-class>com.github.jjYBdx4IL.maven.examples.dynproxy.AOPProxyServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+        <init-param>
+            <param-name>delegateClass</param-name> 
+            <param-value>com.github.jjYBdx4IL.maven.examples.dynproxy.ContentServlet</param-value> 
+        </init-param>
+    </servlet>
+    
+    <servlet-mapping>
+        <servlet-name>contentServlet</servlet-name>
+        <url-pattern>/*</url-pattern>
+    </servlet-mapping>
+    
+</web-app>

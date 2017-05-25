@@ -24,7 +24,8 @@
         <module>antrun-conditional</module>
         <module>antrun-foreach</module>
         <module>antrun-buildfile-params</module>
-        <module>antrun-set-maven-props</module>
+	<module>antrun-set-maven-props</module>
+	<module>aop-dynamic-proxy-jetty-example</module>
 	<module>classpath-jar</module>
         <module>compile-time-annotation-processing</module>
         <module>download-plugin-example</module>
