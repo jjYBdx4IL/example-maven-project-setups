@@ -100,25 +100,11 @@
                     <runTarget>sandbox.jsp</runTarget>
                     <hostedWebapp>${webappDirectory}</hostedWebapp>
                     
-                    <!--<style>OBFUSCATED</style>-->
-                    <!--<draftCompile>false</draftCompile>-->
-                    <!--<optimizationLevel>9</optimizationLevel>-->
-                    <!--<productionMode>true</productionMode>-->
-                    <!--<style>DETAILED</style>-->
-                    <!--<style>PRETTY</style>-->
-                    <!--<draftCompile>true</draftCompile>-->
-                    <!--<optimizationLevel>0</optimizationLevel>-->
-                    <!--<productionMode>false</productionMode>-->
-                    <!--<incremental>true</incremental>-->
-                    
                     <compileReport>${gwt.compileReport}</compileReport>
                     <logLevel>${gwt.logLevel}</logLevel>
                     
                     <mode>htmlunit</mode>
                     <timeOut>${gwt.timeout}</timeOut>
-
-                    <!--<noServer>true</noServer>-->
-                    <!--<launcherDir>${webappDirectory}</launcherDir>-->
 
                     <i18nMessagesBundles>
                         <i18nMessagesBundle>com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client.ClientMessages</i18nMessagesBundle>
@@ -376,126 +362,6 @@
             </plugins>
         </pluginManagement>
     </build>
-    
-    <profiles>
-        <profile>
-            <id>fast</id>
-            <properties>
-                <gwt.compile.user.agent>&lt;set-property name="user.agent" value="safari" /></gwt.compile.user.agent>
-            </properties>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>gwt-maven-plugin</artifactId>
-                        <configuration>
-                            <optimizationLevel>0</optimizationLevel>
-                            <productionMode>false</productionMode>
-                            <modules>
-                                <module>com.github.jjYBdx4IL.maven.examples.gwt.sandbox.Sandbox</module>
-                            </modules>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>prod</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>gwt-maven-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <!-- overwrites resources processed by the regular resource plugin -->
-                                    <!--<goal>resources</goal>-->
-                                    <goal>compile</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-
-                        <configuration>
-                            <style>OBFUSCATED</style>
-                            <draftCompile>false</draftCompile>
-                            <optimizationLevel>9</optimizationLevel>
-                            <productionMode>true</productionMode>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>skipITs</id>
-            <activation>
-                <property>
-                    <name>skipITs</name>
-                    <value>bla</value>
-                    <!--<value>!true</value>-->
-                </property>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <artifactId>maven-failsafe-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>integration-test</goal>
-                                </goals>
-                                <configuration>
-                                    <includes>
-                                        <include>**/*IT.java</include>
-                                    </includes>
-                                    <excludes></excludes>
-                                </configuration>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <skipITs>false</skipITs>
-
-                            <systemPropertyVariables>
-                                <sandbox.location>http://localhost:${jetty.port}/sandbox.jsp</sandbox.location>
-                            </systemPropertyVariables>
-                        </configuration>
-                    </plugin>
-                    
-                    <!--                    <plugin>
-                        <groupId>org.eclipse.jetty</groupId>
-                        <artifactId>jetty-maven-plugin</artifactId>
-                        <version>${jetty.version}</version>
-                        <configuration>
-                            <contextXml>${basedir}/src/main/webapp/WEB-INF/jetty-context.xml</contextXml>
-                            <webAppSourceDirectory>${webappDirectory}</webAppSourceDirectory>
-                            <stopKey>asd</stopKey>
-                            <stopPort>9876</stopPort>
-                            <port>${jetty.port}</port>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <id>start-jetty</id>
-                                <phase>pre-integration-test</phase>
-                                <goals>
-                                    <goal>start</goal>
-                                </goals>
-                                <configuration>
-                                    <daemon>true</daemon>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>stop-jetty</id>
-                                <phase>post-integration-test</phase>
-                                <goals>
-                                    <goal>stop</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>-->
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
     
     <dependencies>
         <dependency>
