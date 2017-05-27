@@ -22,3 +22,5 @@
 /log4j-runtime-configuration/target/
 /jetty-gwt-errai-bus/target/
 /stjs-example/target/
+/aspectj-maven-plugin-example/target/
+/aop-dynamic-proxy-jetty-example/target/
