@@ -24,3 +24,4 @@
 /stjs-example/target/
 /aspectj-maven-plugin-example/target/
 /aop-dynamic-proxy-jetty-example/target/
+/gwt-example/tests/target/

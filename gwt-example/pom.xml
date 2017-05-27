@@ -24,7 +24,7 @@
 	<module>api</module>
         <module>client</module>
         <module>dist</module>
-	<module>it</module>
+	<module>tests</module>
 	<module>server</module>
     </modules>
 

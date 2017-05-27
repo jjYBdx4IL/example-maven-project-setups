@@ -81,9 +81,6 @@
             <includes>
                 <include>${project.groupId}:${project.artifactId}:jar</include>
             </includes>
-<!--            <excludes>
-                <exclude>*:*:war</exclude>
-            </excludes>-->
             <scope>runtime</scope>
             <useTransitiveDependencies>false</useTransitiveDependencies>
             <useProjectArtifact>true</useProjectArtifact>
@@ -92,16 +89,9 @@
             <outputDirectory>${project.artifactId}/apps/root</outputDirectory>
             <unpack>true</unpack>
             <includes>
-<!--                <include>${project.groupId}:${src.artifactId}:war</include>-->
                 <include>${project.groupId}:*:war</include>
             </includes>
-            <!--<scope>runtime</scope>-->
             <useProjectArtifact>false</useProjectArtifact>
-<!--            <unpackOptions>
-                <excludes>
-                    <exclude>WEB-INF/deploy/</exclude>
-                </excludes>
-            </unpackOptions>-->
         </dependencySet>
     </dependencySets>
 </assembly>

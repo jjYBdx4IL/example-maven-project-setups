@@ -22,6 +22,12 @@
         
         <jetty.version>9.4.5.v20170502</jetty.version>
         <src.artifactId>gwt-example-client</src.artifactId>
+        <zip.artifact>${project.build.directory}/${project.artifactId}-${project.version}-bin.zip</zip.artifact>
+        
+        <!-- IT -->
+        <jetty.port>80</jetty.port>
+        <testUrl>http://localhost:${jetty.port}/sandbox.jsp</testUrl>
+        <installDir>${project.build.directory}/install/${project.artifactId}</installDir>
     </properties>
     
     <dependencies>
@@ -175,13 +181,13 @@
             <artifactId>slf4j-simple</artifactId>
             <version>1.7.25</version>
         </dependency>
-<!--        <dependency>
+        <!--        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>1.7.25</version>
         </dependency>-->
 
-<!--        <dependency>
+        <!--        <dependency>
             <groupId>com.github.jjYBdx4IL.maven.examples</groupId>
             <artifactId>gwt-example-client</artifactId>
             <version>${project.version}</version>
@@ -194,7 +200,7 @@
             <scope>runtime</scope>
             <type>war</type>
         </dependency>
-<!--        <dependency>
+        <!--        <dependency>
             <groupId>com.github.jjYBdx4IL.maven.examples</groupId>
             <artifactId>gwt-example-server</artifactId>
             <version>${project.version}</version>
@@ -205,6 +211,25 @@
             <version>${project.version}</version>
             <scope>runtime</scope>
             <type>war</type>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.github.jjYBdx4IL.maven.examples</groupId>
+            <artifactId>gwt-example-tests</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+<!--        <dependency>
+            <groupId>com.github.jjYBdx4IL</groupId>
+            <artifactId>github-test-utils</artifactId>
+            <version>1.1-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>-->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -235,7 +260,7 @@
                                 <!-- go live! -->
                                 <exec executable="bash" failonerror="true">
                                     <arg value="${basedir}/deploy2server.sh"/>
-                                    <arg value="${project.build.directory}/${project.artifactId}-${project.version}-bin.zip"/>
+                                    <arg value="${zip.artifact}"/>
                                     <arg value="${project.artifactId}"/>
                                     <arg value="${src.artifactId}"/>
                                     <arg value="${deployment.sshacct}"/>
@@ -332,6 +357,24 @@
                     </archive>
                 </configuration>
             </plugin>
+            
+            <plugin>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>default</id>
+                        <goals>
+                            <goal>integration-test</goal>
+                        </goals>
+                        <phase>integration-test</phase>
+                    </execution>
+                </executions>
+                <configuration>
+                    <systemPropertyVariables>
+                        <sandbox.location>${testUrl}</sandbox.location>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
         </plugins>
         
         <pluginManagement>
@@ -395,7 +438,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-failsafe-plugin</artifactId>
-                    <version>2.19.1</version>
+                    <version>2.20</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-gpg-plugin</artifactId>
@@ -484,10 +527,113 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
+                <groupId>commons-codec</groupId>
+                <artifactId>commons-codec</artifactId>
+                <version>1.10</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.jetty.websocket</groupId>
+                <artifactId>websocket-client</artifactId>
+                <version>${jetty.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.eclipse.jetty.websocket</groupId>
                 <artifactId>websocket-server</artifactId>
                 <version>${jetty.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
+    
+    <profiles>
+        <profile>
+            <id>run-its</id>
+            <activation>
+                <property>
+                    <name>skipITs</name>
+                    <value>!true</value>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <version>1.8</version>
+                        <executions>
+                            <execution>
+                                <id>start-jetty-server</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target>
+                                        <!-- unpack dist -->
+                                        <delete dir="${installDir}"/>
+                                        <unzip src="${zip.artifact}" dest="${project.build.directory}/install"/>
+                                        
+                                        <!-- shut down running server - just in case -->
+                                        <exec executable="bash" dir="${installDir}"
+                                              spawn="false" failonerror="true">
+                                            <arg value="./autostart.sh" />
+                                            <arg value="stop" />
+                                        </exec>
+                                        <waitfor maxwait="3" maxwaitunit="minute" checkevery="1000">
+                                            <not>
+                                                <socket server="localhost" port="${jetty.port}" />
+                                            </not>
+                                        </waitfor>
+
+                                        <!-- ensure there is no server still running -->
+                                        <fail>
+                                            <condition>
+                                                <socket server="localhost" port="${jetty.port}" />
+                                            </condition>
+                                        </fail>
+                                        <exec executable="bash" dir="${installDir}"
+                                              spawn="false" failonerror="true">
+                                            <arg value="./autostart.sh" />
+                                            <arg value="start" />
+                                        </exec>
+                                        <echo>Waiting for server to come up at port ${jetty.port}</echo>
+                                        <waitfor maxwait="3" maxwaitunit="minute" checkevery="1000">
+                                            <http url="${testUrl}" errorsBeginAt="300" />
+                                        </waitfor>
+                                    </target>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>shutdown-jetty-server</id>
+                                <phase>post-integration-test</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target>
+                                        <exec executable="bash" dir="${installDir}"
+                                              spawn="false" failonerror="true">
+                                            <arg value="./autostart.sh" />
+                                            <arg value="stop" />
+                                        </exec>
+                                        <fail>
+                                            <condition>
+                                                <socket server="localhost" port="${jetty.port}" />
+                                            </condition>
+                                        </fail>
+                                    </target>
+                                </configuration>
+                            </execution>
+                        </executions>
+                        <dependencies>
+                            <dependency>
+                                <groupId>ant-contrib</groupId>
+                                <artifactId>ant-contrib</artifactId>
+                                <version>20020829</version>
+                            </dependency>
+                        </dependencies>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+    
 </project>

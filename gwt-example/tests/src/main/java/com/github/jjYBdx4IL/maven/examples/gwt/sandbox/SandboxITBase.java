@@ -25,11 +25,11 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-public class SandboxIT {
+public class SandboxITBase {
 
     private static final String SERVER_URL = "http://localhost:" + System.getProperty("jetty.port", "8080") + "/";
 
-    public SandboxIT() {
+    public SandboxITBase() {
     }
 
     @BeforeClass
