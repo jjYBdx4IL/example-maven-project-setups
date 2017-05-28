@@ -15,11 +15,14 @@
  */
 package com.github.jjYBdx4IL.maven.examples.gwt.sandbox;
 
+import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.api.DebugId;
 import com.github.jjYBdx4IL.test.selenium.SeleniumTestBase;
 import com.github.jjYBdx4IL.test.selenium.WebElementNotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import java.util.regex.Pattern;
 
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -45,6 +48,37 @@ public abstract class SeleniumITBase extends SeleniumTestBase {
         getDriver(SeleniumTestBase.Driver.CHROME);
     }
 
+    @Test
+    public void testChatDemo() throws WebElementNotFoundException {
+        getDriver().get(getSandboxLocation());
+        setTestName("testChatDemo");
+        takeScreenshot();
+
+        click("ChatDemo");
+        takeScreenshot();
+
+        WebElement textBox = getByDebugId(DebugId.ChatDemoTextBox);
+        WebElement sendButton = getByDebugId(DebugId.ChatDemoSendButton);
+        WebElement chatLog = getByDebugId(DebugId.ChatDemoChatLog);
+
+        String testToken = System.currentTimeMillis() + "-" + new Random().nextLong();
+
+        textBox.sendKeys(testToken);
+        sendButton.click();
+        String fullDebugId = GWT_DEBUG_ID_PREFIX + DebugId.ChatDemoChatLog;
+
+        waitForAttribute(By.id(fullDebugId), "value", Pattern.compile(testToken));
+    }
+
+    protected WebElement getByDebugId(DebugId debugId) throws WebElementNotFoundException {
+        String fullDebugId = GWT_DEBUG_ID_PREFIX + debugId.name();
+        List<WebElement> elements = filterVisible(getDriver().findElements(By.id(fullDebugId)));
+        if (elements.size() != 1) {
+            throw new WebElementNotFoundException("no element found with gwt debug id " + fullDebugId);
+        }
+        return elements.get(0);
+    }
+    
     @Test
     public void testBugStackOverflow15161741() throws WebElementNotFoundException {
         getDriver().get(getSandboxLocation());

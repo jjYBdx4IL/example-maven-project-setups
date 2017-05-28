@@ -24,6 +24,10 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+        <gwt.version>2.8.1</gwt.version>
+        
+        <jetty.port>8080</jetty.port>
+        <testUrl>http://localhost:${jetty.port}/sandbox.jsp</testUrl>
     </properties>
 
     <build>
@@ -40,6 +44,9 @@
                 <version>2.20</version>
                 <configuration>
                     <skipTests>true</skipTests>
+                    <systemPropertyVariables>
+                        <sandbox.location>${testUrl}</sandbox.location>
+                    </systemPropertyVariables>
                 </configuration>
             </plugin>
             <plugin>
@@ -74,9 +81,23 @@
                 </configuration>
             </plugin>
         </plugins>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>3.0.1</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
     </build>
 
     <dependencies>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>gwt-example-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        
         <dependency>
             <groupId>com.github.jjYBdx4IL</groupId>
             <artifactId>github-test-utils</artifactId>
@@ -91,6 +112,12 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <scope>provided</scope>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
     

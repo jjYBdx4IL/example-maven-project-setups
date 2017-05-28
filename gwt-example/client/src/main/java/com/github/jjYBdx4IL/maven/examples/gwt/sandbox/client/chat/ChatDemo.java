@@ -1,6 +1,7 @@
 package com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client.chat;
 
 import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.api.ChatMessage;
+import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.api.DebugId;
 import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.api.IChatMessagePseudoService;
 import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client.ResourceBundle;
 import com.google.gwt.dom.client.Style.Unit;
@@ -37,6 +38,10 @@ public class ChatDemo extends FlowPanel implements ClickHandler,
 
         chatLog.getElement().getStyle().setWidth(100, Unit.PCT);
         chatLog.getElement().getStyle().setHeight(50, Unit.PCT);
+        
+        textBox.ensureDebugId(DebugId.ChatDemoTextBox.name());
+        sendButton.ensureDebugId(DebugId.ChatDemoSendButton.name());
+        chatLog.ensureDebugId(DebugId.ChatDemoChatLog.name());
     }
 
     @Override

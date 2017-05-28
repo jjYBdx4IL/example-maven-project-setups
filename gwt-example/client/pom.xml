@@ -81,47 +81,6 @@
             </plugin>
             
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>gwt-maven-plugin</artifactId>
-                <version>${gwt.version}</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <!-- everything's a special case: don't copy source files in dev mode or you won't
-                            have reliable browser reloads during gwt:run sessions -->
-                            <!--<goal>resources</goal>-->
-                            <goal>css</goal>
-                            <goal>i18n</goal>
-                            <goal>generateAsync</goal>
-                            <!--<goal>compile</goal>-->
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <runTarget>sandbox.jsp</runTarget>
-                    <hostedWebapp>${webappDirectory}</hostedWebapp>
-                    
-                    <compileReport>${gwt.compileReport}</compileReport>
-                    <logLevel>${gwt.logLevel}</logLevel>
-                    
-                    <mode>htmlunit</mode>
-                    <timeOut>${gwt.timeout}</timeOut>
-
-                    <i18nMessagesBundles>
-                        <i18nMessagesBundle>com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client.ClientMessages</i18nMessagesBundle>
-                    </i18nMessagesBundles>
-                    
-                    <cssFiles>
-                        <cssFile>com/github/jjYBdx4IL/maven/examples/gwt/sandbox/client/Style.css</cssFile>
-                        <cssFile>com/github/jjYBdx4IL/maven/examples/gwt/sandbox/client/rpcdemo/Style.css</cssFile>
-                        <cssFile>com/github/jjYBdx4IL/maven/examples/gwt/sandbox/client/shared/Style.css</cssFile>
-                    </cssFiles>
-                    
-                    <copyWebapp>true</copyWebapp>
-                </configuration>
-            </plugin>
-            
-            <plugin>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <version>2.20</version>
                 <configuration>
@@ -218,21 +177,38 @@
                     </rules>
                 </configuration>
             </plugin>
-            <plugin>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>properties</goal>
-                        </goals>
-                        <phase>initialize</phase>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
         
         <pluginManagement>
             <plugins>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>gwt-maven-plugin</artifactId>
+                    <version>${gwt.version}</version>
+                    <configuration>
+                        <runTarget>sandbox.jsp</runTarget>
+                        <hostedWebapp>${webappDirectory}</hostedWebapp>
+                    
+                        <compileReport>${gwt.compileReport}</compileReport>
+                        <logLevel>${gwt.logLevel}</logLevel>
+                    
+                        <mode>htmlunit</mode>
+                        <timeOut>${gwt.timeout}</timeOut>
+
+                        <i18nMessagesBundles>
+                            <i18nMessagesBundle>com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client.ClientMessages</i18nMessagesBundle>
+                        </i18nMessagesBundles>
+                    
+                        <cssFiles>
+                            <cssFile>com/github/jjYBdx4IL/maven/examples/gwt/sandbox/client/Style.css</cssFile>
+                            <cssFile>com/github/jjYBdx4IL/maven/examples/gwt/sandbox/client/rpcdemo/Style.css</cssFile>
+                            <cssFile>com/github/jjYBdx4IL/maven/examples/gwt/sandbox/client/shared/Style.css</cssFile>
+                        </cssFiles>
+                    
+                        <copyWebapp>true</copyWebapp>
+                    </configuration>
+                </plugin>
+
                 <plugin>
                     <groupId>com.mycila</groupId>
                     <artifactId>license-maven-plugin</artifactId>
@@ -626,13 +602,12 @@
     </dependencyManagement>
 
     <profiles>
-        <!-- production mode compilation and regular gwt:run dev mode server setup -->
         <profile>
-            <id>default</id>
+            <id>gwt-compile</id>
             <activation>
-                <activeByDefault>true</activeByDefault>
                 <property>
-                    <name>!devmodeProfile</name>
+                    <name>nocompile</name>
+                    <value>!true</value>
                 </property>
             </activation>
             <build>
@@ -640,10 +615,12 @@
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>gwt-maven-plugin</artifactId>
-                        <version>${gwt.version}</version>
                         <executions>
                             <execution>
                                 <goals>
+                                    <!-- everything's a special case: don't copy source files in dev mode or you won't
+                                    have reliable browser reloads during gwt:run sessions -->
+                                    <!--<goal>resources</goal>-->
                                     <goal>css</goal>
                                     <goal>i18n</goal>
                                     <goal>generateAsync</goal>
@@ -654,22 +631,66 @@
                     </plugin>
                 </plugins>
             </build>
-        </profile>        
+        </profile>
         
-        <!-- here we start the GWT super dev mode without using the gwt-maven-plugin to have max control -->
         <profile>
-            <id>devmode</id>
-            <properties>
-                <devmodeProfile>true</devmodeProfile>
-            </properties>
+            <id>gwt-nocompile</id>
+            <activation>
+                <property>
+                    <name>nocompile</name>
+                    <value>true</value>
+                </property>
+            </activation>
             <build>
                 <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>gwt-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>css</goal>
+                                    <goal>i18n</goal>
+                                    <goal>generateAsync</goal>
+                                    <!--<goal>compile</goal>-->
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        
+        <!-- here we start the GWT super dev mode without using the gwt-maven-plugin to have max control -->
+        <!-- for some reason, explicitly calling exec:java gives a different dependency set than running via phase hook...
+        atm this only works via phase hook -->
+        <profile>
+            <id>devmode</id>
+            <activation>
+                <property>
+                    <name>devmode</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>properties</goal>
+                                </goals>
+                                <phase>initialize</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>exec-maven-plugin</artifactId>
                         <executions>
                             <execution>
-                                <id>default</id>
+                                <id>default-cli</id>
                                 <goals>
                                     <goal>java</goal>
                                 </goals>
@@ -694,6 +715,8 @@
                                         <argument>com.github.jjYBdx4IL.maven.examples.gwt.sandbox.Sandbox</argument>
                                     </arguments>
                                     <additionalClasspathElements>
+                                        <additionalClasspathElement>${project.basedir}/../api/src/main/java</additionalClasspathElement>
+                                        <additionalClasspathElement>${project.basedir}/../api/target/generated-sources/gwt</additionalClasspathElement>
                                         <additionalClasspathElement>${project.basedir}/src/main/java</additionalClasspathElement>
                                         <additionalClasspathElement>${project.build.directory}/generated-sources/gwt</additionalClasspathElement>
                                         <additionalClasspathElement>${project.build.directory}/generated-sources/annotations</additionalClasspathElement>
@@ -705,6 +728,14 @@
                 </plugins>
             </build>
             <dependencies>
+                <!-- remove api jar from DevMode classpath, use source directly from api module instead -->
+                <dependency>
+                    <groupId>${project.groupId}</groupId>
+                    <artifactId>gwt-example-api</artifactId>
+                    <version>${project.version}</version>
+                    <scope>provided</scope>
+                </dependency>
+                
                 <dependency>
                     <groupId>com.google.gwt</groupId>
                     <artifactId>gwt-dev</artifactId>

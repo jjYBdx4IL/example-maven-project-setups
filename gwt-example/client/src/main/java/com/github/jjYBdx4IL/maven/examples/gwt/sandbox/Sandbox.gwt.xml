@@ -4,6 +4,7 @@
     <add-linker name="xsiframe" />
     
     <inherits name='com.google.gwt.user.User'/>
+    <inherits name="com.google.gwt.user.Debug"/>
     <inherits name='com.google.gwt.inject.Inject'/>
     <inherits name="com.google.gwt.logging.Logging"/>
     <inherits name="com.google.gwt.resources.Resources" />

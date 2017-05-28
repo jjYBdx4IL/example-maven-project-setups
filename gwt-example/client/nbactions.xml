@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actions>
+        <action>
+            <actionName>CUSTOM-devmode compile</actionName>
+            <displayName>devmode compile</displayName>
+            <goals>
+                <goal>install</goal>
+                <goal>-Dnocompile</goal>
+                
+            </goals>
+        </action>
+    </actions>

@@ -198,6 +198,11 @@
                                     <target>
                                         <delete dir="${installDir}"/>
                                     
+                                        <copy todir="${installDir}/api">
+                                            <fileset dir="${project.basedir}/../api">
+                                                <exclude name="**/target/"/>
+                                            </fileset>
+                                        </copy>
                                         <copy todir="${installDir}/client">
                                             <fileset dir="${project.basedir}/../client">
                                                 <exclude name="**/target/"/>
@@ -240,6 +245,13 @@
                                             </condition>
                                         </fail>
                                         
+                                        <!-- dev mode server runs against generated api sources -->
+                                        <exec executable="bash" dir="${installDir}/api"
+                                              spawn="false" failonerror="true">
+                                            <arg value="-c" />
+                                            <arg value="mvn clean compile" />
+                                        </exec>
+                                        
                                         <!-- start GWT DevMode server -->
                                         <exec executable="bash" dir="${installDir}/client"
                                               spawn="false" failonerror="true">
@@ -249,7 +261,8 @@
                                             <arg value="mvn" />
                                             <arg value="clean" />
                                             <arg value="package" />
-                                            <arg value="-Pdevmode" />
+                                            <arg value="-Dnocompile" />
+                                            <arg value="-Ddevmode" />
                                             <env key="DEBUG" value="${mgmt.script.debug}" />
                                         </exec>
                                         

@@ -17,7 +17,7 @@ directories and simply add the client's webapp output directory.
 
 As of now, to start up development servers, do:
 
-cd client && mvn package -Pdevmode (or simply gwt:run, but the first variant is test in devel-it)
+cd client && mvn package -Dnocompile -Ddevmode (or simply gwt:run, but the first variant is test in devel-it)
 cd server && mvn jetty:run
 
 Then point your browser at localhost port 8080.
@@ -38,7 +38,6 @@ that it is possible to configure the RemoteServiceServlet to access a running co
 TODO
 
 * Write tests for devel mode server autoreload (devel-it package, for both GWT and frontend Jetty instance).
-* Write a test for the chat demo.
 * Switch from gwt-websocket to Atmosphere framework for better browser support with long-polling fallbacks?
 * add load-time-weaving using -javaagent:aspectjweaver.jar to add database transaction handling to the
   service layer
