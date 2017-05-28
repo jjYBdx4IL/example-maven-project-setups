@@ -12,8 +12,8 @@
     <packaging>jar</packaging>
 
     <name>Maven Examples :: JNA/JNI Example Project</name>
-  
-    <build>
+    
+    <build>  
         <defaultGoal>integration-test</defaultGoal>
         <plugins>
             <!-- ITs run against the natives bundled in the final jar -->
@@ -67,8 +67,9 @@
                         </goals>
                         <phase>process-classes</phase>
                         <configuration>
-                            <executable>${project.basedir}/src/main/resources/build.sh</executable>
+                            <executable>bash</executable>
                             <arguments>
+                                <arg>${project.basedir}/src/main/resources/build.sh</arg>
                                 <arg>${project.basedir}</arg>
                                 <arg>${project.build.directory}</arg>
                                 <arg>${project.build.outputDirectory}</arg>
@@ -77,9 +78,30 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>1.4.1</version>
+                <executions>
+                    <execution>
+                        <id>enforce-versions</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <phase>initialize</phase>
+                        <configuration>
+                            <rules>
+                                <requireOS>
+                                    <family>unix</family>
+                                </requireOS>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
-
+    
     <dependencies>
         <dependency>
             <groupId>junit</groupId>

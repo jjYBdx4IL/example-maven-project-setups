@@ -1,6 +1,8 @@
 # jna-jni-example
 ## STATUS
 
+Runs on: Linux.
+
 native-lib-loader is not working as expected (not loading libs from os/arch dependent paths),
 open issue at https://github.com/scijava/native-lib-loader/issues/15.
 
