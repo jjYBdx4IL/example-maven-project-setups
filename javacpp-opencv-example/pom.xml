@@ -91,7 +91,8 @@
                         <org.bytedeco.javacpp.loadlibraries>false</org.bytedeco.javacpp.loadlibraries>
                         <load.libs.from.dir>${libPath}</load.libs.from.dir>
                     </systemPropertyVariables>
-                    <argLine>-Djava.library.path=${java.library.path}:${libPath}</argLine>
+                    <!--<argLine>-Djava.library.path=${java.library.path}:${libPath}</argLine>-->
+                    <argLine>-Djava.library.path=${libPath}</argLine>
                 </configuration>
             </plugin>
         </plugins>

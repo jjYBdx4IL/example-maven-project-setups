@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import javax.imageio.ImageIO;
 
@@ -30,6 +31,7 @@ public class StitchingTest {
     private static final File WORKDIR = new File(System.getProperty("basedir"), "target");
     public static final String EXAMPLE_IMG_RES_LOC
             = "/org/openimaj/image/contour/aestheticode/aestheticode.jpg";
+    public static final Pattern LIBNAME_PATTERN = Pattern.compile("^(lib.*\\.so|lib.*\\.so\\..*|.*\\.dll)$");
 
     @BeforeClass
     public static void beforeClass() {
@@ -39,7 +41,7 @@ public class StitchingTest {
 
         List<String> toLoad = new ArrayList<>();
         for (File f : libDir.listFiles()) {
-            if (!f.getName().startsWith("lib")) {
+            if (!LIBNAME_PATTERN.matcher(f.getName()).find()) {
                 continue;
             }
             toLoad.add(f.getAbsolutePath());
