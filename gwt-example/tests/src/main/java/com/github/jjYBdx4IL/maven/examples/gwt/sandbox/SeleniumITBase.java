@@ -78,7 +78,7 @@ public abstract class SeleniumITBase extends SeleniumTestBase {
         }
         return elements.get(0);
     }
-    
+
     @Test
     public void testBugStackOverflow15161741() throws WebElementNotFoundException {
         getDriver().get(getSandboxLocation());

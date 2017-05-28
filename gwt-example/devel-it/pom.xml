@@ -46,6 +46,13 @@
                             <goal>integration-test</goal>
                         </goals>
                     </execution>
+                    <execution>
+                        <id>verify</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
                 </executions>
             </plugin>
             <plugin>
@@ -122,6 +129,11 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>gwt-example-tests</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
             <groupId>com.github.jjYBdx4IL</groupId>
             <artifactId>github-test-utils</artifactId>
             <version>1.1-SNAPSHOT</version>
@@ -138,13 +150,6 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.github.jjYBdx4IL.maven.examples</groupId>
-            <artifactId>gwt-example-tests</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>test</scope>
-            <type>jar</type>
         </dependency>
     </dependencies>
     
