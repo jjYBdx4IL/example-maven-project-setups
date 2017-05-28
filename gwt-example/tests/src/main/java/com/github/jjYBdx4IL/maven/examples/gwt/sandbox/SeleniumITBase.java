@@ -186,6 +186,7 @@ public abstract class SeleniumITBase extends SeleniumTestBase {
         takeScreenshot();
 
         click("HandlerManagerDemo");
+        getByDebugId(DebugId.HandlerManagerDemo);
         takeScreenshot();
         List<WebElement> inputs = filterVisible(getDriver().findElements(By.tagName("input")));
         assertEquals(3, inputs.size());

@@ -1,5 +1,6 @@
 package com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client.handlermanager;
 
+import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.api.DebugId;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
@@ -19,6 +20,7 @@ public class HandlerManagerDemo extends AbstractEventDemo {
     @Override
     protected void preInit() {
         handlerManager = new HandlerManager(this);
+        ensureDebugId(DebugId.HandlerManagerDemo.name());
     }
     
     @Override
