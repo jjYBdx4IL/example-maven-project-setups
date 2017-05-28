@@ -2,18 +2,24 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <parent>
+    <!--    <parent>
         <groupId>com.github.jjYBdx4IL.maven.examples</groupId>
         <artifactId>github-maven-examples</artifactId>
         <version>1.0-SNAPSHOT</version>
-    </parent>
+    </parent>-->
 
+    <groupId>com.github.jjYBdx4IL.maven.examples</groupId>
     <artifactId>jna-jni-example</artifactId>
+    <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>Maven Examples :: JNA/JNI Example Project</name>
     
-    <build>  
+    <properties>
+        <skipTests>true</skipTests>
+    </properties>
+  
+    <build>
         <defaultGoal>integration-test</defaultGoal>
         <plugins>
             <!-- ITs run against the natives bundled in the final jar -->
@@ -36,6 +42,7 @@
                     <systemPropertyVariables>
                         <jna.debug_load>true</jna.debug_load>
                     </systemPropertyVariables>
+                    <skipTests>${skipTests}</skipTests>
                 </configuration>
             </plugin>
             <!-- regular tests run against the unpacked native lib -->
@@ -51,61 +58,273 @@
                     <reuseForks>false</reuseForks>
                     <!-- only needed for direct JNI loading, not for JNA: -->
                     <argLine>-Djava.library.path=${project.build.directory}</argLine>
+                    <skipTests>${skipTests}</skipTests>
                 </configuration>
             </plugin>
 
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>1.5.0</version>
-                <!-- native lib build only supported on linux/gnu systems -->
-                <executions>
-                    <execution>
-                        <id>native-build</id>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <phase>process-classes</phase>
-                        <configuration>
-                            <executable>bash</executable>
-                            <arguments>
-                                <arg>${project.basedir}/src/main/resources/build.sh</arg>
-                                <arg>${project.basedir}</arg>
-                                <arg>${project.build.directory}</arg>
-                                <arg>${project.build.outputDirectory}</arg>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
                 <version>1.4.1</version>
                 <executions>
                     <execution>
-                        <id>enforce-versions</id>
+                        <id>enforce</id>
                         <goals>
                             <goal>enforce</goal>
                         </goals>
-                        <phase>initialize</phase>
-                        <configuration>
-                            <rules>
-                                <requireOS>
-                                    <family>unix</family>
-                                </requireOS>
-                            </rules>
-                        </configuration>
+                        <phase>verify</phase>
                     </execution>
                 </executions>
+                <configuration>
+                    <rules>
+                        <requireNoRepositories />
+                        <requirePluginVersions />
+                        <dependencyConvergence />
+                        <requireUpperBoundDeps />
+                        <requireReleaseDeps>
+                            <message>No Snapshots Allowed!</message>
+                            <onlyWhenRelease>true</onlyWhenRelease>
+                        </requireReleaseDeps>
+                        <requireJavaVersion>
+                            <version>[1.8,)</version>
+                        </requireJavaVersion>
+                        <requireMavenVersion>
+                            <version>[3.0,)</version>
+                        </requireMavenVersion>
+                    </rules>
+                </configuration>
             </plugin>
         </plugins>
+        
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>com.mycila</groupId>
+                    <artifactId>license-maven-plugin</artifactId>
+                    <version>2.11</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-antrun-plugin</artifactId>
+                    <version>1.8</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>appassembler-maven-plugin</artifactId>
+                    <version>1.10</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>build-helper-maven-plugin</artifactId>
+                    <version>1.10</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>exec-maven-plugin</artifactId>
+                    <version>1.5.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>jdepend-maven-plugin</artifactId>
+                    <version>2.0</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-assembly-plugin</artifactId>
+                    <version>2.6</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-checkstyle-plugin</artifactId>
+                    <version>2.17</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.5.1</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-clean-plugin</artifactId>
+                    <version>3.0.0</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>2.10</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>2.8.2</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-enforcer-plugin</artifactId>
+                    <version>1.4.1</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <version>2.20</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-gpg-plugin</artifactId>
+                    <version>1.6</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-install-plugin</artifactId>
+                    <version>2.5.2</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>3.0.0</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-jarsigner-plugin</artifactId>
+                    <version>1.4</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>2.10.3</version>
+                    <configuration>
+                        <failOnError>false</failOnError>
+                        <additionalparam>-Xdoclint:none</additionalparam>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.jvnet.jaxb2.maven2</groupId>
+                    <artifactId>maven-jaxb2-plugin</artifactId>
+                    <version>0.13.1</version>
+                </plugin>
+                <plugin>
+                    <groupId>com.google.code.maven-license-plugin</groupId>
+                    <artifactId>maven-license-plugin</artifactId>
+                    <version>1.4.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.bsc.maven</groupId>
+                    <artifactId>maven-processor-plugin</artifactId>
+                    <version>3.1.0</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-project-info-reports-plugin</artifactId>
+                    <version>2.9</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>3.0.0</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-shade-plugin</artifactId>
+                    <version>2.4.3</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <version>3.5.1</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>3.0.0</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>2.19.1</version>
+                    <configuration>
+                        <runOrder>random</runOrder> <!-- use random to make tests more thorough -->
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-war-plugin</artifactId>
+                    <version>2.6</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>properties-maven-plugin</artifactId>
+                    <version>1.0.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>selenium-maven-plugin</artifactId>
+                    <version>2.3</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
     </build>
+  
+    <profiles>
+        <profile>
+            <id>NotLinuxBox</id>
+            <activation>
+                <os>
+                    <family>!unix</family>
+                </os>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <version>1.8</version>
+                        <executions>
+                            <execution>
+                                <id>start-jetty-server</id>
+                                <phase>initialize</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target>
+                                        <echo>Non-UNIX systems not supported.</echo>
+                                    </target>
+                                </configuration>
+                            </execution>
+                        </executions>
+                        <dependencies>
+                            <dependency>
+                                <groupId>ant-contrib</groupId>
+                                <artifactId>ant-contrib</artifactId>
+                                <version>20020829</version>
+                            </dependency>
+                        </dependencies>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>        
+        <profile>
+            <id>LinuxBox</id>
+            <activation>
+                <os>
+                    <family>unix</family>
+                </os>
+            </activation>
+            <properties>
+                <skipTests>false</skipTests>
+            </properties>
+            <build>
+                <plugins>            
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <!-- native lib build only supported on linux/gnu systems -->
+                        <executions>
+                            <execution>
+                                <id>native-build</id>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <phase>process-classes</phase>
+                                <configuration>
+                                    <executable>bash</executable>
+                                    <arguments>
+                                        <arg>${project.basedir}/src/main/resources/build.sh</arg>
+                                        <arg>${project.basedir}</arg>
+                                        <arg>${project.build.directory}</arg>
+                                        <arg>${project.build.outputDirectory}</arg>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>        
+    </profiles>
     
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
+            <version>4.12</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -138,7 +357,6 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.7.21</version>
         </dependency>
         <dependency>
             <groupId>log4j</groupId>
@@ -146,4 +364,14 @@
             <version>1.2.17</version>
         </dependency>
     </dependencies>
+    
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>1.7.21</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 </project>

@@ -42,7 +42,7 @@
 	<module>log4j-runtime-configuration</module>
         <module>maven-jnaerator-example</module>
         <module>multimodule-archetype-example</module>
-        <module>nar-maven-plugin-jni-example</module>
+	<!-- <module>nar-maven-plugin-jni-example</module> not working atm -->
     </modules>
 
     <build>
