@@ -15,9 +15,9 @@ files, too. It tries to load them via the WebAppContext's resource loader. So in
 proxy that is only working for the client, we are now using jetty-maven-plugin's ability to overlay webapp
 directories and simply add the client's webapp output directory.
 
-As of now, do start up development servers, do:
+As of now, to start up development servers, do:
 
-cd client && mvn gwt:run
+cd client && mvn package -Pdevmode (or simply gwt:run, but the first variant is test in devel-it)
 cd server && mvn jetty:run
 
 Then point your browser at localhost port 8080.
@@ -37,10 +37,5 @@ that it is possible to configure the RemoteServiceServlet to access a running co
 
 TODO
 
-Fix dist module.
-Write a generic websocket service layer to support formal service definitions in the style of interfaces/GWT?
-Remove XsrfTokenServiceServlet. It seems like it is XSRF-vulnerable itself.
-Replace 'mvn jetty:run' with embedded server? How do we detect changes? Can we use existing stuff or is this
-specific to jetty-maven-plugin?
-Completely switch over to websocket? Fallbacks?
-
+* Write tests for devel mode server autoreload (devel-it package, for both GWT and frontend Jetty instance).
+* Write a test for the chat demo.

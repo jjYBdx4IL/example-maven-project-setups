@@ -22,7 +22,8 @@
 
     <modules>
 	<module>api</module>
-        <module>client</module>
+	<module>client</module>
+	<module>devel-it</module>
         <module>dist</module>
 	<module>tests</module>
 	<module>server</module>

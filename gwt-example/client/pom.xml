@@ -22,6 +22,7 @@
         <webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
         <jetty.port>8080</jetty.port>
         <jetty.version>9.2.21.v20170120</jetty.version>
+        <gwt.jetty.port>8888</gwt.jetty.port>
     </properties>
     
     <build>
@@ -92,7 +93,7 @@
                             <goal>css</goal>
                             <goal>i18n</goal>
                             <goal>generateAsync</goal>
-                            <goal>compile</goal>
+                            <!--<goal>compile</goal>-->
                         </goals>
                     </execution>
                 </executions>
@@ -115,6 +116,8 @@
                         <cssFile>com/github/jjYBdx4IL/maven/examples/gwt/sandbox/client/rpcdemo/Style.css</cssFile>
                         <cssFile>com/github/jjYBdx4IL/maven/examples/gwt/sandbox/client/shared/Style.css</cssFile>
                     </cssFiles>
+                    
+                    <copyWebapp>true</copyWebapp>
                 </configuration>
             </plugin>
             
@@ -215,7 +218,19 @@
                     </rules>
                 </configuration>
             </plugin>
+            <plugin>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>properties</goal>
+                        </goals>
+                        <phase>initialize</phase>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
+        
         <pluginManagement>
             <plugins>
                 <plugin>
@@ -240,7 +255,7 @@
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>exec-maven-plugin</artifactId>
-                    <version>1.5.0</version>
+                    <version>1.6.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
@@ -265,7 +280,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-dependency-plugin</artifactId>
-                    <version>2.10</version>
+                    <version>3.0.1</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-deploy-plugin</artifactId>
@@ -376,6 +391,13 @@
         </dependency>
         
         <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-dev</artifactId>
+            <version>${gwt.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        
+        <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <scope>test</scope>
@@ -387,12 +409,6 @@
         </dependency>        
         <dependency>
             <groupId>com.google.gwt</groupId>
-            <artifactId>gwt-dev</artifactId>
-            <version>${gwt.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.google.gwt</groupId>
             <artifactId>gwt-servlet</artifactId>
             <version>${gwt.version}</version>
         </dependency>
@@ -400,7 +416,7 @@
             <groupId>com.sksamuel.gwt</groupId>
             <artifactId>gwt-websockets</artifactId>
             <version>1.0.4</version>
-        </dependency>        
+        </dependency>
     </dependencies>
     
     <dependencyManagement>
@@ -608,5 +624,106 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <profiles>
+        <!-- production mode compilation and regular gwt:run dev mode server setup -->
+        <profile>
+            <id>default</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+                <property>
+                    <name>!devmodeProfile</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>gwt-maven-plugin</artifactId>
+                        <version>${gwt.version}</version>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>css</goal>
+                                    <goal>i18n</goal>
+                                    <goal>generateAsync</goal>
+                                    <goal>compile</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>        
+        
+        <!-- here we start the GWT super dev mode without using the gwt-maven-plugin to have max control -->
+        <profile>
+            <id>devmode</id>
+            <properties>
+                <devmodeProfile>true</devmodeProfile>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>default</id>
+                                <goals>
+                                    <goal>java</goal>
+                                </goals>
+                                <phase>generate-test-sources</phase>
+                                <configuration>
+                                    <mainClass>com.google.gwt.dev.DevMode</mainClass>
+                                    <arguments>
+                                        <argument>-gen</argument>
+                                        <argument>${project.build.directory}/.generated</argument>
+                                        <argument>-war</argument>
+                                        <argument>${webappDirectory}</argument>
+                                        <argument>-logLevel</argument>
+                                        <argument>INFO</argument>
+                                        <argument>-port</argument>
+                                        <argument>${gwt.jetty.port}</argument>
+                                        <argument>-codeServerPort</argument>
+                                        <argument>9997</argument>
+                                        <argument>-startupUrl</argument>
+                                        <argument>sandbox.jsp</argument>
+                                        <argument>-sourceLevel</argument>
+                                        <argument>${maven.compiler.source}</argument>
+                                        <argument>com.github.jjYBdx4IL.maven.examples.gwt.sandbox.Sandbox</argument>
+                                    </arguments>
+                                    <additionalClasspathElements>
+                                        <additionalClasspathElement>${project.basedir}/src/main/java</additionalClasspathElement>
+                                        <additionalClasspathElement>${project.build.directory}/generated-sources/gwt</additionalClasspathElement>
+                                        <additionalClasspathElement>${project.build.directory}/generated-sources/annotations</additionalClasspathElement>
+                                    </additionalClasspathElements>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+            <dependencies>
+                <dependency>
+                    <groupId>com.google.gwt</groupId>
+                    <artifactId>gwt-dev</artifactId>
+                    <version>${gwt.version}</version>
+                    <scope>runtime</scope>
+                </dependency>
+                <dependency>
+                    <groupId>com.google.gwt</groupId>
+                    <artifactId>gwt-user</artifactId>
+                    <version>${gwt.version}</version>
+                    <scope>runtime</scope>
+                </dependency>
+                <dependency>
+                    <groupId>javax.servlet</groupId>
+                    <artifactId>javax.servlet-api</artifactId>
+                    <version>3.1.0</version>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
 
 </project>
