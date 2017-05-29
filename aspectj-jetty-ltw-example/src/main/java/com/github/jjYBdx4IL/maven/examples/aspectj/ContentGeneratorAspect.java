@@ -19,8 +19,8 @@ public class ContentGeneratorAspect {
 
     @Around("execution(* com.github.jjYBdx4IL.maven.examples.aspectj.ContentGenerator.getContent(..))")
     public Object doNothing(ProceedingJoinPoint thisJoinPoint) throws Throwable {
-        thisJoinPoint.proceed();
         LOG.info("ContentGeneratorAspect >>> around ContentGenerator.getContent()");
+        thisJoinPoint.proceed();
         return "Load-time weaving works with jetty!";
     }
     
@@ -33,5 +33,12 @@ public class ContentGeneratorAspect {
     public void doNothing3(ISetMessage foo) throws Throwable {
         LOG.info("ContentGeneratorAspect >>> before servlet doGet");
         foo.setMessage("Load-time weaving works with jetty!");
+    }
+    
+    @Around("@annotation(com.github.jjYBdx4IL.maven.examples.aspectj.Tx) && execution(* com.github.jjYBdx4IL..*(..))")
+    public Object doNothing4(ProceedingJoinPoint thisJoinPoint) throws Throwable {
+        LOG.info("ContentGeneratorAspect >>> around @Tx");
+        thisJoinPoint.proceed();
+        return "Load-time weaving works with jetty!";
     }
 }
