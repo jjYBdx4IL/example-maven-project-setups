@@ -215,9 +215,10 @@
         
         <dependency>
             <groupId>com.github.jjYBdx4IL.maven.examples</groupId>
-            <artifactId>gwt-example-tests</artifactId>
+            <artifactId>gwt-example-devel-it</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
+            <classifier>tests</classifier>
         </dependency>
         <!--        <dependency>
             <groupId>com.github.jjYBdx4IL</groupId>

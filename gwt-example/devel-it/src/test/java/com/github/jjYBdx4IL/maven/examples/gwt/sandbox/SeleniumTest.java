@@ -33,15 +33,21 @@ import org.openqa.selenium.WebElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class SeleniumITBase extends SeleniumTestBase {
+public class SeleniumTest extends SeleniumTestBase {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SeleniumITBase.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SeleniumTest.class);
 
     /**
      *
      * @return some URL string pointing to the location of the app to be tested
      */
-    public abstract String getSandboxLocation();
+    public String getSandboxLocation() {
+        String location = System.getProperty("sandbox.location");
+        LOG.debug("sandbox location = " + location);
+        assertNotNull(location);
+        assertTrue(!location.isEmpty());
+        return location;
+    }
 
     @Before
     public void before() {

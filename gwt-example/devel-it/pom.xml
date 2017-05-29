@@ -32,35 +32,33 @@
         <proxyTestUrl>http://localhost:${jetty.port}/sandbox/sandbox.nocache.js</proxyTestUrl>
         <installDir>${project.build.directory}/work</installDir>
         <mgmt.script>${project.basedir}/src/main/resources/startStop.sh</mgmt.script>
+        <!-- set to 1 or empty -->
         <mgmt.script.debug></mgmt.script.debug>
+        
+        <antrun.skip>false</antrun.skip>
+        <failsafe.skip>false</failsafe.skip>
+        <surefire.skip>true</surefire.skip>
     </properties>
 
     <build>
         <plugins>
             <plugin>
-                <artifactId>maven-failsafe-plugin</artifactId>
-                <version>2.20</version>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.0.2</version>
                 <executions>
                     <execution>
+                        <id>make-a-test-jar</id>
                         <goals>
-                            <goal>integration-test</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>verify</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>verify</goal>
+                            <goal>test-jar</goal>
                         </goals>
                     </execution>
                 </executions>
             </plugin>
             <plugin>
+                <artifactId>maven-failsafe-plugin</artifactId>
+            </plugin>
+            <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.20</version>
-                <configuration>
-                    <skipTests>true</skipTests>
-                </configuration>
             </plugin>
             <plugin>
                 <artifactId>maven-enforcer-plugin</artifactId>
@@ -93,24 +91,238 @@
                     </rules>
                 </configuration>
             </plugin>
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.8</version>
+                <executions>
+                    <execution>
+                        <id>start-devel-servers</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <delete dir="${installDir}"/>
+                                    
+                                <copy todir="${installDir}/api">
+                                    <fileset dir="${project.basedir}/../api">
+                                        <exclude name="**/target/"/>
+                                    </fileset>
+                                </copy>
+                                <copy todir="${installDir}/client">
+                                    <fileset dir="${project.basedir}/../client">
+                                        <exclude name="**/target/"/>
+                                    </fileset>
+                                </copy>
+                                <copy todir="${installDir}/server">
+                                    <fileset dir="${project.basedir}/../server">
+                                        <exclude name="**/target/"/>
+                                    </fileset>
+                                </copy>
+                                        
+                                <!-- shut down running server - just in case -->
+                                <exec executable="bash" dir="${installDir}"
+                                      spawn="false" failonerror="true">
+                                    <arg value="${mgmt.script}" />
+                                    <arg value="${project.groupId}:${project.artifactId}:" />
+                                    <arg value="stop" />
+                                    <env key="DEBUG" value="${mgmt.script.debug}" />
+                                </exec>
+                                <waitfor maxwait="3" maxwaitunit="minute" checkevery="1000">
+                                    <not>
+                                        <socket server="localhost" port="${jetty.port}" />
+                                    </not>
+                                </waitfor>
+
+                                <!-- ensure there is no server still running -->
+                                <fail>
+                                    <condition>
+                                        <socket server="localhost" port="${jetty.port}" />
+                                    </condition>
+                                </fail>
+                                <fail>
+                                    <condition>
+                                        <socket server="localhost" port="${gwt.jetty.port}" />
+                                    </condition>
+                                </fail>
+                                <fail>
+                                    <condition>
+                                        <socket server="localhost" port="${gwt.codeserver.port}" />
+                                    </condition>
+                                </fail>
+                                        
+                                <!-- dev mode server runs against generated api sources -->
+                                <exec executable="bash" dir="${installDir}/api"
+                                      spawn="false" failonerror="true">
+                                    <arg value="-c" />
+                                    <arg value="mvn clean compile" />
+                                </exec>
+                                        
+                                <!-- start GWT DevMode server -->
+                                <exec executable="bash" dir="${installDir}/client"
+                                      spawn="false" failonerror="true">
+                                    <arg value="${mgmt.script}" />
+                                    <arg value="${project.groupId}:${project.artifactId}:gwt" />
+                                    <arg value="start" />
+                                    <arg value="mvn" />
+                                    <arg value="clean" />
+                                    <arg value="package" />
+                                    <arg value="-Dnocompile" />
+                                    <arg value="-Ddevmode" />
+                                    <env key="DEBUG" value="${mgmt.script.debug}" />
+                                </exec>
+                                        
+                                <echo>Waiting for GWT jetty server to come up at port ${gwt.jetty.port}</echo>
+                                <waitfor maxwait="3" maxwaitunit="minute" checkevery="1000">
+                                    <socket server="localhost" port="${gwt.jetty.port}" />
+                                </waitfor>
+                                <echo>Waiting for GWT code server to come up at port ${gwt.codeserver.port}</echo>
+                                <waitfor maxwait="3" maxwaitunit="minute" checkevery="1000">
+                                    <socket server="localhost" port="${gwt.codeserver.port}" />
+                                </waitfor>
+                                        
+                                <!-- start mvn jetty:run -->
+                                <exec executable="bash" dir="${installDir}/server"
+                                      spawn="false" failonerror="true">
+                                    <arg value="${mgmt.script}" />
+                                    <arg value="${project.groupId}:${project.artifactId}:jetty" />
+                                    <arg value="start" />
+                                    <arg value="mvn" />
+                                    <arg value="clean" />
+                                    <arg value="jetty:run" />
+                                    <env key="DEBUG" value="${mgmt.script.debug}" />
+                                </exec>
+                                        
+                                <echo>Waiting for server to come up at port ${jetty.port}</echo>
+                                <waitfor maxwait="3" maxwaitunit="minute" checkevery="1000">
+                                    <!-- implicitly check that our reverse proxy to the gwt jetty server is working
+                                    ("/sandbox/*" is actually loaded from GWT's jetty server instance) -->
+                                    <http url="${proxyTestUrl}" errorsBeginAt="300" />
+                                </waitfor>
+
+                            </target>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>stop-devel-servers</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <!-- shut down running server - just in case -->
+                                <exec executable="bash" dir="${installDir}"
+                                      spawn="false" failonerror="true">
+                                    <arg value="${mgmt.script}" />
+                                    <arg value="${project.groupId}:${project.artifactId}:" />
+                                    <arg value="stop" />
+                                    <env key="DEBUG" value="${mgmt.script.debug}" />
+                                </exec>
+                                <waitfor maxwait="3" maxwaitunit="minute" checkevery="1000">
+                                    <not>
+                                        <socket server="localhost" port="${jetty.port}" />
+                                    </not>
+                                </waitfor>
+                                <waitfor maxwait="3" maxwaitunit="minute" checkevery="1000">
+                                    <not>
+                                        <socket server="localhost" port="${gwt.jetty.port}" />
+                                    </not>
+                                </waitfor>
+                                <waitfor maxwait="3" maxwaitunit="minute" checkevery="1000">
+                                    <not>
+                                        <socket server="localhost" port="${gwt.codeserver.port}" />
+                                    </not>
+                                </waitfor>
+                            </target>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>stop-devel-servers-preclean</id>
+                        <phase>pre-clean</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <!-- shut down running server - just in case -->
+                                <exec executable="bash" dir="${project.basedir}"
+                                      spawn="false" failonerror="true">
+                                    <arg value="${mgmt.script}" />
+                                    <arg value="${project.groupId}:${project.artifactId}:" />
+                                    <arg value="stop" />
+                                    <env key="DEBUG" value="${mgmt.script.debug}" />
+                                </exec>
+                                <waitfor maxwait="3" maxwaitunit="minute" checkevery="1000">
+                                    <not>
+                                        <socket server="localhost" port="${jetty.port}" />
+                                    </not>
+                                </waitfor>
+                                <waitfor maxwait="3" maxwaitunit="minute" checkevery="1000">
+                                    <not>
+                                        <socket server="localhost" port="${gwt.jetty.port}" />
+                                    </not>
+                                </waitfor>
+                                <waitfor maxwait="3" maxwaitunit="minute" checkevery="1000">
+                                    <not>
+                                        <socket server="localhost" port="${gwt.codeserver.port}" />
+                                    </not>
+                                </waitfor>
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>ant-contrib</groupId>
+                        <artifactId>ant-contrib</artifactId>
+                        <version>20020829</version>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <skip>${antrun.skip}</skip>
+                </configuration>
+            </plugin>
         </plugins>
 
         <pluginManagement>
             <plugins>        
                 <plugin>
                     <artifactId>maven-failsafe-plugin</artifactId>
+                    <version>2.20</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>integration-test</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <id>verify</id>
+                            <phase>verify</phase>
+                            <goals>
+                                <goal>verify</goal>
+                            </goals>
+                        </execution>
+                    </executions>
                     <configuration>
                         <systemPropertyVariables>
                             <sandbox.location>${testUrl}</sandbox.location>
                         </systemPropertyVariables>
+                        <includes>
+                            <include>**/*Test.java</include>
+                        </includes>
+                        <skipTests>${failsafe.skip}</skipTests>
                     </configuration>
                 </plugin>
                 <plugin>
                     <artifactId>maven-surefire-plugin</artifactId>
+                    <version>2.20</version>
                     <configuration>
                         <systemPropertyVariables>
                             <sandbox.location>${testUrl}</sandbox.location>
                         </systemPropertyVariables>
+                        <skipTests>${surefire.skip}</skipTests>
                     </configuration>
                 </plugin>
             </plugins>
@@ -127,11 +339,6 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>gwt-example-server</artifactId>
             <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>gwt-example-tests</artifactId>
-            <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.github.jjYBdx4IL</groupId>
@@ -180,207 +387,50 @@
     
     <profiles>
         <profile>
-            <id>run-its</id>
+            <!-- for interactive test development using Netbeans (activate this profile in Netbeans!): -->
+            <!-- (this assumes that you have gwt and jetty servers started manually) -->
+            <id>surefire</id>
+            <activation>
+                <property>
+                    <name>surefire</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <properties>
+                <antrun.skip>true</antrun.skip>
+                <failsafe.skip>true</failsafe.skip>
+                <surefire.skip>false</surefire.skip>
+            </properties>
+        </profile>
+        
+        <profile>
+            <id>skipITs</id>
             <activation>
                 <property>
                     <name>skipITs</name>
-                    <value>!true</value>
+                    <value>true</value>
                 </property>
             </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <artifactId>maven-antrun-plugin</artifactId>
-                        <version>1.8</version>
-                        <executions>
-                            <execution>
-                                <id>start-devel-servers</id>
-                                <phase>pre-integration-test</phase>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                                <configuration>
-                                    <target>
-                                        <delete dir="${installDir}"/>
-                                    
-                                        <copy todir="${installDir}/api">
-                                            <fileset dir="${project.basedir}/../api">
-                                                <exclude name="**/target/"/>
-                                            </fileset>
-                                        </copy>
-                                        <copy todir="${installDir}/client">
-                                            <fileset dir="${project.basedir}/../client">
-                                                <exclude name="**/target/"/>
-                                            </fileset>
-                                        </copy>
-                                        <copy todir="${installDir}/server">
-                                            <fileset dir="${project.basedir}/../server">
-                                                <exclude name="**/target/"/>
-                                            </fileset>
-                                        </copy>
-                                        
-                                        <!-- shut down running server - just in case -->
-                                        <exec executable="bash" dir="${installDir}"
-                                              spawn="false" failonerror="true">
-                                            <arg value="${mgmt.script}" />
-                                            <arg value="${project.groupId}:${project.artifactId}:" />
-                                            <arg value="stop" />
-                                            <env key="DEBUG" value="${mgmt.script.debug}" />
-                                        </exec>
-                                        <waitfor maxwait="3" maxwaitunit="minute" checkevery="1000">
-                                            <not>
-                                                <socket server="localhost" port="${jetty.port}" />
-                                            </not>
-                                        </waitfor>
-
-                                        <!-- ensure there is no server still running -->
-                                        <fail>
-                                            <condition>
-                                                <socket server="localhost" port="${jetty.port}" />
-                                            </condition>
-                                        </fail>
-                                        <fail>
-                                            <condition>
-                                                <socket server="localhost" port="${gwt.jetty.port}" />
-                                            </condition>
-                                        </fail>
-                                        <fail>
-                                            <condition>
-                                                <socket server="localhost" port="${gwt.codeserver.port}" />
-                                            </condition>
-                                        </fail>
-                                        
-                                        <!-- dev mode server runs against generated api sources -->
-                                        <exec executable="bash" dir="${installDir}/api"
-                                              spawn="false" failonerror="true">
-                                            <arg value="-c" />
-                                            <arg value="mvn clean compile" />
-                                        </exec>
-                                        
-                                        <!-- start GWT DevMode server -->
-                                        <exec executable="bash" dir="${installDir}/client"
-                                              spawn="false" failonerror="true">
-                                            <arg value="${mgmt.script}" />
-                                            <arg value="${project.groupId}:${project.artifactId}:gwt" />
-                                            <arg value="start" />
-                                            <arg value="mvn" />
-                                            <arg value="clean" />
-                                            <arg value="package" />
-                                            <arg value="-Dnocompile" />
-                                            <arg value="-Ddevmode" />
-                                            <env key="DEBUG" value="${mgmt.script.debug}" />
-                                        </exec>
-                                        
-                                        <echo>Waiting for GWT jetty server to come up at port ${gwt.jetty.port}</echo>
-                                        <waitfor maxwait="3" maxwaitunit="minute" checkevery="1000">
-                                            <socket server="localhost" port="${gwt.jetty.port}" />
-                                        </waitfor>
-                                        <echo>Waiting for GWT code server to come up at port ${gwt.codeserver.port}</echo>
-                                        <waitfor maxwait="3" maxwaitunit="minute" checkevery="1000">
-                                            <socket server="localhost" port="${gwt.codeserver.port}" />
-                                        </waitfor>
-                                        
-                                        <!-- start mvn jetty:run -->
-                                        <exec executable="bash" dir="${installDir}/server"
-                                              spawn="false" failonerror="true">
-                                            <arg value="${mgmt.script}" />
-                                            <arg value="${project.groupId}:${project.artifactId}:jetty" />
-                                            <arg value="start" />
-                                            <arg value="mvn" />
-                                            <arg value="clean" />
-                                            <arg value="jetty:run" />
-                                            <env key="DEBUG" value="${mgmt.script.debug}" />
-                                        </exec>
-                                        
-                                        <echo>Waiting for server to come up at port ${jetty.port}</echo>
-                                        <waitfor maxwait="3" maxwaitunit="minute" checkevery="1000">
-                                            <!-- implicitly check that our reverse proxy to the gwt jetty server is working
-                                            ("/sandbox/*" is actually loaded from GWT's jetty server instance) -->
-                                            <http url="${proxyTestUrl}" errorsBeginAt="300" />
-                                        </waitfor>
-
-                                    </target>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>stop-devel-servers</id>
-                                <phase>post-integration-test</phase>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                                <configuration>
-                                    <target>
-                                        <!-- shut down running server - just in case -->
-                                        <exec executable="bash" dir="${installDir}"
-                                              spawn="false" failonerror="true">
-                                            <arg value="${mgmt.script}" />
-                                            <arg value="${project.groupId}:${project.artifactId}:" />
-                                            <arg value="stop" />
-                                            <env key="DEBUG" value="${mgmt.script.debug}" />
-                                        </exec>
-                                        <waitfor maxwait="3" maxwaitunit="minute" checkevery="1000">
-                                            <not>
-                                                <socket server="localhost" port="${jetty.port}" />
-                                            </not>
-                                        </waitfor>
-                                        <waitfor maxwait="3" maxwaitunit="minute" checkevery="1000">
-                                            <not>
-                                                <socket server="localhost" port="${gwt.jetty.port}" />
-                                            </not>
-                                        </waitfor>
-                                        <waitfor maxwait="3" maxwaitunit="minute" checkevery="1000">
-                                            <not>
-                                                <socket server="localhost" port="${gwt.codeserver.port}" />
-                                            </not>
-                                        </waitfor>
-                                    </target>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>stop-devel-servers-preclean</id>
-                                <phase>pre-clean</phase>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                                <configuration>
-                                    <target>
-                                        <!-- shut down running server - just in case -->
-                                        <exec executable="bash" dir="${project.basedir}"
-                                              spawn="false" failonerror="true">
-                                            <arg value="${mgmt.script}" />
-                                            <arg value="${project.groupId}:${project.artifactId}:" />
-                                            <arg value="stop" />
-                                            <env key="DEBUG" value="${mgmt.script.debug}" />
-                                        </exec>
-                                        <waitfor maxwait="3" maxwaitunit="minute" checkevery="1000">
-                                            <not>
-                                                <socket server="localhost" port="${jetty.port}" />
-                                            </not>
-                                        </waitfor>
-                                        <waitfor maxwait="3" maxwaitunit="minute" checkevery="1000">
-                                            <not>
-                                                <socket server="localhost" port="${gwt.jetty.port}" />
-                                            </not>
-                                        </waitfor>
-                                        <waitfor maxwait="3" maxwaitunit="minute" checkevery="1000">
-                                            <not>
-                                                <socket server="localhost" port="${gwt.codeserver.port}" />
-                                            </not>
-                                        </waitfor>
-                                    </target>
-                                </configuration>
-                            </execution>
-                        </executions>
-                        <dependencies>
-                            <dependency>
-                                <groupId>ant-contrib</groupId>
-                                <artifactId>ant-contrib</artifactId>
-                                <version>20020829</version>
-                            </dependency>
-                        </dependencies>
-                    </plugin>
-                </plugins>
-            </build>
+            <properties>
+                <antrun.skip>true</antrun.skip>
+                <failsafe.skip>true</failsafe.skip>
+                <surefire.skip>true</surefire.skip>
+            </properties>
+        </profile>
+        
+        <profile>
+            <id>skipTests</id>
+            <activation>
+                <property>
+                    <name>skipTests</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <properties>
+                <antrun.skip>true</antrun.skip>
+                <failsafe.skip>true</failsafe.skip>
+                <surefire.skip>true</surefire.skip>
+            </properties>
         </profile>
     </profiles>
 
