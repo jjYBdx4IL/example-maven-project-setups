@@ -26,8 +26,6 @@
     </properties>
     
     <build>
-        <outputDirectory>${webappDirectory}/WEB-INF/classes</outputDirectory>
-        
         <resources>
             <resource>
                 <directory>src/main/java</directory>

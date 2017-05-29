@@ -1,5 +1,6 @@
 package com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client.rpcdemo;
 
+import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.api.DebugId;
 import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client.ResourceBundle;
 import static com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client.ResourceBundle.message;
 import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client.Sandbox;
@@ -88,6 +89,7 @@ public class RpcDemo extends FlowPanel {
         listBox.addItem("first listbox entry");
         listBox.addItem("second listbox entry");
         listBox.addItem("third listbox entry");
+        listBox.ensureDebugId(DebugId.RpcDemoListBox.name());
 
         List<EnumForValueListBox> list = new ArrayList<>();
         list.add(null);
