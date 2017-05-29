@@ -68,7 +68,7 @@ public class SeleniumTest extends SeleniumTestBase {
     }
     
     @Test
-    public void testDevModeRefreshOnBrowserReload() throws IOException, WebElementNotFoundException {
+    public void testGWTDevModeRefreshOnBrowserReload() throws IOException, WebElementNotFoundException {
         assumeNotNull(DEVMODE_INSTALL_DIR);
         
         getDriver().get(getSandboxLocation());
@@ -94,8 +94,8 @@ public class SeleniumTest extends SeleniumTestBase {
         
         // undo
         FileUtils.write(classFile, classContents, "UTF-8");
-    }   
-
+    }
+    
     @Test
     public void testChatDemo() throws WebElementNotFoundException {
         getDriver().get(getSandboxLocation());

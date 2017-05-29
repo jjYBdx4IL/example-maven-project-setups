@@ -37,7 +37,6 @@ that it is possible to configure the RemoteServiceServlet to access a running co
 
 TODO
 
-* Write tests for devel mode server autoreload (devel-it package, for both GWT and frontend Jetty instance).
 * Switch from gwt-websocket to Atmosphere framework for better browser support with long-polling fallbacks?
 * add load-time-weaving using -javaagent:aspectjweaver.jar to add database transaction handling to the
   service layer
