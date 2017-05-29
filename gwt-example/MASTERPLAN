@@ -40,3 +40,4 @@ TODO
 * Switch from gwt-websocket to Atmosphere framework for better browser support with long-polling fallbacks?
 * add load-time-weaving using -javaagent:aspectjweaver.jar to add database transaction handling to the
   service layer
+* fix XSRF protection
