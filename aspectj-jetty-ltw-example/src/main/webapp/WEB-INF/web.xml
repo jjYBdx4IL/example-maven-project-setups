@@ -15,4 +15,23 @@
         <url-pattern>/content</url-pattern>
     </servlet-mapping>
     
+    <servlet>
+        <servlet-name>servletWithTxSupport</servlet-name>
+        <servlet-class>com.github.jjYBdx4IL.maven.examples.aspectj.tx.TxServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>servletWithTxSupport</servlet-name>
+        <url-pattern>/tx</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>servletWithWeavedFieldAccess</servlet-name>
+        <servlet-class>com.github.jjYBdx4IL.maven.examples.aspectj.fieldaccess.FieldAccessServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>servletWithWeavedFieldAccess</servlet-name>
+        <url-pattern>/fieldAccess</url-pattern>
+    </servlet-mapping>
 </web-app>
