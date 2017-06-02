@@ -2,6 +2,9 @@ package com.github.jjYBdx4IL.maven.examples.aspectj.tx;
 
 import com.github.jjYBdx4IL.maven.examples.aspectj.Tx;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.logging.Level;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -43,21 +46,40 @@ public class TxServlet extends HttpServlet {
     
     private String message = "Load-time weaving failed!";
    
-    @Override
-    public void init() throws ServletException {
-        LOG.info("ContentServlet.init()");
-        super.init();
-    }
-
+//    @Override
+//    public void init() {
+//        
+//    }
+     
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        // let's build some secutiry hazard into this servlet:
+        String methodName = req.getParameter("method");
+        String responseMessage = "unknown method";
+        try {
+            Method method = getClass().getDeclaredMethod(methodName);
+            responseMessage = (String) method.invoke(this);
+        } catch (IllegalAccessException | IllegalArgumentException | NoSuchMethodException | SecurityException | InvocationTargetException ex) {
+            LOG.error("", ex);
+            responseMessage = ex.getMessage();
+        }
+        
         resp.setStatus(HttpServletResponse.SC_OK);
         resp.setContentType("text/plain");
-        resp.getWriter().append(message);
+        resp.getWriter().append(responseMessage);
+    }
+
+    @Tx
+    private String one() {
+        return "ONE";
     }
     
-    public void setMessage(String message) {
-        this.message = message;
+    private String two() {
+        return "TWO";
+    }
+    
+    private String getMessage() {
+        return message;
     }
 
 }
