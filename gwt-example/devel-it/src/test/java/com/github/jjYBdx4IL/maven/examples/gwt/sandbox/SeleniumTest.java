@@ -17,16 +17,26 @@ package com.github.jjYBdx4IL.maven.examples.gwt.sandbox;
 
 import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.api.DebugId;
 import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client.rpcdemo.RpcDemo;
+import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.server.GWTServiceImpl;
 import com.github.jjYBdx4IL.test.selenium.SeleniumTestBase;
 import com.github.jjYBdx4IL.test.selenium.WebElementNotFoundException;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 import java.util.regex.Pattern;
+import javax.tools.Diagnostic;
+import javax.tools.DiagnosticCollector;
+import javax.tools.JavaCompiler;
+import javax.tools.JavaFileObject;
+import javax.tools.StandardJavaFileManager;
+import javax.tools.ToolProvider;
 import org.apache.commons.io.FileUtils;
+import org.apache.tools.ant.DirectoryScanner;
 
 import static org.junit.Assert.*;
 import static org.junit.Assume.assumeNotNull;
@@ -68,6 +78,47 @@ public class SeleniumTest extends SeleniumTestBase {
     }
     
     @Test
+    public void testJettyDevWebAppAutoReload() throws Exception {
+        assumeNotNull(DEVMODE_INSTALL_DIR);
+
+        File sourceFile = new File(DEVMODE_INSTALL_DIR,
+                "server/src/main/java/" + GWTServiceImpl.class.getName().replace(".", "/") + ".java");
+        String unauthReply = "Hello unauthenticated user!";
+        String changedReply = "Hello xyz user!";
+
+        getDriver().get(getSandboxLocation());
+        click("RpcDemo");
+        WebElement greetMeButton = getByDebugId(DebugId.RpcDemoGreetMeButton);
+        greetMeButton.click();
+        
+        // wait for reply from server
+        assertNotNull(waitForElement(String.format(Locale.ROOT, "xpath://*[@id='%s'][contains(text(),'%s')]",
+                getDebugId(DebugId.RpcDemoReplyLabel),
+                unauthReply)));
+        
+        // recompile server-side service class to send another reply
+        String sourceContents = FileUtils.readFileToString(sourceFile, "UTF-8");
+        String updatedSourceContents = sourceContents.replace(unauthReply, changedReply);
+        try {
+            FileUtils.write(sourceFile, updatedSourceContents, "UTF-8");
+            recompile(sourceFile, findWebInfClassesDir(new File(DEVMODE_INSTALL_DIR, "server/target")));
+            Thread.sleep(10000L); // give the server enough time to reload
+            
+            greetMeButton.click();
+
+            // wait for modified reply from server
+            assertNotNull(waitForElement(String.format(Locale.ROOT, "xpath://*[@id='%s'][contains(text(),'%s')]",
+                    getDebugId(DebugId.RpcDemoReplyLabel),
+                    changedReply)));
+        } finally {
+            // undo
+            FileUtils.write(sourceFile, sourceContents, "UTF-8");
+            recompile(sourceFile, findWebInfClassesDir(new File(DEVMODE_INSTALL_DIR, "server/target")));
+            Thread.sleep(10000L); // give the server enough time to reload
+        }
+    }
+    
+    @Test
     public void testGWTDevModeRefreshOnBrowserReload() throws IOException, WebElementNotFoundException {
         assumeNotNull(DEVMODE_INSTALL_DIR);
         
@@ -79,21 +130,23 @@ public class SeleniumTest extends SeleniumTestBase {
         assertEquals("first listbox entry", firstOption.getText());
         
         // update the text for the first listbox entry
-        File classFile = new File(DEVMODE_INSTALL_DIR, "client/src/main/java/" + RpcDemo.class.getName().replace(".", "/") + ".java");
-        String classContents = FileUtils.readFileToString(classFile, "UTF-8");
-        String updatedClassContents = classContents.replace("\"first listbox entry\"", "\"first listbox entry updated\"");
-        FileUtils.write(classFile, updatedClassContents, "UTF-8");
-        
-        // refresh browser page and check
-        getDriver().get(getSandboxLocation());
-        click("RpcDemo");
-        listBox = getByDebugId(DebugId.RpcDemoListBox);
-        sel = new Select(listBox);
-        firstOption = sel.getOptions().get(0);
-        assertEquals("first listbox entry updated", firstOption.getText());
-        
-        // undo
-        FileUtils.write(classFile, classContents, "UTF-8");
+        File sourceFile = new File(DEVMODE_INSTALL_DIR, "client/src/main/java/" + RpcDemo.class.getName().replace(".", "/") + ".java");
+        String sourceContents = FileUtils.readFileToString(sourceFile, "UTF-8");
+        String updatedSourceContents = sourceContents.replace("\"first listbox entry\"", "\"first listbox entry updated\"");
+        try {
+            FileUtils.write(sourceFile, updatedSourceContents, "UTF-8");
+
+            // refresh browser page and check
+            getDriver().get(getSandboxLocation());
+            click("RpcDemo");
+            listBox = getByDebugId(DebugId.RpcDemoListBox);
+            sel = new Select(listBox);
+            firstOption = sel.getOptions().get(0);
+            assertEquals("first listbox entry updated", firstOption.getText());
+        } finally {
+            // undo
+            FileUtils.write(sourceFile, sourceContents, "UTF-8");
+        }
     }
     
     @Test
@@ -252,12 +305,58 @@ public class SeleniumTest extends SeleniumTestBase {
         return result;
     }
     
+    protected String getDebugId(DebugId debugId) {
+        return GWT_DEBUG_ID_PREFIX + debugId.name();
+    }
+    
     protected WebElement getByDebugId(DebugId debugId) throws WebElementNotFoundException {
-        String fullDebugId = GWT_DEBUG_ID_PREFIX + debugId.name();
+        String fullDebugId = getDebugId(debugId);
         List<WebElement> elements = filterDisplayed(getDriver().findElements(By.id(fullDebugId)));
         if (elements.size() != 1) {
             throw new WebElementNotFoundException("no element found with gwt debug id " + fullDebugId);
         }
         return elements.get(0);
+    }
+    
+    protected void recompile(File sourceFile, File classesDir) throws Exception {
+        JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+        DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<JavaFileObject>();
+        StandardJavaFileManager jfm = compiler.getStandardFileManager(diagnostics, Locale.ROOT, Charset.forName("UTF-8"));
+
+        Iterable<? extends JavaFileObject> compilationUnit = jfm.getJavaFileObjects(sourceFile);
+
+        List<String> optionList = new ArrayList<String>();
+        optionList.add("-d");
+        optionList.add(classesDir.getAbsolutePath()); // classes destination dir
+//        optionList.add("-classpath");
+//        optionList.add(System.getProperty("java.class.path") + ";dist/InlineCompiler.jar");
+
+        JavaCompiler.CompilationTask task = compiler.getTask(
+                null,
+                jfm,
+                diagnostics,
+                optionList,
+                null,
+                compilationUnit);
+
+        assertTrue(task.call());
+
+        for (Diagnostic<? extends JavaFileObject> diagnostic : diagnostics.getDiagnostics()) {
+            LOG.error("Error on line {} in {}: {}",
+                    diagnostic.getLineNumber(),
+                    diagnostic.getSource().toUri(),
+                    diagnostic.getMessage(Locale.ROOT));
+        }
+
+        jfm.close();
+    }
+
+    protected File findWebInfClassesDir(File searchRoot) {
+        DirectoryScanner scanner = new DirectoryScanner();
+        scanner.setBasedir(searchRoot);
+        scanner.setIncludes(new String[]{"**/WEB-INF/classes"});
+        scanner.scan();
+        assertEquals(1, scanner.getIncludedDirsCount());
+        return new File(searchRoot, scanner.getIncludedDirectories()[0]);
     }
 }

@@ -28,11 +28,11 @@ import java.util.List;
 public class RpcDemo extends FlowPanel {
 
     private TextBox textBox;
-    private Label label;
+    private Label rpcReplyLabel;
     private Button loginButton;
     private Button logoutButton;
-    private Button button;
-    private Button button2;
+    private Button greetMeButton;
+    private Button forceOomButton;
     private Button startAnimButton;
     private Button stopAnimButton;
     private Animation animation;
@@ -52,15 +52,19 @@ public class RpcDemo extends FlowPanel {
         RES.getStyle().ensureInjected();
 
         textBox = new TextBox();
+        textBox.ensureDebugId(DebugId.RpcDemoTextBox.name());
         loginButton = new Button(ResourceBundle.message.loginDesc());
         logoutButton = new Button(ResourceBundle.message.logoutDesc());
-        button = new Button(ResourceBundle.message.greetMeDesc());
-        label = new Label(ResourceBundle.message.wait4input());
-        button2 = new Button(ResourceBundle.message.forceOOM());
+        greetMeButton = new Button(ResourceBundle.message.greetMeDesc());
+        greetMeButton.ensureDebugId(DebugId.RpcDemoGreetMeButton.name());
+        rpcReplyLabel = new Label(ResourceBundle.message.wait4input());
+        rpcReplyLabel.ensureDebugId(DebugId.RpcDemoReplyLabel.name());
+        forceOomButton = new Button(ResourceBundle.message.forceOOM());
         startAnimButton = new Button(message.start());
         stopAnimButton = new Button(message.stop());
         fpsTextBox = new TextBox();
         listBox = new ListBox();
+        listBox.ensureDebugId(DebugId.RpcDemoListBox.name());
         enumListBox = new ValueListBox<EnumForValueListBox>(new Renderer<EnumForValueListBox>() {
 
             @Override
@@ -89,7 +93,6 @@ public class RpcDemo extends FlowPanel {
         listBox.addItem("first listbox entry");
         listBox.addItem("second listbox entry");
         listBox.addItem("third listbox entry");
-        listBox.ensureDebugId(DebugId.RpcDemoListBox.name());
 
         List<EnumForValueListBox> list = new ArrayList<>();
         list.add(null);
@@ -114,15 +117,15 @@ public class RpcDemo extends FlowPanel {
             }
         });
         
-        button.addClickHandler(new ClickHandler() {
+        greetMeButton.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                label.setText(ResourceBundle.message.wait4reply());
+                rpcReplyLabel.setText(ResourceBundle.message.wait4reply());
                 ResourceBundle.asyncService.greetme(textBox.getText(), new ButtonCallback());
             }
         });
 
-        button2.addClickHandler(new ClickHandler() {
+        forceOomButton.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
                 ResourceBundle.asyncService.forceOOM(null);
@@ -134,9 +137,9 @@ public class RpcDemo extends FlowPanel {
         add(loginButton);
         add(logoutButton);
         add(textBox);
-        add(button);
-        add(label);
-        add(button2);
+        add(greetMeButton);
+        add(rpcReplyLabel);
+        add(forceOomButton);
         add(animation);
         add(startAnimButton);
         add(stopAnimButton);
@@ -163,12 +166,12 @@ public class RpcDemo extends FlowPanel {
         @Override
         public void onFailure(Throwable caught) {
             Window.alert(caught.toString());
-            label.setText(ResourceBundle.message.wait4input());
+            rpcReplyLabel.setText(ResourceBundle.message.wait4input());
         }
 
         @Override
         public void onSuccess(String result) {
-            label.setText(ResourceBundle.message.receivedReply(result));
+            rpcReplyLabel.setText(ResourceBundle.message.receivedReply(result));
         }
     }
 

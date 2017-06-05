@@ -339,12 +339,12 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>gwt-example-client</artifactId>
             <version>${project.version}</version>
-            <type>jar</type>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>gwt-example-server</artifactId>
             <version>${project.version}</version>
+            <classifier>classes</classifier>
         </dependency>
         <dependency>
             <groupId>com.github.jjYBdx4IL</groupId>
@@ -363,6 +363,13 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.ant</groupId>
+            <artifactId>ant</artifactId>
+            <version>1.10.1</version>
+            <scope>test</scope>
+            <type>jar</type>
         </dependency>
     </dependencies>
     

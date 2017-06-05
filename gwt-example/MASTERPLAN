@@ -17,7 +17,7 @@ directories and simply add the client's webapp output directory.
 
 As of now, to start up development servers, do:
 
-cd client && mvn package -Dnocompile -Ddevmode (or simply gwt:run, but the first variant is test in devel-it)
+cd client && mvn package -Dnocompile -Ddevmode (or simply gwt:run, but the first variant is tested in devel-it)
 cd server && mvn jetty:run
 
 Then point your browser at localhost port 8080.

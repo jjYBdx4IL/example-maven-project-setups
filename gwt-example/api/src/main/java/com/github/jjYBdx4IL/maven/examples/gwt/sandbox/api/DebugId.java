@@ -9,5 +9,8 @@ public enum DebugId {
     ChatDemoSendButton,
     ChatDemoChatLog,
     HandlerManagerDemo,
-    RpcDemoListBox;
+    RpcDemoListBox,
+    RpcDemoReplyLabel,
+    RpcDemoGreetMeButton,
+    RpcDemoTextBox;
 }
