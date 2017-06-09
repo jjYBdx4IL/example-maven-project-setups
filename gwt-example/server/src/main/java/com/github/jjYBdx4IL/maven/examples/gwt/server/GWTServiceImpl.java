@@ -4,10 +4,16 @@ import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.api.GWTService;
 import com.github.jjYBdx4IL.aop.tx.Tx;
 import com.github.jjYBdx4IL.aop.tx.TxEM;
 import com.github.jjYBdx4IL.aop.tx.TxRO;
+import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.api.jpa.ExampleItem;
+import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.api.dto.ExampleItemDTO;
+import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.api.jpa.QueryFactory;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
@@ -25,7 +31,6 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
     @TxEM
     private EntityManager em;
     
-    @TxRO
     @Override
     public String greetme(String username) {
         Boolean authenticated = (Boolean) getSession().getAttribute(SESSION_ATTRNAME_AUTHENTICATED);
@@ -65,6 +70,23 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
         getSession().removeAttribute(SESSION_ATTRNAME_USER);
         getSession().removeAttribute(SESSION_ATTRNAME_AUTHENTICATED);
         
+    }
+
+    @TxRO
+    @Override
+    public List<ExampleItemDTO> getExampleItems() {
+        TypedQuery<ExampleItem> itemQuery = QueryFactory.getAll(em);
+        List<ExampleItemDTO> resultList = new ArrayList<>();
+        for (ExampleItem item : itemQuery.getResultList()) {
+            resultList.add(item.toDTO());
+        }
+        return resultList;
+    }
+
+    @Tx
+    @Override
+    public void addExampleItem(ExampleItemDTO item) {
+        em.persist(ExampleItem.fromDTO(item));
     }
 
 }

@@ -3,7 +3,6 @@ package com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client.rpcdemo;
 import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.api.DebugId;
 import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client.ResourceBundle;
 import static com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client.ResourceBundle.message;
-import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client.Sandbox;
 import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client.events.LoginEvent;
 import static com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client.rpcdemo.ResourceBundle.RES;
 

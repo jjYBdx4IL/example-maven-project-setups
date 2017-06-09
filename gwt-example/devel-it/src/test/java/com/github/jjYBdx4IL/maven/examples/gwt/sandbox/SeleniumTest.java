@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 import javax.tools.Diagnostic;
 import javax.tools.DiagnosticCollector;
@@ -53,13 +54,13 @@ public class SeleniumTest extends SeleniumTestBase {
 
     private static final Logger LOG = LoggerFactory.getLogger(SeleniumTest.class);
     private static final File DEVMODE_INSTALL_DIR;
-    
+
     static {
         String s = System.getProperty("devmode.install.dir", null);
         LOG.info(s);
         DEVMODE_INSTALL_DIR = s == null ? null : new File(s);
     }
-    
+
     /**
      *
      * @return some URL string pointing to the location of the app to be tested
@@ -73,10 +74,33 @@ public class SeleniumTest extends SeleniumTestBase {
     }
 
     @Before
-    public void before() {
+    public void before() throws InterruptedException {
         getDriver(SeleniumTestBase.Driver.CHROME);
     }
-    
+
+    @Test
+    public void testJpaCellTableDemo() throws WebElementNotFoundException {
+        getDriver().get(getSandboxLocation());
+        setTestName("testJpaCellTableDemo");
+        takeScreenshot();
+
+        click(String.format(Locale.ROOT, "xpath://*[@id='%s']", getDebugId(DebugId.JpaCellTableExample)));
+        takeScreenshot();
+
+        WebElement data1Input = getByDebugId(DebugId.JpaCellTableExampleData1TextBox);
+        String testToken = System.currentTimeMillis() + "-" + new Random().nextLong();
+        data1Input.sendKeys(testToken);
+
+        WebElement sendButton = getByDebugId(DebugId.JpaCellTableExampleAddButton);
+        sendButton.click();
+
+        // wait for list update from server
+        assertNotNull(waitForElement(String.format(Locale.ROOT, "xpath://*[@id='%s']//*[contains(text(),'%s')]",
+                getDebugId(DebugId.JpaCellTableExampleTable),
+                testToken)));
+        takeScreenshot();
+    }
+
     @Test
     public void testJettyDevWebAppAutoReload() throws Exception {
         assumeNotNull(DEVMODE_INSTALL_DIR);
@@ -90,12 +114,12 @@ public class SeleniumTest extends SeleniumTestBase {
         click("RpcDemo");
         WebElement greetMeButton = getByDebugId(DebugId.RpcDemoGreetMeButton);
         greetMeButton.click();
-        
+
         // wait for reply from server
         assertNotNull(waitForElement(String.format(Locale.ROOT, "xpath://*[@id='%s'][contains(text(),'%s')]",
                 getDebugId(DebugId.RpcDemoReplyLabel),
                 unauthReply)));
-        
+
         // recompile server-side service class to send another reply
         String sourceContents = FileUtils.readFileToString(sourceFile, "UTF-8");
         String updatedSourceContents = sourceContents.replace(unauthReply, changedReply);
@@ -103,7 +127,7 @@ public class SeleniumTest extends SeleniumTestBase {
             FileUtils.write(sourceFile, updatedSourceContents, "UTF-8");
             recompile(sourceFile, findWebInfClassesDir(new File(DEVMODE_INSTALL_DIR, "server/target")));
             Thread.sleep(10000L); // give the server enough time to reload
-            
+
             greetMeButton.click();
 
             // wait for modified reply from server
@@ -117,18 +141,18 @@ public class SeleniumTest extends SeleniumTestBase {
             Thread.sleep(10000L); // give the server enough time to reload
         }
     }
-    
+
     @Test
     public void testGWTDevModeRefreshOnBrowserReload() throws IOException, WebElementNotFoundException {
         assumeNotNull(DEVMODE_INSTALL_DIR);
-        
+
         getDriver().get(getSandboxLocation());
         click("RpcDemo");
         WebElement listBox = getByDebugId(DebugId.RpcDemoListBox);
         Select sel = new Select(listBox);
         WebElement firstOption = sel.getOptions().get(0);
         assertEquals("first listbox entry", firstOption.getText());
-        
+
         // update the text for the first listbox entry
         File sourceFile = new File(DEVMODE_INSTALL_DIR, "client/src/main/java/" + RpcDemo.class.getName().replace(".", "/") + ".java");
         String sourceContents = FileUtils.readFileToString(sourceFile, "UTF-8");
@@ -148,7 +172,7 @@ public class SeleniumTest extends SeleniumTestBase {
             FileUtils.write(sourceFile, sourceContents, "UTF-8");
         }
     }
-    
+
     @Test
     public void testChatDemo() throws WebElementNotFoundException {
         getDriver().get(getSandboxLocation());
@@ -304,23 +328,28 @@ public class SeleniumTest extends SeleniumTestBase {
         }
         return result;
     }
-    
+
     protected String getDebugId(DebugId debugId) {
         return GWT_DEBUG_ID_PREFIX + debugId.name();
     }
-    
+
     protected WebElement getByDebugId(DebugId debugId) throws WebElementNotFoundException {
-        String fullDebugId = getDebugId(debugId);
-        List<WebElement> elements = filterDisplayed(getDriver().findElements(By.id(fullDebugId)));
-        if (elements.size() != 1) {
-            throw new WebElementNotFoundException("no element found with gwt debug id " + fullDebugId);
+        try {
+            getDriver().manage().timeouts().implicitlyWait(DEFAULT_WAIT_SECS, TimeUnit.SECONDS);
+            String fullDebugId = getDebugId(debugId);
+            List<WebElement> elements = filterDisplayed(getDriver().findElements(By.id(fullDebugId)));
+            if (elements.size() != 1) {
+                throw new WebElementNotFoundException("no element found with gwt debug id " + fullDebugId);
+            }
+            return elements.get(0);
+        } finally {
+            getDriver().manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
         }
-        return elements.get(0);
     }
-    
+
     protected void recompile(File sourceFile, File classesDir) throws Exception {
         LOG.info("compiling " + sourceFile.getAbsolutePath() + " to " + classesDir.getAbsolutePath());
-        
+
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
         DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<JavaFileObject>();
         StandardJavaFileManager jfm = compiler.getStandardFileManager(diagnostics, Locale.getDefault(), Charset.forName("UTF-8"));

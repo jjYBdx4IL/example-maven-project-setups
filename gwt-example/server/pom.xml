@@ -350,7 +350,7 @@
             <groupId>com.github.jjYBdx4IL.aop</groupId>
             <artifactId>aspectj-ltw-configurator-api</artifactId>
             <version>1.0-SNAPSHOT</version>
-            <type>jar</type>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 

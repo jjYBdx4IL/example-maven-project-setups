@@ -1,6 +1,7 @@
 package com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client;
 
 
+import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.api.DebugId;
 import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client.chat.ChatDemo;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.logical.shared.SelectionEvent;
@@ -12,6 +13,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client.datagrid.CellTableExample;
 import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client.datagrid.CellTableFieldUpdaterComplexExample;
 import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client.datagrid.CellTableFieldUpdaterExample;
+import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client.datagrid.JpaCellTableExample;
 import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client.datagrid.StackOverflow15161741;
 import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client.eventbus.SimpleEventBusDemo;
 import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client.handlermanager.HandlerManagerDemo;
@@ -21,11 +23,12 @@ import com.google.gwt.user.client.ui.StackLayoutPanel;
 import com.google.inject.Inject;
 import java.util.logging.Logger;
 
+@SuppressWarnings("LoggerStringConcat")
 public class MainPanel extends Composite implements ValueChangeHandler<String> {
 
-    private static final Logger logger = Logger.getLogger(MainPanel.class.getName());
+    private static final Logger LOG = Logger.getLogger(MainPanel.class.getName());
     private final StackLayoutPanel layoutPanel = new StackLayoutPanel(Unit.EM);
-    private final double headerSize = 3.0d;
+    private final double headerSize = 2.3d;
 
     @Inject
     public MainPanel(final RpcDemo rpcDemo) {
@@ -38,17 +41,19 @@ public class MainPanel extends Composite implements ValueChangeHandler<String> {
         layoutPanel.add(new CellTableFieldUpdaterExample(), "CellTableFieldUpdaterExample", headerSize);
         layoutPanel.add(new CellTableFieldUpdaterComplexExample(), "CellTableFieldUpdaterComplexExample", headerSize);
         layoutPanel.add(new ChatDemo(), "ChatDemo", headerSize);
+        layoutPanel.add(new JpaCellTableExample(), "JpaCellTableExample", headerSize);
+        layoutPanel.getHeaderWidget(layoutPanel.getWidgetCount()-1).ensureDebugId(DebugId.JpaCellTableExample.name());
         this.initWidget(layoutPanel);
 
         String initToken = History.getToken();
-        logger.info("initToken = " + initToken);
+        LOG.info("initToken = " + initToken);
         int tabIdx;
         try {
             tabIdx = Integer.parseInt(initToken);
         } catch (NumberFormatException ex) {
             tabIdx = 0;
         }
-        logger.info("tabIdx = "+tabIdx);
+        LOG.info("tabIdx = "+tabIdx);
         layoutPanel.showWidget(tabIdx);
 
         layoutPanel.addSelectionHandler(new SelectionHandler<Integer>() {
@@ -63,16 +68,16 @@ public class MainPanel extends Composite implements ValueChangeHandler<String> {
 
     @Override
     protected void onAttach() {
-        logger.fine("entering onAttach()");
+        LOG.fine("entering onAttach()");
         super.onAttach();
-        logger.fine("leaving onAttach()");
+        LOG.fine("leaving onAttach()");
     }
 
     @Override
     protected void onLoad() {
-        logger.fine("entering onLoad()");
+        LOG.fine("entering onLoad()");
         super.onLoad();
-        logger.fine("leaving onLoad()");
+        LOG.fine("leaving onLoad()");
     }
 
     @Override
@@ -85,7 +90,7 @@ public class MainPanel extends Composite implements ValueChangeHandler<String> {
             tabIdx = 0;
         }
 
-        logger.info("tabIdx = "+tabIdx);
+        LOG.info("tabIdx = "+tabIdx);
         layoutPanel.showWidget(tabIdx);
     }
 }

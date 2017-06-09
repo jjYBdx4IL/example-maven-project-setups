@@ -23,6 +23,7 @@
         <jetty.version>9.4.5.v20170502</jetty.version>
         <src.artifactId>gwt-example-client</src.artifactId>
         <zip.artifact>${project.build.directory}/${project.artifactId}-${project.version}-bin.zip</zip.artifact>
+        <aspectj.version>1.8.10</aspectj.version>
         
         <!-- IT -->
         <jetty.port>80</jetty.port>
@@ -42,6 +43,11 @@
             <version>${jetty.version}</version>
             <scope>runtime</scope>
             <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>com.github.jjYBdx4IL.aop</groupId>
+            <artifactId>aspectj-tx-manager</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.h2database</groupId>

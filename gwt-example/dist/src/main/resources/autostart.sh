@@ -86,10 +86,12 @@ if [[ $cmd == "start" ]]; then
         authbind="authbind --deep"
     fi
 
+    javaagent="-javaagent:lib/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar -Daj.weaving.verbose=true"
+
     export PROCIDTAG
     (
         while true; do
-            $authbind java -jar $startJar || :
+            $authbind java $javaagent -jar $startJar || :
             sleep 10
         done
     ) >& $LOGFILE &

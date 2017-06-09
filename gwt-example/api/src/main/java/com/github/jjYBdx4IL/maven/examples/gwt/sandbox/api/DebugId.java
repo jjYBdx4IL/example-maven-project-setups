@@ -12,5 +12,10 @@ public enum DebugId {
     RpcDemoListBox,
     RpcDemoReplyLabel,
     RpcDemoGreetMeButton,
-    RpcDemoTextBox;
+    RpcDemoTextBox,
+    JpaCellTableExample,
+    JpaCellTableExampleData1TextBox,
+    JpaCellTableExampleData2TextBox,
+    JpaCellTableExampleAddButton,
+    JpaCellTableExampleTable;
 }
