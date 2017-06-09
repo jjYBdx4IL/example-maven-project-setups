@@ -3,8 +3,6 @@ package com.github.jjYBdx4IL.maven.examples.aspectj.fieldaccess;
 import com.github.jjYBdx4IL.maven.examples.aspectj.ServletTestBase;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -12,8 +10,6 @@ import org.slf4j.LoggerFactory;
  */
 public class FieldAccessServletTest extends ServletTestBase {
 
-    private static final Logger LOG = LoggerFactory.getLogger(FieldAccessServletTest.class);
-    
     /**
      * Test of doGet method, of class FieldAccessServlet.
      */

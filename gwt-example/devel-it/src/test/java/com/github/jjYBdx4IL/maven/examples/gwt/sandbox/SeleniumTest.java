@@ -17,7 +17,7 @@ package com.github.jjYBdx4IL.maven.examples.gwt.sandbox;
 
 import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.api.DebugId;
 import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client.rpcdemo.RpcDemo;
-import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.server.GWTServiceImpl;
+import com.github.jjYBdx4IL.maven.examples.gwt.server.GWTServiceImpl;
 import com.github.jjYBdx4IL.test.selenium.SeleniumTestBase;
 import com.github.jjYBdx4IL.test.selenium.WebElementNotFoundException;
 import java.io.File;
@@ -319,9 +319,11 @@ public class SeleniumTest extends SeleniumTestBase {
     }
     
     protected void recompile(File sourceFile, File classesDir) throws Exception {
+        LOG.info("compiling " + sourceFile.getAbsolutePath() + " to " + classesDir.getAbsolutePath());
+        
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
         DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<JavaFileObject>();
-        StandardJavaFileManager jfm = compiler.getStandardFileManager(diagnostics, Locale.ROOT, Charset.forName("UTF-8"));
+        StandardJavaFileManager jfm = compiler.getStandardFileManager(diagnostics, Locale.getDefault(), Charset.forName("UTF-8"));
 
         Iterable<? extends JavaFileObject> compilationUnit = jfm.getJavaFileObjects(sourceFile);
 
@@ -339,14 +341,15 @@ public class SeleniumTest extends SeleniumTestBase {
                 null,
                 compilationUnit);
 
-        assertTrue(task.call());
-
         for (Diagnostic<? extends JavaFileObject> diagnostic : diagnostics.getDiagnostics()) {
             LOG.error("Error on line {} in {}: {}",
                     diagnostic.getLineNumber(),
                     diagnostic.getSource().toUri(),
-                    diagnostic.getMessage(Locale.ROOT));
+                    diagnostic.getMessage(Locale.getDefault()));
         }
+
+        assertTrue("compilation failed, source to compile was: "
+                + FileUtils.readFileToString(sourceFile, "UTF-8"), task.call());
 
         jfm.close();
     }

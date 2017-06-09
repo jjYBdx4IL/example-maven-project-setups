@@ -1,7 +1,5 @@
 package com.github.jjYBdx4IL.maven.examples.gwt.server.chat;
 
-import static org.junit.Assert.*;
-
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,7 +7,6 @@ import org.slf4j.LoggerFactory;
 import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.api.ChatMessage;
 import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.api.IChatMessagePseudoService;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.GWTBridge;
 import com.google.gwt.user.client.rpc.SerializationException;
 import com.google.gwt.user.client.rpc.SerializationStreamFactory;
 import com.google.gwt.user.client.rpc.SerializationStreamReader;
@@ -23,8 +20,6 @@ public class GWTSerializationUtilsTest {
     @Ignore
     @Test
     public void test() throws SerializationException {
-        GWTBridge br;
-        
         String serialized = GWTSerializationUtils.serializeMessage(new ChatMessage("room", "text"));
         LOG.info(">>" + serialized + "<<");
         // messages encoded by client and server have different encodings.... so we can't decode for testing

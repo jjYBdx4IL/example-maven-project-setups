@@ -1,20 +1,35 @@
-package com.github.jjYBdx4IL.maven.examples.gwt.sandbox.server;
+package com.github.jjYBdx4IL.maven.examples.gwt.server;
 
 import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.api.GWTService;
+import com.github.jjYBdx4IL.aop.tx.Tx;
+import com.github.jjYBdx4IL.aop.tx.TxEM;
+import com.github.jjYBdx4IL.aop.tx.TxRO;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+@SuppressWarnings("serial")
+@Tx
 public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
 
+    private static final Logger LOG = LoggerFactory.getLogger(GWTServiceImpl.class);
+    
     private static final String SESSION_ATTRNAME_USER = "username";
     private static final String SESSION_ATTRNAME_AUTHENTICATED = "authenticated";
+   
+    @TxEM
+    private EntityManager em;
     
+    @TxRO
     @Override
     public String greetme(String username) {
         Boolean authenticated = (Boolean) getSession().getAttribute(SESSION_ATTRNAME_AUTHENTICATED);
+        LOG.info(""+em);
         if (authenticated == null || !authenticated.booleanValue()) {
             return "Hello unauthenticated user!";
         }

@@ -44,7 +44,6 @@
         <plugins>
             <plugin>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.0.2</version>
                 <executions>
                     <execution>
                         <id>make-a-test-jar</id>
@@ -62,7 +61,6 @@
             </plugin>
             <plugin>
                 <artifactId>maven-enforcer-plugin</artifactId>
-                <version>1.4.1</version>
                 <executions>
                     <execution>
                         <id>enforce</id>
@@ -93,10 +91,9 @@
             </plugin>
             <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
-                <version>1.8</version>
                 <executions>
                     <execution>
-                        <id>start-devel-servers</id>
+                        <id>start</id>
                         <phase>pre-integration-test</phase>
                         <goals>
                             <goal>run</goal>
@@ -205,7 +202,7 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <id>stop-devel-servers</id>
+                        <id>stop</id>
                         <phase>post-integration-test</phase>
                         <goals>
                             <goal>run</goal>
@@ -239,7 +236,7 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <id>stop-devel-servers-preclean</id>
+                        <id>stop-preclean</id>
                         <phase>pre-clean</phase>
                         <goals>
                             <goal>run</goal>
@@ -369,7 +366,11 @@
             <artifactId>ant</artifactId>
             <version>1.10.1</version>
             <scope>test</scope>
-            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>com.github.jjYBdx4IL.aop</groupId>
+            <artifactId>aspectj-tx-manager-api</artifactId>
+            <version>1.0-SNAPSHOT</version> <!-- FIXME inherit this -->
         </dependency>
     </dependencies>
     

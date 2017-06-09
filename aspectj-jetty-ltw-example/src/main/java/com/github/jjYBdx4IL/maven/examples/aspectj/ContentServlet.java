@@ -12,6 +12,8 @@ import org.slf4j.LoggerFactory;
  *
  * @author jjYBdx4IL
  */
+@SuppressWarnings("serial")
+@Tx
 public class ContentServlet extends HttpServlet implements ISetMessage {
 
     private static final Logger LOG = LoggerFactory.getLogger(ContentServlet.class);

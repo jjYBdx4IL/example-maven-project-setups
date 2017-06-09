@@ -4,7 +4,6 @@ import com.github.jjYBdx4IL.maven.examples.aspectj.Tx;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.logging.Level;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -40,11 +39,14 @@ import org.slf4j.LoggerFactory;
  * @author jjYBdx4IL
  */
 @Tx
+@SuppressWarnings({ "unused", "serial" })
 public class TxServlet extends HttpServlet {
 
     private static final Logger LOG = LoggerFactory.getLogger(TxServlet.class);
     
     private String message = "Load-time weaving failed!";
+    @TxInject
+    private String message2 = "Load-time weaving failed!";
    
 //    @Override
 //    public void init() {
@@ -80,6 +82,10 @@ public class TxServlet extends HttpServlet {
     
     private String getMessage() {
         return message;
+    }
+
+	private String getMessage2() {
+        return message2;
     }
 
 }

@@ -10,3 +10,7 @@ Use -DskipITs to do only compilation.
 
 The same test classes are also used in the integration-test phase of the dist module
 to check the final distribution package.
+
+Use mvn antrun:run@start (or @stop) to start (stop) the servers so you can run
+and develop single unit tests. (you need a reasonably recent maven version for the
+@-part to work)

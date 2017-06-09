@@ -1,37 +1,38 @@
 package com.github.jjYBdx4IL.maven.examples.gwt.server.chat;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import org.eclipse.jetty.websocket.servlet.WebSocketServlet;
 import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author jjYBdx4IL
  */
+@SuppressWarnings("serial")
 public class ChatServlet extends WebSocketServlet {
 
-    private static final Logger LOG = Logger.getLogger(ChatServlet.class.getName());
+    private static final Logger LOG = LoggerFactory.getLogger(ChatServlet.class);
     private ChatServer chatServer = null;
     private Thread chatServerThread = null;
 
     public ChatServlet() {
         super();
-        LOG.log(Level.INFO, "TestServlet constructor called {0}", this);
+        LOG.debug("ChatServlet constructor called {}", this);
     }
 
     @Override
     public void destroy() {
         super.destroy(); //To change body of generated methods, choose Tools | Templates.
-        LOG.log(Level.INFO, "destroy called on {0}", this);
+        LOG.info("destroy called on {}", this);
         chatServer.shutdown();
     }
 
     @Override
     public void init() throws ServletException {
         super.init(); //To change body of generated methods, choose Tools | Templates.
-        LOG.log(Level.INFO, "init called on {0}", this);
+        LOG.info("init called on {}", this);
         chatServerThread = new Thread(chatServer, "ChatServer");
         chatServerThread.start();
     }

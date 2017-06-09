@@ -55,7 +55,7 @@ public class ServletTestBase {
 
     protected String getServletOutput() {
         try {
-            return IOUtils.toString(getURL());
+            return IOUtils.toString(getURL(), "UTF-8");
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }

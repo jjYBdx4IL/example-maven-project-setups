@@ -6,6 +6,7 @@ import java.io.Serializable;
  *
  * @author jjYBdx4IL
  */
+@SuppressWarnings("serial")
 public class ChatMessage implements Serializable {
 
     private String room;

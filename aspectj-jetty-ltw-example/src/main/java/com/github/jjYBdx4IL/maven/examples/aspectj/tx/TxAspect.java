@@ -9,16 +9,26 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.github.jjYBdx4IL.aspectj.utils.AspectJWeaveConfig;
+import com.github.jjYBdx4IL.maven.examples.aspectj.Tx;
+
 /**
  *
  * @author jjYBdx4IL
  */
 @Aspect
+@AspectJWeaveConfig(
+		includesWithin = {
+				"javax.servlet.GenericServlet"},
+		showWeaveInfo = true,
+		verbose = true,
+		weaveJavaxPackages = true
+)
 public class TxAspect {
 
     private static final Logger LOG = LoggerFactory.getLogger(TxAspect.class);
 
-    @Pointcut("execution(void javax.servlet.GenericServlet+.init())")
+    @Pointcut("execution(void javax.servlet.GenericServlet+.init(..))")
     public void servletInit() {
     }
 
@@ -34,6 +44,10 @@ public class TxAspect {
     public void messageFieldAccess() {
     }
 
+    @Pointcut("get(@com.github.jjYBdx4IL.maven.examples.aspectj.tx.TxInject String *..*)")
+    public void fieldInjectionViaAnnotation() {
+    }
+    
     @Pointcut("classAnnotatedWithTx() && messageFieldAccess()")
     public void messageFieldAccessInAnnotatedClass() {
     }
@@ -53,6 +67,13 @@ public class TxAspect {
         return "Load-time weaving works with jetty!";
     }
 
+    @Around("fieldInjectionViaAnnotation() && classAnnotatedWithTx() && this(foo)")
+    public Object injectIntoFieldViaAnnotation(ProceedingJoinPoint thisJoinPoint, Object foo) throws Throwable {
+        thisJoinPoint.proceed();
+        LOG.info("injecting message via annotation");
+        return "Load-time weaving works with jetty and field annotations! " + foo;
+    }
+    
     @After("servletInitInAnnotatedClass()")
     public void afterServletInit() {
         LOG.info("after servlet init");
@@ -63,9 +84,9 @@ public class TxAspect {
         LOG.info("before servlet destroy");
     }
 
-    @Around("execution(@com.github.jjYBdx4IL.maven.examples.aspectj.Tx * *..*(..))")
-    public Object handleTx(ProceedingJoinPoint thisJoinPoint) throws Throwable {
-        LOG.info("handle tx");
+    @Around("execution(* *..TxServlet.*(..)) && this(foo)")
+    public Object handleTx(ProceedingJoinPoint thisJoinPoint, Object foo) throws Throwable {
+        LOG.info("handle tx, isAnnotationPresent(Tx): " + foo.getClass().isAnnotationPresent(Tx.class));
         // start tx
 
         Object result = thisJoinPoint.proceed();
@@ -74,4 +95,9 @@ public class TxAspect {
         return result;
     }
     
+    @After("execution(* javax.servlet.GenericServlet.init()) && this(foo)")
+    public void handleAfterInit(Object foo) {
+    	LOG.info("handleAfterInit, foo = " + foo);
+        LOG.info("handleAfterInit, isAnnotationPresent(Tx): " + foo.getClass().isAnnotationPresent(com.github.jjYBdx4IL.maven.examples.aspectj.Tx.class));
+    }
 }

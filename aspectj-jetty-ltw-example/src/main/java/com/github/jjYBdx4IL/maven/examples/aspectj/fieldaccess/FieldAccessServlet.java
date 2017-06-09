@@ -5,17 +5,14 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author jjYBdx4IL
  */
+@SuppressWarnings("serial")
 public class FieldAccessServlet extends HttpServlet {
 
-    private static final Logger LOG = LoggerFactory.getLogger(FieldAccessServlet.class);
-    
     /**
      * In this example we weave access to a field.
      * Servlet classes get instantiated only once per servlet context, they must be thread-safe.

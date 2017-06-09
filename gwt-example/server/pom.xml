@@ -20,6 +20,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <jetty.version>9.4.5.v20170502</jetty.version>
+        <aspectj.utils.version>1.0-SNAPSHOT</aspectj.utils.version>
     </properties>
 
     <build>
@@ -40,7 +41,9 @@
                 <configuration>
                     <rules>
                         <requireNoRepositories />
-                        <requirePluginVersions />
+                        <requirePluginVersions>
+                            <banSnapshots>false</banSnapshots> <!-- FIXME -->
+                        </requirePluginVersions>
                         <dependencyConvergence />
                         <requireUpperBoundDeps />
                         <requireReleaseDeps>
@@ -62,6 +65,9 @@
                 <artifactId>jetty-maven-plugin</artifactId>
                 <version>${jetty.version}</version>
                 <configuration>
+                    <!-- we cannot use provided scope for additional server classes because if the webapp
+                    needs it too, it may get declared twice, once explicitly with provided scope, and once through the
+                    plugin's dependencies, which leads to class loading errors like "class not found" -->
                     <useProvidedScope>false</useProvidedScope>
                     <scanIntervalSeconds>1</scanIntervalSeconds>
                     <webApp>
@@ -74,6 +80,18 @@
                         </systemProperty>
                     </systemProperties>
                 </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.github.jjYBdx4IL.aop</groupId>
+                        <artifactId>aspectj-tx-manager</artifactId>
+                        <version>${aspectj.utils.version}</version>
+                    </dependency>
+<!--                    <dependency>
+                        <groupId>org.eclipse.jetty</groupId>
+                        <artifactId>apache-jsp</artifactId>
+                        <version>${jetty.version}</version>
+                    </dependency>-->
+                </dependencies>
             </plugin>
             
             <plugin>
@@ -105,6 +123,22 @@
                         <exclude>**/application-context.xml</exclude>
                         <exclude>**/application-properties.xml</exclude>
                     </excludes>
+                </configuration>
+            </plugin>
+            
+            <plugin>
+                <groupId>com.github.jjYBdx4IL.aop</groupId>
+                <artifactId>aspectj-ltw-maven-plugin</artifactId>
+                <version>${aspectj.utils.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate-maven-startup-config</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <aspectjWeaverVersion>1.8.10</aspectjWeaverVersion>
                 </configuration>
             </plugin>
         </plugins>
@@ -257,25 +291,21 @@
     </build>
 
     <dependencies>
-        <dependency>
-            <groupId>org.aspectj</groupId>
-            <artifactId>aspectjrt</artifactId>
-            <version>1.8.10</version>
-        </dependency>
-        <dependency>
+        
+        
+        <!--        <dependency>
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjweaver</artifactId>
             <version>1.8.10</version>
-        </dependency>
+            <scope>provided</scope>
+        </dependency>-->
+
+        <!-- proxy servlet is considered server class and therefore hidden from webapp. for that reason
+        we have to explicitly include it for using it inside the webapp -->        
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-proxy</artifactId>
             <version>${jetty.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-dbcp</groupId>
-            <artifactId>commons-dbcp</artifactId>
-            <version>1.4</version>
         </dependency>
 
         <dependency>
@@ -315,11 +345,13 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.hibernate.javax.persistence</groupId>
-            <artifactId>hibernate-jpa-2.1-api</artifactId>
-            <version>1.0.0.Final</version>
-            <type>jar</type>
+            <groupId>com.github.jjYBdx4IL.aop</groupId>
+            <artifactId>aspectj-tx-manager-api</artifactId>
+            <version>${aspectj.utils.version}</version>
+            <scope>provided</scope>
         </dependency>
+        
+        
     </dependencies>
 
     <dependencyManagement>

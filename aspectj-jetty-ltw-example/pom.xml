@@ -37,20 +37,6 @@
             </plugin>
             
             <plugin>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>3.0.1</version>
-                <executions>
-                    <execution>
-                        <id>getClasspathFilenames</id>
-                        <goals>
-                            <goal>properties</goal>
-                        </goals>
-                        <phase>initialize</phase>
-                    </execution>
-                </executions>
-            </plugin>
-            
-            <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.20</version>
                 <executions>
@@ -63,31 +49,9 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <argLine>-javaagent:${org.aspectj:aspectjweaver:jar} -Daj.weaving.verbose=true</argLine>
+                    <argLine>-javaagent:${aspectjWeaverLocation} -Daj.weaving.verbose=true</argLine>
                     <forkMode>once</forkMode>
                 </configuration>
-            </plugin>
-            
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>1.6.0</version>
-                <executions>
-                    <execution>
-                        <id>aspectj-maven-config</id>
-                        <goals>
-                            <goal>java</goal>
-                        </goals>
-                        <phase>process-classes</phase>
-                        <configuration>
-                            <mainClass>com.github.jjYBdx4IL.maven.examples.aspectj.MavenConfigurator</mainClass>
-                            <arguments>
-                                <argument>${project.basedir}/.mvn/jvm.config</argument>
-                                <argument>${org.aspectj:aspectjweaver:jar}</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
             
             <plugin>
@@ -98,9 +62,13 @@
                     <execution>
                         <goals>
                             <goal>generate-ltw-config</goal>
+                            <goal>generate-maven-startup-config</goal>
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <aspectjWeaverVersion>1.8.10</aspectjWeaverVersion>
+                </configuration>
             </plugin>
         </plugins>
     </build>
@@ -108,7 +76,7 @@
     <dependencies>
         <dependency>
             <groupId>com.github.jjYBdx4IL.aop</groupId>
-            <artifactId>aspectj-utils</artifactId>
+            <artifactId>aspectj-ltw-configurator-api</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         
