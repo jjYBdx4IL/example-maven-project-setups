@@ -1,5 +1,6 @@
 package com.github.jjYBdx4IL.maven.examples.gwt.server;
 
+import java.io.File;
 import java.lang.management.ManagementFactory;
 import java.nio.file.Paths;
 import org.apache.tomcat.SimpleInstanceManager;
@@ -9,6 +10,7 @@ import org.eclipse.jetty.deploy.bindings.DebugListenerBinding;
 import org.eclipse.jetty.deploy.providers.WebAppProvider;
 import org.eclipse.jetty.http.HttpVersion;
 import org.eclipse.jetty.jmx.MBeanContainer;
+import org.eclipse.jetty.plus.jndi.Resource;
 import org.eclipse.jetty.server.DebugListener;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.HttpConfiguration;
@@ -189,6 +191,8 @@ public class EmbeddedMain {
         lowResourcesMonitor.setMaxLowResourcesTime(5000);
         server.addBean(lowResourcesMonitor);
 
+        new Resource(server, "jdbc/url", "jdbc:h2:" + new File(cwd, "data/db/h2").getAbsolutePath());
+        
         // === test-realm.xml ===
 //        HashLoginService login = new HashLoginService();
 //        login.setName("Test Realm");

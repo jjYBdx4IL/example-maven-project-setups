@@ -73,6 +73,7 @@
                     <webApp>
                         <overrideDescriptor>${project.basedir}/src/main/webapp/WEB-INF/web.devel.xml</overrideDescriptor>
                     </webApp>
+                    <jettyEnvXml>${project.basedir}/src/main/webapp/WEB-INF/jetty-env.xml</jettyEnvXml>
                     <systemProperties>
                         <systemProperty>
                             <name>gwt.codeserver.port</name>
@@ -93,7 +94,7 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <version>3.1.0</version>
                 <configuration>
-                    <packagingExcludes>**/*.cache.ttf,**/hosted.html,WEB-INF/web.devel.xml</packagingExcludes>
+                    <packagingExcludes>**/*.cache.ttf,**/hosted.html,WEB-INF/web.devel.xml,WEB-INF/jetty-env.xml</packagingExcludes>
                     <!-- do NOT archive classes, or jetty:run's auto-reload does not work -->
                     <archiveClasses>false</archiveClasses>
                     <attachClasses>true</attachClasses>

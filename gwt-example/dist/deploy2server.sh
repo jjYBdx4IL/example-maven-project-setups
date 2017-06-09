@@ -18,6 +18,7 @@ if [[ -z "$acct" ]]; then
 fi
 host=${acct##*@}
 chktgt=http://$host:80/
+chktgt2=https://$host:443/
 unpd=target/deploy.zip.unpack
 distname=$artifactId
 relexec=./$distname/autostart.sh
@@ -25,9 +26,12 @@ tmpdest=$distname.deploy.tmpdest
 sshopts='-o PasswordAuthentication=no -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o ConnectTimeout=10 -o TCPKeepAlive=yes -o BatchMode=yes -o ServerAliveInterval=3 -o ServerAliveCountMax=4 -o IdentitiesOnly=yes'
 
 uptest() {
-    if curl --connect-timeout 3 -s -I "$chktgt" | grep "^Content-Type:" >/dev/null; then
+    if curl -k --connect-timeout 3 -s -I "$chktgt" | grep "^Content-Type:" >/dev/null; then
         return 0
     fi
+    if curl -k --connect-timeout 3 -s -I "$chktgt2" | grep "^Content-Type:" >/dev/null; then
+	return 0
+    fi	
     return 1
 }
 
@@ -50,5 +54,5 @@ done
 
 uptest
 
-curl -s "$chktgt" | grep sandbox.html >/dev/null
+curl -k -s "$chktgt2" | grep sandbox.html >/dev/null
 
