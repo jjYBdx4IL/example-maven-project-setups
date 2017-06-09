@@ -23,7 +23,9 @@ public class ContentServlet extends HttpServlet implements ISetMessage {
     @Override
     public void init() throws ServletException {
         LOG.info("ContentServlet.init()");
+        LOG.info("before super.init() call");
         super.init();
+        LOG.info("after super.init() call");
     }
 
     @Override

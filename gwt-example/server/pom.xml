@@ -128,6 +128,7 @@
                 <executions>
                     <execution>
                         <goals>
+                            <goal>generate-ltw-config</goal>
                             <goal>generate-maven-startup-config</goal>
                         </goals>
                     </execution>
@@ -345,8 +346,12 @@
             <version>${aspectj.utils.version}</version>
             <scope>provided</scope>
         </dependency>
-        
-        
+        <dependency>
+            <groupId>com.github.jjYBdx4IL.aop</groupId>
+            <artifactId>aspectj-ltw-configurator-api</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <type>jar</type>
+        </dependency>
     </dependencies>
 
     <dependencyManagement>

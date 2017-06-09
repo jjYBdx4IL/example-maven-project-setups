@@ -95,7 +95,9 @@ public class TxAspect {
         return result;
     }
     
-    @After("execution(* javax.servlet.GenericServlet.init()) && @this(tx) && this(foo)")
+    // the within(..) statement prevents multiple executions when the GenericServet's init() method gets overridden
+    // and the override does a super.init() call. On the downside, it *must* do the super.init() call for this to work...
+    @After("execution(* init()) && @this(tx) && within(javax.servlet.GenericServlet) && this(foo)")
     public void handleAfterInit(Tx tx, Object foo) {
     	LOG.info("handleAfterInit, foo = " + foo);
         LOG.info("handleAfterInit, isAnnotationPresent(Tx): " + foo.getClass().isAnnotationPresent(Tx.class));
