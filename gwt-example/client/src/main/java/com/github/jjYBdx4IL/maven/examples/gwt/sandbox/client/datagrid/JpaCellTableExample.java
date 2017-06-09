@@ -15,6 +15,7 @@ import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
 import java.util.List;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.ScrollPanel;
 
 public class JpaCellTableExample extends FlowPanel {
 
@@ -59,18 +60,19 @@ public class JpaCellTableExample extends FlowPanel {
             }
         });
 
-        // Add it to the root panel.
-        table.setSize("100%", "auto");
-        
         data1TextBox.ensureDebugId(DebugId.JpaCellTableExampleData1TextBox.name());
         data2TextBox.ensureDebugId(DebugId.JpaCellTableExampleData2TextBox.name());
         addItemButton.ensureDebugId(DebugId.JpaCellTableExampleAddButton.name());
         table.ensureDebugId(DebugId.JpaCellTableExampleTable.name());
         
+        ScrollPanel tableScrollPanel = new ScrollPanel(table);
+        tableScrollPanel.setAlwaysShowScrollBars(true);
+        tableScrollPanel.setHeight("100%");
+        
         add(data1TextBox);
         add(data2TextBox);
         add(addItemButton);
-        add(table);
+        add(tableScrollPanel);
         
         addItemButton.addClickHandler(new ClickHandler() {
             @Override
@@ -102,6 +104,7 @@ public class JpaCellTableExample extends FlowPanel {
 
             @Override
             public void onSuccess(List<ExampleItemDTO> result) {
+                table.setPageSize(result.size());
                 table.setRowCount(result.size(), true);
                 table.setRowData(0, result);
             }
