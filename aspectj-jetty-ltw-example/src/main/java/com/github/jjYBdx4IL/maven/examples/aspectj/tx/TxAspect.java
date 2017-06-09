@@ -95,9 +95,9 @@ public class TxAspect {
         return result;
     }
     
-    @After("execution(* javax.servlet.GenericServlet.init()) && this(foo)")
-    public void handleAfterInit(Object foo) {
+    @After("execution(* javax.servlet.GenericServlet.init()) && @this(tx) && this(foo)")
+    public void handleAfterInit(Tx tx, Object foo) {
     	LOG.info("handleAfterInit, foo = " + foo);
-        LOG.info("handleAfterInit, isAnnotationPresent(Tx): " + foo.getClass().isAnnotationPresent(com.github.jjYBdx4IL.maven.examples.aspectj.Tx.class));
+        LOG.info("handleAfterInit, isAnnotationPresent(Tx): " + foo.getClass().isAnnotationPresent(Tx.class));
     }
 }

@@ -86,11 +86,6 @@
                         <artifactId>aspectj-tx-manager</artifactId>
                         <version>${aspectj.utils.version}</version>
                     </dependency>
-<!--                    <dependency>
-                        <groupId>org.eclipse.jetty</groupId>
-                        <artifactId>apache-jsp</artifactId>
-                        <version>${jetty.version}</version>
-                    </dependency>-->
                 </dependencies>
             </plugin>
             

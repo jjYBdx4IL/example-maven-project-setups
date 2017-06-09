@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Configure PUBLIC "-//Mort Bay Consulting//DTD Configure//EN" "http://www.eclipse.org/jetty/configure.dtd">
+
+<Configure id="thisfile" class="org.eclipse.jetty.webapp.WebAppContext">
+    
+    <!-- this is sort of a dirty workaround that prevents you from having to deal with classloader priorities
+    and making sure the dependencies for the server and the webapp are 100% correct: (not recommended in production) -->
+    <Set name="parentLoaderPriority">true</Set>
+    
+</Configure>

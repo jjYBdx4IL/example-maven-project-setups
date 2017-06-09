@@ -34,6 +34,14 @@
                 <configuration>
                     <scanIntervalSeconds>1</scanIntervalSeconds>
                 </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>${project.groupId}</groupId>
+                        <artifactId>${project.artifactId}</artifactId>
+                        <version>${project.version}</version>
+                        <classifier>aop</classifier>
+                    </dependency>
+                </dependencies>
             </plugin>
             
             <plugin>
@@ -69,6 +77,32 @@
                 <configuration>
                     <aspectjWeaverVersion>1.8.10</aspectjWeaverVersion>
                 </configuration>
+            </plugin>
+            
+            <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.0.2</version>
+                <executions>
+                    <!-- the classes controlling the weaving process must be loaded in server context so we are
+                    able to weave server classes like javax.servlet.GenericServlet. Normally, you'd have to make sure
+                    to exclude them from the webapp so you don't end up with those classes being loaded by both class-
+                    loaders, ie server and webapp classloader. In this example we simply changed the classloader
+                    priority in jetty-env.xml to avoid this issue. -->
+                    <execution>
+                        <id>aop-jar</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>    
+                        <configuration>
+                            <classifier>aop</classifier>
+                            <includes>
+                                <include>**/*Aspect.class</include>
+                                <include>**/Tx.class</include>
+                                <include>**/aop.xml</include>
+                            </includes>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
