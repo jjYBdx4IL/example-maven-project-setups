@@ -1,6 +1,7 @@
 package com.github.jjYBdx4IL.maven.examples.gwt.server.chat;
 
 import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.api.ChatMessage;
+import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.api.WebSocketPong;
 import com.google.gwt.user.client.rpc.SerializationException;
 import java.util.Collection;
 import java.util.HashSet;
@@ -26,6 +27,7 @@ public class ChatServer implements Runnable {
 
     private long nTextMessagesReceived = 0;
     private long nTextMessagesSent = 0;
+    private long nPongsSent = 0;
 
     public ChatServer() {
     }
@@ -51,7 +53,35 @@ public class ChatServer implements Runnable {
         ChatMessage reply = new ChatMessage(room, text);
         return reply;
     }
-    
+
+    private void send(Object obj, Session sess) {
+        String serializedReply;
+        try {
+            serializedReply = GWTSerializationUtils.serializeMessage(obj);
+        } catch (SerializationException ex) {
+            LOG.error("failed to serialize: " + obj, ex);
+            return;
+        }
+        try {
+            LOG.info("sending " + serializedReply + " to " + sess.getRemoteAddress());
+            sess.getRemote().sendString(serializedReply, new WriteCallback() {
+                @Override
+                public void writeFailed(Throwable x) {
+                    LOG.warn("write failed");
+                }
+
+                @Override
+                public void writeSuccess() {
+                    nPongsSent++;
+                    LOG.info("nPongsSent: " + nPongsSent);
+                }
+            });
+        } catch (WebSocketException ex) {
+            LOG.error("", ex);
+            add(Message.createDisonnect(sess));
+        }
+    }
+
     private void send(Message message) {
         ChatMessage reply = createReply(message.getChatMessage());
         String serializedReply;
@@ -114,6 +144,10 @@ public class ChatServer implements Runnable {
                 case DISCONNECT:
                     sessions.remove(message.getSession());
                     LOG.info("connections total: " + sessions.size());
+                    break;
+                case PING:
+                    LOG.info("ping received");
+                    send(new WebSocketPong(), message.getSession());
                     break;
             }
         }

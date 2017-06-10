@@ -35,7 +35,7 @@ public class ServerChatSocket extends WebSocketAdapter {
         super.onWebSocketText(message);
         LOG.info("Received TEXT message: " + message);
         try {
-            chatServer.add(Message.createMsg(GWTSerializationUtils.deserializeMessage(message)));
+            chatServer.add(Message.createMsg(GWTSerializationUtils.deserializeMessage(message), this.session));
         } catch (SerializationException ex) {
             LOG.error("failed to deserialize message >>>" + message + "<<<", ex);
         }

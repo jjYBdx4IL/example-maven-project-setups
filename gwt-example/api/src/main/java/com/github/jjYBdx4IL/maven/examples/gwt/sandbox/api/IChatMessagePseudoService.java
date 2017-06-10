@@ -15,4 +15,5 @@ public interface IChatMessagePseudoService extends RemoteService {
     // Types the client wants to send must be listed as call parameters.
     // The same applies vice versa to the server.
     ChatMessage publish(ChatMessage message);
+    WebSocketPong ping(WebSocketPing ping);
 }

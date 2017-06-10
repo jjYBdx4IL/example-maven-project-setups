@@ -1,7 +1,9 @@
 package com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client.chat;
 
 import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.api.IChatMessagePseudoService;
+import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.api.WebSocketPing;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.SerializationException;
@@ -21,8 +23,11 @@ import java.util.Map;
  */
 public class ClientMessageService implements WebsocketListener {
 
-    private static Map<Class<? extends RemoteService>, ClientMessageService> INSTANCES
+    private static final Map<Class<? extends RemoteService>, ClientMessageService> INSTANCES
             = new HashMap<>();
+
+    private static final int PING_IVAL_SECS = 55;
+    private final Timer pingTimer;
 
     public static ClientMessageService getInstance(Class<? extends RemoteService> clazz,
             String remoteServiceRelativePath) {
@@ -39,7 +44,7 @@ public class ClientMessageService implements WebsocketListener {
     private final String remoteServiceRelativePath;
     private Websocket socket = null;
 
-    private Map<Class<?>, List<MessageListener<?>>> listeners = new HashMap<>();
+    private final Map<Class<?>, List<MessageListener<?>>> listeners = new HashMap<>();
 
     private ClientMessageService(Class clazz,
             String remoteServiceRelativePath) {
@@ -49,6 +54,13 @@ public class ClientMessageService implements WebsocketListener {
             throw new IllegalArgumentException("RemoteService class " + clazz.getName() + " not known");
         }
         this.remoteServiceRelativePath = remoteServiceRelativePath;
+        pingTimer = new Timer() {
+            @Override
+            public void run() {
+                pingTimer.schedule(PING_IVAL_SECS * 1000);
+                send(new WebSocketPing());
+            }
+        };
     }
 
     private void connect() {
@@ -59,6 +71,7 @@ public class ClientMessageService implements WebsocketListener {
         socket = new Websocket(websocketURL);
         socket.addListener(this);
         socket.open();
+        pingTimer.schedule(PING_IVAL_SECS * 1000);
     }
 
     public void addMessageListener(Class<?> aClass, MessageListener<?> aThis) {
@@ -72,6 +85,7 @@ public class ClientMessageService implements WebsocketListener {
 
     @Override
     public void onClose() {
+        pingTimer.cancel();
     }
 
     @Override
