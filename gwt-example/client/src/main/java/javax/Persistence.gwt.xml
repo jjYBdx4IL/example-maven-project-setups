@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<module>
+    <!-- needed to be able to directly use JPA-annotated model entities with GWT -->
+    <source path="persistence" />
+</module>

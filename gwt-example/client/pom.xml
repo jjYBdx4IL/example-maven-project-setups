@@ -390,6 +390,21 @@
             <artifactId>gwt-websockets</artifactId>
             <version>1.0.4</version>
         </dependency>
+        
+        <!-- allow using JPA model entities directly with GWT: -->
+        <dependency>
+            <groupId>org.hibernate.javax.persistence</groupId>
+            <artifactId>hibernate-jpa-2.1-api</artifactId>
+            <version>1.0.0.Final</version>
+            <classifier>sources</classifier>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate.javax.persistence</groupId>
+            <artifactId>hibernate-jpa-2.1-api</artifactId>
+            <version>1.0.0.Final</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
     
     <dependencyManagement>
@@ -738,6 +753,18 @@
                     <groupId>javax.servlet</groupId>
                     <artifactId>javax.servlet-api</artifactId>
                     <version>3.1.0</version>
+                </dependency>
+                
+                <dependency>
+                    <groupId>org.hibernate.javax.persistence</groupId>
+                    <artifactId>hibernate-jpa-2.1-api</artifactId>
+                    <version>1.0.0.Final</version>
+                    <classifier>sources</classifier>
+                </dependency>
+                <dependency>
+                    <groupId>org.hibernate.javax.persistence</groupId>
+                    <artifactId>hibernate-jpa-2.1-api</artifactId>
+                    <version>1.0.0.Final</version>
                 </dependency>
             </dependencies>
         </profile>

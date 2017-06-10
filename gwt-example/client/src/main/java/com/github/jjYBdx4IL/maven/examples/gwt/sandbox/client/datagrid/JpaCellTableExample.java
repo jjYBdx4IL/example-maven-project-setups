@@ -1,7 +1,7 @@
 package com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client.datagrid;
 
 import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.api.DebugId;
-import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.api.dto.ExampleItemDTO;
+import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.api.jpa.ExampleItem;
 import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client.ResourceBundle;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -19,7 +19,7 @@ import com.google.gwt.user.client.ui.ScrollPanel;
 
 public class JpaCellTableExample extends FlowPanel {
 
-    private final CellTable<ExampleItemDTO> table = new CellTable<>();
+    private final CellTable<ExampleItem> table = new CellTable<>();
     private final Button addItemButton = new Button("add");
     private final TextBox data1TextBox = new TextBox();
     private final TextBox data2TextBox = new TextBox();
@@ -29,31 +29,46 @@ public class JpaCellTableExample extends FlowPanel {
 
     @Override
     protected void onLoad() {
-        // Add a text column to show the name.
-        TextColumn<ExampleItemDTO> data1Column = new TextColumn<ExampleItemDTO>() {
+        TextColumn<ExampleItem> idColumn = new TextColumn<ExampleItem>() {
             @Override
-            public String getValue(ExampleItemDTO object) {
+            public String getValue(ExampleItem object) {
+                return Integer.toString(object.getId());
+            }
+            
+        };
+        table.addColumn(idColumn, "ID");
+        
+        TextColumn<ExampleItem> data1Column = new TextColumn<ExampleItem>() {
+            @Override
+            public String getValue(ExampleItem object) {
                 return object.getData1();
             }
         };
         table.addColumn(data1Column, "Data1");
 
-        // Add a date column to show the birthday.
-        TextColumn<ExampleItemDTO> data2Column = new TextColumn<ExampleItemDTO>() {
+        TextColumn<ExampleItem> data2Column = new TextColumn<ExampleItem>() {
             @Override
-            public String getValue(ExampleItemDTO object) {
+            public String getValue(ExampleItem object) {
                 return object.getData2();
             }
         };
         table.addColumn(data2Column, "Data2");
 
+        TextColumn<ExampleItem> versionColumn = new TextColumn<ExampleItem>() {
+            @Override
+            public String getValue(ExampleItem object) {
+                return Long.toString(object.getVersion());
+            }
+        };
+        table.addColumn(versionColumn, "Version");
+
         // Add a selection model to handle user selection.
-        final SingleSelectionModel<ExampleItemDTO> selectionModel = new SingleSelectionModel<>();
+        final SingleSelectionModel<ExampleItem> selectionModel = new SingleSelectionModel<>();
         table.setSelectionModel(selectionModel);
         selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
             @Override
             public void onSelectionChange(SelectionChangeEvent event) {
-                ExampleItemDTO selected = selectionModel.getSelectedObject();
+                ExampleItem selected = selectionModel.getSelectedObject();
                 if (selected != null) {
                     Window.alert("You selected: " + selected);
                 }
@@ -77,7 +92,9 @@ public class JpaCellTableExample extends FlowPanel {
         addItemButton.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                ExampleItemDTO item = new ExampleItemDTO(data1TextBox.getText(), data2TextBox.getText());
+                ExampleItem item = new ExampleItem();
+                item.setData1(data1TextBox.getText());
+                item.setData2(data2TextBox.getText());
                 ResourceBundle.asyncService.addExampleItem(item, new AsyncCallback<Void>() {
                     @Override
                     public void onFailure(Throwable caught) {
@@ -96,14 +113,14 @@ public class JpaCellTableExample extends FlowPanel {
     }
     
     private void updateTable() {
-        ResourceBundle.asyncService.getExampleItems(new AsyncCallback<List<ExampleItemDTO>>() {
+        ResourceBundle.asyncService.getExampleItems(new AsyncCallback<List<ExampleItem>>() {
             @Override
             public void onFailure(Throwable caught) {
                 Window.alert(caught.getMessage());
             }
 
             @Override
-            public void onSuccess(List<ExampleItemDTO> result) {
+            public void onSuccess(List<ExampleItem> result) {
                 table.setPageSize(result.size());
                 table.setRowCount(result.size(), true);
                 table.setRowData(0, result);

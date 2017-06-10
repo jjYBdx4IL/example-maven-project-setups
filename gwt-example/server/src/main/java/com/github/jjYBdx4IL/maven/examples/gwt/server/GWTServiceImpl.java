@@ -5,10 +5,8 @@ import com.github.jjYBdx4IL.aop.tx.Tx;
 import com.github.jjYBdx4IL.aop.tx.TxEM;
 import com.github.jjYBdx4IL.aop.tx.TxRO;
 import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.api.jpa.ExampleItem;
-import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.api.dto.ExampleItemDTO;
 import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.api.jpa.QueryFactory;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -69,24 +67,19 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
     public void logout() {
         getSession().removeAttribute(SESSION_ATTRNAME_USER);
         getSession().removeAttribute(SESSION_ATTRNAME_AUTHENTICATED);
-        
     }
 
     @TxRO
     @Override
-    public List<ExampleItemDTO> getExampleItems() {
+    public List<ExampleItem> getExampleItems() {
         TypedQuery<ExampleItem> itemQuery = QueryFactory.getAll(em);
-        List<ExampleItemDTO> resultList = new ArrayList<>();
-        for (ExampleItem item : itemQuery.getResultList()) {
-            resultList.add(item.toDTO());
-        }
-        return resultList;
+        return itemQuery.getResultList();
     }
 
     @Tx
     @Override
-    public void addExampleItem(ExampleItemDTO item) {
-        em.persist(ExampleItem.fromDTO(item));
+    public void addExampleItem(ExampleItem item) {
+        em.persist(item);
     }
 
 }

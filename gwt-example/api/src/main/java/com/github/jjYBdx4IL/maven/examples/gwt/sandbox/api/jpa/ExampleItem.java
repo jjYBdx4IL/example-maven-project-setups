@@ -1,6 +1,5 @@
 package com.github.jjYBdx4IL.maven.examples.gwt.sandbox.api.jpa;
 
-import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.api.dto.ExampleItemDTO;
 import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Entity;
@@ -14,6 +13,20 @@ import javax.persistence.Version;
  */
 @Entity
 public class ExampleItem implements Serializable {
+
+    /**
+     * @return the version
+     */
+    public long getVersion() {
+        return version;
+    }
+
+    /**
+     * @return the id
+     */
+    public int getId() {
+        return id;
+    }
 
     /**
      * @return the data1
@@ -45,7 +58,7 @@ public class ExampleItem implements Serializable {
 
     @Id
     @GeneratedValue
-    int id;
+    private int id;
 
     @Basic
     private String data1;
@@ -54,31 +67,21 @@ public class ExampleItem implements Serializable {
     private String data2;
 
     @Version
-    long version;
+    private long version;
 
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
         builder.append("SomeEntityWithVersionAndIndex [id=");
-        builder.append(id);
+        builder.append(getId());
         builder.append(", data=");
         builder.append(getData1());
         builder.append(", data2=");
         builder.append(getData2());
         builder.append(", version=");
-        builder.append(version);
+        builder.append(getVersion());
         builder.append("]");
         return builder.toString();
     }
 
-    public ExampleItemDTO toDTO() {
-        return new ExampleItemDTO(data1, data2);
-    }
-    
-    public static ExampleItem fromDTO(ExampleItemDTO dto) {
-        ExampleItem item = new ExampleItem();
-        item.setData1(dto.getData1());
-        item.setData2(dto.getData2());
-        return item;
-    }
 }

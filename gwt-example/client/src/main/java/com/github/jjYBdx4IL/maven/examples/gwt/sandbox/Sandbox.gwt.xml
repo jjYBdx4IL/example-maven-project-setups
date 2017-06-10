@@ -5,6 +5,7 @@
     
     <inherits name='com.google.gwt.user.User'/>
     <inherits name="com.google.gwt.user.Debug"/>
+    <inherits name='javax.Persistence'/>
     <inherits name='com.google.gwt.inject.Inject'/>
     <inherits name="com.google.gwt.logging.Logging"/>
     <inherits name="com.google.gwt.resources.Resources" />
