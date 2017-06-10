@@ -80,7 +80,7 @@ public class SeleniumTest extends SeleniumTestBase {
 
     @Test
     public void testJpaCellTableDemo() throws WebElementNotFoundException {
-        getDriver().get(getSandboxLocation());
+        openPage();
         setTestName("testJpaCellTableDemo");
         takeScreenshot();
 
@@ -110,7 +110,7 @@ public class SeleniumTest extends SeleniumTestBase {
         String unauthReply = "Hello unauthenticated user!";
         String changedReply = "Hello xyz user!";
 
-        getDriver().get(getSandboxLocation());
+        openPage();
         click("RpcDemo");
         WebElement greetMeButton = getByDebugId(DebugId.RpcDemoGreetMeButton);
         greetMeButton.click();
@@ -146,7 +146,7 @@ public class SeleniumTest extends SeleniumTestBase {
     public void testGWTDevModeRefreshOnBrowserReload() throws IOException, WebElementNotFoundException {
         assumeNotNull(DEVMODE_INSTALL_DIR);
 
-        getDriver().get(getSandboxLocation());
+        openPage();
         click("RpcDemo");
         WebElement listBox = getByDebugId(DebugId.RpcDemoListBox);
         Select sel = new Select(listBox);
@@ -161,7 +161,7 @@ public class SeleniumTest extends SeleniumTestBase {
             FileUtils.write(sourceFile, updatedSourceContents, "UTF-8");
 
             // refresh browser page and check
-            getDriver().get(getSandboxLocation());
+            openPage();
             click("RpcDemo");
             listBox = getByDebugId(DebugId.RpcDemoListBox);
             sel = new Select(listBox);
@@ -175,7 +175,7 @@ public class SeleniumTest extends SeleniumTestBase {
 
     @Test
     public void testChatDemo() throws WebElementNotFoundException {
-        getDriver().get(getSandboxLocation());
+        openPage();
         setTestName("testChatDemo");
         takeScreenshot();
 
@@ -198,7 +198,7 @@ public class SeleniumTest extends SeleniumTestBase {
 
     @Test
     public void testBugStackOverflow15161741() throws WebElementNotFoundException {
-        getDriver().get(getSandboxLocation());
+        openPage();
         setTestName("testBugStackOverflow15161741");
         takeScreenshot();
 
@@ -218,7 +218,7 @@ public class SeleniumTest extends SeleniumTestBase {
 
     @Test
     public void testBug2StackOverflow15161741() throws WebElementNotFoundException, InterruptedException {
-        getDriver().get(getSandboxLocation());
+        openPage();
         setTestName("testBug2StackOverflow15161741");
         takeScreenshot();
 
@@ -257,7 +257,7 @@ public class SeleniumTest extends SeleniumTestBase {
 
     @Test
     public void testRpcDemo() throws WebElementNotFoundException {
-        getDriver().get(getSandboxLocation());
+        openPage();
         setTestName("testRpcDemo");
         takeScreenshot();
 
@@ -276,7 +276,7 @@ public class SeleniumTest extends SeleniumTestBase {
 
     @Test
     public void testSimpleEventBusDemo() throws WebElementNotFoundException {
-        getDriver().get(getSandboxLocation());
+        openPage();
         setTestName("testSimpleEventBusDemo");
         takeScreenshot();
 
@@ -298,7 +298,7 @@ public class SeleniumTest extends SeleniumTestBase {
 
     @Test
     public void testHandlerManagerDemo() throws WebElementNotFoundException {
-        getDriver().get(getSandboxLocation());
+        openPage();
         setTestName("testHandlerManagerDemo");
         takeScreenshot();
 
@@ -342,6 +342,17 @@ public class SeleniumTest extends SeleniumTestBase {
                 throw new WebElementNotFoundException("no element found with gwt debug id " + fullDebugId);
             }
             return elements.get(0);
+        } finally {
+            getDriver().manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
+        }
+    }
+    
+    protected boolean wait4DebugId(DebugId debugId, int seconds) {
+        try {
+            getDriver().manage().timeouts().implicitlyWait(seconds, TimeUnit.SECONDS);
+            String fullDebugId = getDebugId(debugId);
+            List<WebElement> elements = filterDisplayed(getDriver().findElements(By.id(fullDebugId)));
+            return !elements.isEmpty();
         } finally {
             getDriver().manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
         }
@@ -390,5 +401,18 @@ public class SeleniumTest extends SeleniumTestBase {
         scanner.scan();
         assertEquals(1, scanner.getIncludedDirsCount());
         return new File(searchRoot, scanner.getIncludedDirectories()[0]);
+    }
+
+    /**
+     * when running against GWT dev mode, the page sometimes fails to load. this is a workaround.
+     */
+    protected void openPage() throws WebElementNotFoundException {
+        for (int i = 0; i < 10; i++) {
+            getDriver().get(getSandboxLocation());
+            if (wait4DebugId(DebugId.JpaCellTableExample, 10)) {
+                return;
+            }
+        }
+        throw new WebElementNotFoundException();
     }
 }
