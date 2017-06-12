@@ -1,5 +1,6 @@
 package com.github.jjYBdx4IL.maven.examples.gwt.server;
 
+import com.github.jjYBdx4IL.aop.tx.H2FrontendRunner;
 import java.io.File;
 import java.lang.management.ManagementFactory;
 import java.nio.file.Paths;
@@ -191,7 +192,10 @@ public class EmbeddedMain {
         lowResourcesMonitor.setMaxLowResourcesTime(5000);
         server.addBean(lowResourcesMonitor);
 
-        new Resource(server, "jdbc/url", "jdbc:h2:" + new File(cwd, "data/db/h2").getAbsolutePath());
+        String jdbcUrl = "jdbc:h2:" + new File(cwd, "data/db/h2").getAbsolutePath();
+        new Resource(server, "jdbc/url", jdbcUrl);
+        // lifecycle handlers run outside webapps, so can't make use of jndi
+        server.addManaged(new H2FrontendRunner(jdbcUrl));
         
         // === test-realm.xml ===
 //        HashLoginService login = new HashLoginService();

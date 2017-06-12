@@ -6,7 +6,7 @@
     <!-- this file isnt deployed to production and only intended for use with mvn jetty:run command
     during development. In production, the embedded jetty server will configure this data resource -->
     
-    <New class="org.eclipse.jetty.plus.jndi.Resource">
+<!--    <New class="org.eclipse.jetty.plus.jndi.Resource">
         <Arg>
             <Ref refid="thisfile"/>
         </Arg>
@@ -16,5 +16,5 @@
                 <Arg>jdbc:h2:<SystemProperty name="basedir" default="."/>/target/h2db</Arg>
             </New>
         </Arg>
-    </New>
+    </New>-->
 </Configure>
