@@ -29,6 +29,7 @@
         <jetty.port>80</jetty.port>
         <testUrl>http://localhost:${jetty.port}/sandbox.jsp</testUrl>
         <installDir>${project.build.directory}/install/${project.artifactId}</installDir>
+        <h2db.mgmt.port>8083</h2db.mgmt.port>
     </properties>
     
     <dependencies>
@@ -581,6 +582,10 @@
                                         <echo>Waiting for server to come up at port ${jetty.port}</echo>
                                         <waitfor maxwait="3" maxwaitunit="minute" checkevery="1000">
                                             <http url="${testUrl}" errorsBeginAt="300" />
+                                        </waitfor>
+                                        <echo>Waiting for h2 database frontend to come up at port ${h2db.mgmt.port}</echo>
+                                        <waitfor maxwait="3" maxwaitunit="minute" checkevery="1000">
+                                            <socket server="localhost" port="${h2db.mgmt.port}" />
                                         </waitfor>
                                     </target>
                                 </configuration>

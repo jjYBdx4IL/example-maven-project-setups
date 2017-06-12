@@ -79,6 +79,11 @@
                             <name>gwt.codeserver.port</name>
                             <value>9876</value>
                         </systemProperty>
+                        <systemProperty>
+                            <!-- h2 frontend: -->
+                            <name>h2.bindAddress</name>
+                            <value>localhost</value>
+                        </systemProperty>
                     </systemProperties>
                 </configuration>
                 <dependencies>
