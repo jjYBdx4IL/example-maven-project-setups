@@ -52,7 +52,7 @@
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <version>1.4.193</version>
+            <version>1.4.195</version>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
@@ -63,13 +63,11 @@
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-io</artifactId>
             <version>${jetty.version}</version>
-            <!--<scope>runtime</scope>-->
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-server</artifactId>
             <version>${jetty.version}</version>
-            <!--<scope>runtime</scope>-->
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
@@ -81,7 +79,6 @@
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-webapp</artifactId>
             <version>${jetty.version}</version>
-            <!--<scope>runtime</scope>-->
         </dependency>
         
         <!-- Runtime dependencies that need to be included in the generated binaries -->
@@ -142,73 +139,26 @@
             <artifactId>websocket-server</artifactId>
             <version>${jetty.version}</version>
         </dependency>
-
-        <!--        <dependency>
-            <groupId>jstl</groupId>
-            <artifactId>jstl</artifactId>
-            <version>1.2</version>
-            <scope>runtime</scope>
-        </dependency>-->
         <dependency>
             <groupId>javax.servlet.jsp</groupId>
             <artifactId>javax.servlet.jsp-api</artifactId>
             <version>2.3.1</version>
-            <!--<scope>runtime</scope>-->
         </dependency>
-        <!--        <dependency>
-            <groupId>org.glassfish.web</groupId>
-            <artifactId>javax.servlet.jsp</artifactId>
-            <version>2.3.2</version>
-            <scope>runtime</scope>
-        </dependency>-->
         <dependency>
             <groupId>javax.servlet.jsp.jstl</groupId>
             <artifactId>javax.servlet.jsp.jstl-api</artifactId>
             <version>1.2.1</version>
-            <!--<scope>runtime</scope>-->
         </dependency>
-        <!--        <dependency>
-            <groupId>org.eclipse.jetty.orbit</groupId>
-            <artifactId>javax.servlet.jsp.jstl</artifactId>
-            <version>1.2.0.v201105211821</version>
-            <scope>runtime</scope>
-        </dependency>-->
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
             <version>3.1.0</version>
-            <!--<scope>runtime</scope>-->
         </dependency>        
-        <!--        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>jstl</artifactId>
-            <version>1.2</version>
-            <scope>runtime</scope>
-        </dependency>        -->
-        <!--        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-            <version>3.0-alpha-1</version>
-            <scope>runtime</scope>
-        </dependency>        -->
-
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
             <version>1.7.25</version>
         </dependency>
-        <!--        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>1.7.25</version>
-        </dependency>-->
-
-        <!--        <dependency>
-            <groupId>com.github.jjYBdx4IL.maven.examples</groupId>
-            <artifactId>gwt-example-client</artifactId>
-            <version>${project.version}</version>
-            <scope>runtime</scope>
-        </dependency>-->
         <dependency>
             <groupId>com.github.jjYBdx4IL.maven.examples</groupId>
             <artifactId>gwt-example-client</artifactId>
@@ -216,11 +166,6 @@
             <scope>runtime</scope>
             <type>war</type>
         </dependency>
-        <!--        <dependency>
-            <groupId>com.github.jjYBdx4IL.maven.examples</groupId>
-            <artifactId>gwt-example-server</artifactId>
-            <version>${project.version}</version>
-        </dependency>-->
         <dependency>
             <groupId>com.github.jjYBdx4IL.maven.examples</groupId>
             <artifactId>gwt-example-server</artifactId>
@@ -236,12 +181,6 @@
             <scope>test</scope>
             <classifier>tests</classifier>
         </dependency>
-        <!--        <dependency>
-            <groupId>com.github.jjYBdx4IL</groupId>
-            <artifactId>github-test-utils</artifactId>
-            <version>1.1-SNAPSHOT</version>
-            <scope>test</scope>
-        </dependency>-->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
