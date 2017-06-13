@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 import java.util.regex.Pattern;
 import javax.tools.Diagnostic;
 import javax.tools.DiagnosticCollector;
@@ -45,7 +46,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -303,10 +306,10 @@ public class SeleniumTest extends SeleniumTestBase {
         takeScreenshot();
 
         click("HandlerManagerDemo");
-        getByDebugId(DebugId.HandlerManagerDemo);
+        getByDebugId(DebugId.HandlerManagerDemoBody);
         takeScreenshot();
-        List<WebElement> inputs = filterDisplayed(getDriver().findElements(By.tagName("input")));
-        assertEquals(3, inputs.size());
+        
+        List<WebElement> inputs = getElementsByTagName(DebugId.HandlerManagerDemoBody, "input", 3, 3);
         inputs.get(0).sendKeys("123\n");
         takeScreenshot();
         assertEquals("123", inputs.get(1).getAttribute("value"));
@@ -405,6 +408,7 @@ public class SeleniumTest extends SeleniumTestBase {
 
     /**
      * when running against GWT dev mode, the page sometimes fails to load. this is a workaround.
+     * @throws com.github.jjYBdx4IL.test.selenium.WebElementNotFoundException
      */
     protected void openPage() throws WebElementNotFoundException {
         for (int i = 0; i < 10; i++) {
@@ -414,5 +418,35 @@ public class SeleniumTest extends SeleniumTestBase {
             }
         }
         throw new WebElementNotFoundException();
+    }
+    
+    /**
+     * Wait for a specific number of elements below parentElementId and having tag tagName and return them.
+     * 
+     * @param parentElementId the parent element below which to look for the child elements. Not null.
+     * @param tagName the child elements' tag name, ie. 'input' or 'div'. Can be null.
+     * @param minCount supply non-positive value to not check for min count limit
+     * @param maxCount supply negative value to not check for max count limit
+     * @return 
+     */
+    public List<WebElement> getElementsByTagName(DebugId parentElementId, String tagName, final int minCount, final int maxCount) {
+        assertNotNull(tagName);
+        final List<WebElement> elements = new ArrayList<>();
+        String fullDebugId = getDebugId(parentElementId);
+        final By by = parentElementId != null
+                ? By.xpath(String.format(Locale.ROOT, "//*[@id='%s']//%s", fullDebugId, tagName))
+                : By.xpath(String.format(Locale.ROOT, "//%s", tagName));
+        final int _maxCount = maxCount >= 0 ? maxCount : Integer.MAX_VALUE;
+        LOG.info(String.format(Locale.ROOT, "waiting for %d to %d elements with tag '%s' below element with id '%s'",
+                minCount, _maxCount, tagName, fullDebugId));
+        waitUntil(new Function<WebDriver, Boolean>(){
+            @Override
+            public Boolean apply(WebDriver t) {
+                elements.clear();
+                elements.addAll(filterDisplayed(t.findElements(by)));
+                return elements.size() <= _maxCount && elements.size() >= minCount;
+            }
+        });
+        return elements;
     }
 }

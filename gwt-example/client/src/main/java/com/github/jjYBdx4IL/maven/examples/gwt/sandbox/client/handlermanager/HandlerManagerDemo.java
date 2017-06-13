@@ -20,7 +20,7 @@ public class HandlerManagerDemo extends AbstractEventDemo {
     @Override
     protected void preInit() {
         handlerManager = new HandlerManager(this);
-        ensureDebugId(DebugId.HandlerManagerDemo.name());
+        ensureDebugId(DebugId.HandlerManagerDemoBody.name());
     }
     
     @Override
