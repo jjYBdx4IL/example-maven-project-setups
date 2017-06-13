@@ -2,8 +2,6 @@ package com.github.jjYBdx4IL.maven.examples.gwt.server;
 
 import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.api.GWTService;
 import com.github.jjYBdx4IL.aop.tx.Tx;
-import com.github.jjYBdx4IL.aop.tx.TxEM;
-import com.github.jjYBdx4IL.aop.tx.TxRO;
 import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.api.jpa.ExampleItem;
 import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.api.jpa.QueryFactory;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
@@ -16,6 +14,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.github.jjYBdx4IL.aop.tx.TxEntityManager;
+import com.github.jjYBdx4IL.aop.tx.TxReadOnly;
 
 @SuppressWarnings("serial")
 @Tx
@@ -26,7 +26,7 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
     private static final String SESSION_ATTRNAME_USER = "username";
     private static final String SESSION_ATTRNAME_AUTHENTICATED = "authenticated";
    
-    @TxEM
+    @TxEntityManager
     private EntityManager em;
     
     @Override
@@ -69,7 +69,7 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
         getSession().removeAttribute(SESSION_ATTRNAME_AUTHENTICATED);
     }
 
-    @TxRO
+    @TxReadOnly
     @Override
     public List<ExampleItem> getExampleItems() {
         TypedQuery<ExampleItem> itemQuery = QueryFactory.getAll(em);

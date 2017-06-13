@@ -26,6 +26,19 @@ Add this to /etc/rc.local (on debian based machines):
 mvn clean install
 mvn antrun:run@go-live -Ddeployment.sshacct=web@gruust.stream
 
+## database managment frontend
+
+The server includes a database managment frontend that can be accessed using a web browser
+by pointing it to http://localhost:8083. Redirect the port via:
+
+    ssh -L 8083:localhost:8083 web@gruust.stream
+
+Live backups can be done by issuing the sql statement "backup to data/db-backup-<date>.zip".
+
+The managment frontend's main purpose is to be able to configure the server via database
+entries, ie. not having to use a bunch of config files and thus having an easy one-stop
+solution for backup of *everything*.
+
 ## JDK
 
 The jdk is expected to be installed at /opt/jdk8 on the server. I have
