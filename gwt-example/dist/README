@@ -10,8 +10,8 @@ Linux command line tools. Cygwin should be supported, too.
 ## allow port < 1024 access to regular user on web server machine:
 
 apt-get install authbind
-touch /etc/authbind/byport/80 /etfc/authbind/byport/443
-chmod 777 /etc/authbind/byport/80 /etfc/authbind/byport/443
+touch /etc/authbind/byport/80 /etc/authbind/byport/443
+chmod 777 /etc/authbind/byport/80 /etc/authbind/byport/443
 
 ## start jetty on server start
 
