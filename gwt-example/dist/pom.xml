@@ -20,7 +20,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         
-        <jetty.version>9.4.5.v20170502</jetty.version>
+        <jetty.version>9.4.6.v20170531</jetty.version>
         <src.artifactId>gwt-example-client</src.artifactId>
         <zip.artifact>${project.build.directory}/${project.artifactId}-${project.version}-bin.zip</zip.artifact>
         <aspectj.version>1.8.10</aspectj.version>

@@ -19,7 +19,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <jetty.version>9.4.5.v20170502</jetty.version>
+        <jetty.version>9.4.6.v20170531</jetty.version>
         <aspectj.utils.version>1.0-SNAPSHOT</aspectj.utils.version>
     </properties>
 
