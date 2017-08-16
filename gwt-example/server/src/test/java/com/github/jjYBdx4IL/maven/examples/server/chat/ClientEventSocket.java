@@ -1,4 +1,4 @@
-package com.github.jjYBdx4IL.maven.examples.gwt.server.chat;
+package com.github.jjYBdx4IL.maven.examples.server.chat;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;

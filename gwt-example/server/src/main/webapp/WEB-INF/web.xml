@@ -8,10 +8,24 @@
         <param-name>gwt.xsrf.session_cookie_name</param-name>
         <param-value>JSESSIONID</param-value>
     </context-param>
+    <!-- REST -->
+    <servlet>
+        <servlet-name>Jersey REST Service</servlet-name>
+        <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
+        <init-param>
+            <param-name>jersey.config.server.provider.packages</param-name>
+            <param-value>com.github.jjYBdx4IL.maven.examples.server</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Jersey REST Service</servlet-name>
+        <url-pattern>/rest/*</url-pattern>
+    </servlet-mapping>
     <!-- GWT RPC -->
     <servlet>
         <servlet-name>gwtServiceImpl</servlet-name>
-        <servlet-class>com.github.jjYBdx4IL.maven.examples.gwt.server.GWTServiceImpl</servlet-class>
+        <servlet-class>com.github.jjYBdx4IL.maven.examples.server.GWTServiceImpl</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet-mapping>
@@ -36,7 +50,7 @@
     <servlet>
         <servlet-name>chatServlet</servlet-name>
         <servlet-class>
-            com.github.jjYBdx4IL.maven.examples.gwt.server.chat.ChatServlet
+            com.github.jjYBdx4IL.maven.examples.server.chat.ChatServlet
         </servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>

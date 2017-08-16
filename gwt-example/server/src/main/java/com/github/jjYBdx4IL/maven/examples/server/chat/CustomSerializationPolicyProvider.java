@@ -1,4 +1,4 @@
-package com.github.jjYBdx4IL.maven.examples.gwt.server.chat;
+package com.github.jjYBdx4IL.maven.examples.server.chat;
 
 import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.api.IChatMessagePseudoService;
 import org.slf4j.Logger;

@@ -1,4 +1,4 @@
-package com.github.jjYBdx4IL.maven.examples.gwt.server.chat;
+package com.github.jjYBdx4IL.maven.examples.server.chat;
 
 import java.net.InetAddress;
 import java.net.MalformedURLException;
@@ -16,6 +16,9 @@ import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.client.WebSocketClient;
 import org.junit.After;
 import static org.junit.Assert.assertEquals;
+
+import com.github.jjYBdx4IL.maven.examples.server.chat.ChatHandler;
+
 import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;

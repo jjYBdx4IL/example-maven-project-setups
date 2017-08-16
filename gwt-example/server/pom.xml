@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
     <modelVersion>4.0.0</modelVersion>
+
     <groupId>com.github.jjYBdx4IL.maven.examples</groupId>
     <artifactId>gwt-example-server</artifactId>
     <version>1.0-SNAPSHOT</version>
@@ -21,10 +23,12 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <jetty.version>9.4.6.v20170531</jetty.version>
         <aspectj.utils.version>1.0-SNAPSHOT</aspectj.utils.version>
+        <jersey.version>2.25.1</jersey.version>
     </properties>
 
     <build>
-        <!-- put compiled classes where jetty:run's auto-reload is looking for changes -->
+        <!-- put compiled classes where jetty:run's auto-reload is looking 
+            for changes -->
         <outputDirectory>${project.build.directory}/${project.build.finalName}/WEB-INF/classes</outputDirectory>
         <plugins>
             <plugin>
@@ -59,15 +63,16 @@
                     </rules>
                 </configuration>
             </plugin>
-            
+
             <plugin>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
                 <version>${jetty.version}</version>
                 <configuration>
-                    <!-- we cannot use provided scope for additional server classes because if the webapp
-                    needs it too, it may get declared twice, once explicitly with provided scope, and once through the
-                    plugin's dependencies, which leads to class loading errors like "class not found" -->
+                    <!-- we cannot use provided scope for additional server 
+                        classes because if the webapp needs it too, it may get declared twice, once 
+                        explicitly with provided scope, and once through the plugin's dependencies, 
+                        which leads to class loading errors like "class not found" -->
                     <useProvidedScope>false</useProvidedScope>
                     <scanIntervalSeconds>1</scanIntervalSeconds>
                     <webApp>
@@ -93,15 +98,20 @@
                         <artifactId>aspectj-tx-manager</artifactId>
                         <version>${aspectj.utils.version}</version>
                     </dependency>
+                    <dependency>
+                        <groupId>org.glassfish.jersey.core</groupId>
+                        <artifactId>jersey-server</artifactId>
+                        <version>${jersey.version}</version>
+                    </dependency>
                 </dependencies>
             </plugin>
-            
+
             <plugin>
                 <artifactId>maven-war-plugin</artifactId>
-                <version>3.1.0</version>
                 <configuration>
                     <packagingExcludes>**/*.cache.ttf,**/hosted.html,WEB-INF/web.devel.xml,WEB-INF/jetty-env.xml,WEB-INF/jetty.devel.xml</packagingExcludes>
-                    <!-- do NOT archive classes, or jetty:run's auto-reload does not work -->
+                    <!-- do NOT archive classes, or jetty:run's auto-reload 
+                        does not work -->
                     <archiveClasses>false</archiveClasses>
                     <attachClasses>true</attachClasses>
                 </configuration>
@@ -109,7 +119,6 @@
 
             <plugin>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.0.2</version>
                 <executions>
                     <execution>
                         <id>make-a-test-jar</id>
@@ -127,7 +136,7 @@
                     </excludes>
                 </configuration>
             </plugin>
-            
+
             <plugin>
                 <groupId>com.github.jjYBdx4IL.aop</groupId>
                 <artifactId>aspectj-ltw-maven-plugin</artifactId>
@@ -219,7 +228,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-jar-plugin</artifactId>
-                    <version>3.0.0</version>
+                    <version>3.0.2</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-jarsigner-plugin</artifactId>
@@ -289,22 +298,51 @@
                     <artifactId>selenium-maven-plugin</artifactId>
                     <version>2.3</version>
                 </plugin>
+                <!--This plugin's configuration is used to store Eclipse 
+                    m2e settings only. It has no influence on the Maven build itself. -->
+                <plugin>
+                    <groupId>org.eclipse.m2e</groupId>
+                    <artifactId>lifecycle-mapping</artifactId>
+                    <version>1.0.0</version>
+                    <configuration>
+                        <lifecycleMappingMetadata>
+                            <pluginExecutions>
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>
+                                            com.github.jjYBdx4IL.aop
+                                        </groupId>
+                                        <artifactId>
+                                            aspectj-ltw-maven-plugin
+                                        </artifactId>
+                                        <versionRange>
+                                            [1.0-SNAPSHOT,)
+                                        </versionRange>
+                                        <goals>
+                                            <goal>
+                                                generate-ltw-config
+                                            </goal>
+                                            <goal>
+                                                generate-maven-startup-config
+                                            </goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <ignore></ignore>
+                                    </action>
+                                </pluginExecution>
+                            </pluginExecutions>
+                        </lifecycleMappingMetadata>
+                    </configuration>
+                </plugin>
             </plugins>
         </pluginManagement>
     </build>
 
     <dependencies>
-        
-        
-        <!--        <dependency>
-            <groupId>org.aspectj</groupId>
-            <artifactId>aspectjweaver</artifactId>
-            <version>1.8.10</version>
-            <scope>provided</scope>
-        </dependency>-->
-
-        <!-- proxy servlet is considered server class and therefore hidden from webapp. for that reason
-        we have to explicitly include it for using it inside the webapp -->        
+        <!-- proxy servlet is considered server class and therefore hidden 
+            from webapp. for that reason we have to explicitly include it for using it 
+            inside the webapp -->
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-proxy</artifactId>
@@ -316,7 +354,26 @@
             <artifactId>gwt-example-api</artifactId>
             <version>${project.version}</version>
         </dependency>
-        
+
+<!--         <dependency> -->
+<!--             <groupId>org.glassfish.jersey.core</groupId> -->
+<!--             <artifactId>jersey-server</artifactId> -->
+<!--             <version>${jersey.version}</version> -->
+<!--             <scope>provided</scope> -->
+<!--         </dependency> -->
+<!--         <dependency> -->
+<!--             <groupId>org.glassfish.jersey.containers</groupId> -->
+<!--             <artifactId>jersey-container-jetty-http</artifactId> -->
+<!--             <version>${jersey.version}</version> -->
+<!--             <scope>provided</scope> -->
+<!--         </dependency> -->
+        <dependency>
+            <groupId>org.glassfish.jersey.containers</groupId>
+            <artifactId>jersey-container-servlet-core</artifactId>
+            <version>${jersey.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -501,7 +558,17 @@
             </dependency>
             <dependency>
                 <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-continuation</artifactId>
+                <version>${jetty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-io</artifactId>
+                <version>${jetty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-server</artifactId>
                 <version>${jetty.version}</version>
             </dependency>
             <dependency>

@@ -1,4 +1,4 @@
-package com.github.jjYBdx4IL.maven.examples.gwt.server;
+package com.github.jjYBdx4IL.maven.examples.server;
 
 import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.api.GWTService;
 import com.github.jjYBdx4IL.aop.tx.Tx;

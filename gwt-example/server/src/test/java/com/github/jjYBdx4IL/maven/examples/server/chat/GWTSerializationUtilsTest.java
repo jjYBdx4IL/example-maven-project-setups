@@ -1,4 +1,4 @@
-package com.github.jjYBdx4IL.maven.examples.gwt.server.chat;
+package com.github.jjYBdx4IL.maven.examples.server.chat;
 
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 
 import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.api.ChatMessage;
 import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.api.IChatMessagePseudoService;
+import com.github.jjYBdx4IL.maven.examples.server.chat.GWTSerializationUtils;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.SerializationException;
 import com.google.gwt.user.client.rpc.SerializationStreamFactory;

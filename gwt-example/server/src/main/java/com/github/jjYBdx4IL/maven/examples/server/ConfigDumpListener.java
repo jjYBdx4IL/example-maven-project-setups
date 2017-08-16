@@ -1,4 +1,4 @@
-package com.github.jjYBdx4IL.maven.examples.gwt.server;
+package com.github.jjYBdx4IL.maven.examples.server;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;

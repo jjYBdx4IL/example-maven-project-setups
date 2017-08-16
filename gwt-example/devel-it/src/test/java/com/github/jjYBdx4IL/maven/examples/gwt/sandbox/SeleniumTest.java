@@ -15,15 +15,32 @@
  */
 package com.github.jjYBdx4IL.maven.examples.gwt.sandbox;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assume.assumeNotNull;
+
 import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.api.DebugId;
 import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client.rpcdemo.RpcDemo;
-import com.github.jjYBdx4IL.maven.examples.gwt.server.GWTServiceImpl;
+import com.github.jjYBdx4IL.maven.examples.server.GWTServiceImpl;
 import com.github.jjYBdx4IL.test.selenium.SeleniumTestBase;
 import com.github.jjYBdx4IL.test.selenium.WebElementNotFoundException;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.tools.ant.DirectoryScanner;
+import org.junit.Before;
+import org.junit.Test;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.Select;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -31,27 +48,13 @@ import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.regex.Pattern;
+
 import javax.tools.Diagnostic;
 import javax.tools.DiagnosticCollector;
 import javax.tools.JavaCompiler;
 import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
-import org.apache.commons.io.FileUtils;
-import org.apache.tools.ant.DirectoryScanner;
-
-import static org.junit.Assert.*;
-import static org.junit.Assume.assumeNotNull;
-import org.junit.Before;
-import org.junit.Test;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.Select;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class SeleniumTest extends SeleniumTestBase {
 
