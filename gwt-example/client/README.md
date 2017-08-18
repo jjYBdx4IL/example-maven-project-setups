@@ -2,7 +2,7 @@
 
 ## devel
 
-	mvn clean install -DskipITs
+	mvn clean install
 	mvn gwt:run
 	mvn gwt:debug
 

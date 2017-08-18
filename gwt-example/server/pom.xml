@@ -103,6 +103,11 @@
                         <artifactId>jersey-server</artifactId>
                         <version>${jersey.version}</version>
                     </dependency>
+                    <dependency>
+                        <groupId>org.glassfish.jersey.containers</groupId>
+                        <artifactId>jersey-container-servlet-core</artifactId>
+                        <version>${jersey.version}</version>
+                    </dependency>
                 </dependencies>
             </plugin>
 
