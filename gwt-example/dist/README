@@ -62,3 +62,7 @@ After that, change into /etc/letsencrypt/live/<your-domain> directory and do:
     chown web.web /home/web/gwt-example-dist/data/keystore
     chmod 600 /home/web/gwt-example-dist/data/keystore
 
+## INTEGRATION TESTS
+
+The integration tests for this package require port 80. If you intend to run those tests on Linux,
+you need to follow the authbind instructions above also on your development machine.

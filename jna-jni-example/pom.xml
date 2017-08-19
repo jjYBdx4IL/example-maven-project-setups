@@ -25,7 +25,6 @@
             <!-- ITs run against the natives bundled in the final jar -->
             <plugin>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <version>2.19.1</version>
                 <executions>
                     <execution>
                         <id>run-tests</id>
@@ -48,7 +47,6 @@
             <!-- regular tests run against the unpacked native lib -->
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.19.1</version>
                 <configuration>
                     <systemPropertyVariables>
                         <jna.debug_load>true</jna.debug_load>
@@ -64,7 +62,6 @@
 
             <plugin>
                 <artifactId>maven-enforcer-plugin</artifactId>
-                <version>1.4.1</version>
                 <executions>
                     <execution>
                         <id>enforce</id>

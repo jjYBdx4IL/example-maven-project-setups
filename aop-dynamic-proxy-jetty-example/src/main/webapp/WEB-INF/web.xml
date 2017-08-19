@@ -4,11 +4,11 @@
     <servlet>
         <servlet-name>contentServlet</servlet-name>
         <servlet-class>com.github.jjYBdx4IL.maven.examples.dynproxy.AOPProxyServlet</servlet-class>
-        <load-on-startup>1</load-on-startup>
         <init-param>
             <param-name>delegateClass</param-name> 
             <param-value>com.github.jjYBdx4IL.maven.examples.dynproxy.ContentServlet</param-value> 
         </init-param>
+        <load-on-startup>1</load-on-startup>
     </servlet>
     
     <servlet-mapping>
