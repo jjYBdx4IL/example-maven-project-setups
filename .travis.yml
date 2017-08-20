@@ -1,6 +1,21 @@
 language: java
-install: sudo apt-get -y install libc6-i386
-script: mvn -V -B install
+before_install:
+  - sudo apt-get -y install libc6-i386
+  - git clone https://github.com/jjYBdx4IL/misc
+  - mvn -B install -f misc/checkstyle-configurations    
+  - git clone https://github.com/jjYBdx4IL/github-parent
+  - mvn -B install -f github-parent -DskipTests
+  - git clone https://github.com/jjYBdx4IL/github-test-utils
+  - mvn -B install -f github-test-utils -DskipTests    
+  - git clone https://github.com/jjYBdx4IL/diskcache
+  - mvn -B install -f diskcache -DskipTests
+  - git clone https://github.com/jjYBdx4IL/github-utils
+  - mvn -B install -f github-utils -DskipTests
+  - git clone https://github.com/jjYBdx4IL/aspectj-utils
+  - mvn -B install -f aspectj-utils -DskipTests
+script:
+  - mvn -V -B install -pl '!gwt-example/dist,!gwt-example/devel-it'
+  - mvn -V -B install -DskipITs -pl gwt-example/dist
 dist: trusty
 notifications:
   email: false
