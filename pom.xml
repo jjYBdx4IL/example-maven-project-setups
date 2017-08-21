@@ -1,11 +1,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="
+    xsi:schemaLocation="
         http://maven.apache.org/POM/4.0.0
             http://maven.apache.org/maven-v4_0_0.xsd
             ">
 
     <modelVersion>4.0.0</modelVersion>
-    
+
     <groupId>com.github.jjYBdx4IL.maven.examples</groupId>
     <artifactId>github-maven-examples</artifactId>
     <packaging>pom</packaging>
@@ -24,28 +24,29 @@
         <module>antrun-conditional</module>
         <module>antrun-foreach</module>
         <module>antrun-buildfile-params</module>
-	<module>antrun-set-maven-props</module>
-	<module>aop-dynamic-proxy-jetty-example</module>
+        <module>antrun-set-maven-props</module>
+        <module>aop-dynamic-proxy-jetty-example</module>
         <module>aspectj-jetty-ltw-example</module>
         <module>aspectj-maven-plugin-example</module>
-	<module>classpath-jar</module>
+        <module>classpath-jar</module>
         <module>compile-time-annotation-processing</module>
         <module>download-plugin-example</module>
-	<module>gwt-example</module>
+        <module>gwt-example</module>
         <module>izpack-example</module>
-	<module>javacpp-opencv-example</module>
-	<module>jetty-gwt-errai-bus</module>
-	<module>jna-jni-example</module>
-	<module>stjs-example</module>
+        <module>javacpp-opencv-example</module>
+        <module>jetty-gwt-errai-bus</module>
+        <module>jetty-jersey-jta-jpa</module>
+        <module>jna-jni-example</module>
+        <module>stjs-example</module>
         <!-- intentionally broken: -->
-        <!--<module>java6only</module>-->
+        <!--<module>java6only</module> -->
         <module>launch4j-plugin</module>
-	<module>launch4j-example</module>
-	<module>log4j-runtime-configuration</module>
-	<module>maven-checkstyle-example</module>
+        <module>launch4j-example</module>
+        <module>log4j-runtime-configuration</module>
+        <module>maven-checkstyle-example</module>
         <module>maven-jnaerator-example</module>
         <module>multimodule-archetype-example</module>
-	<!-- <module>nar-maven-plugin-jni-example</module> not working atm -->
+        <!-- <module>nar-maven-plugin-jni-example</module> not working atm -->
     </modules>
 
     <build>
