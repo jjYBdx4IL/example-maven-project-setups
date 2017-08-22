@@ -35,7 +35,7 @@
         <module>izpack-example</module>
         <module>javacpp-opencv-example</module>
         <module>jetty-gwt-errai-bus</module>
-        <module>jetty-jersey-jta-jpa</module>
+	<!--        <module>jetty-jersey-jta-jpa</module>-->
         <module>jna-jni-example</module>
         <module>stjs-example</module>
         <!-- intentionally broken: -->
