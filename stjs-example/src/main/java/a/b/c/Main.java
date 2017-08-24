@@ -16,5 +16,8 @@ public class Main {
 
     public void run() {
         counter++;
+        DTO dto = new DTO();
+        dto.setId(1);
+        dto.setText("test");
     }
 }

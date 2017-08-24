@@ -12,6 +12,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Map;
+
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
@@ -26,6 +28,7 @@ import org.stjs.generator.GenerationDirectory;
 import org.stjs.generator.Generator;
 import org.stjs.generator.GeneratorConfiguration;
 import org.stjs.generator.GeneratorConfigurationBuilder;
+import org.stjs.generator.name.DependencyType;
 
 /**
  *
@@ -55,6 +58,13 @@ public class RunGeneratorTest {
         long durationMs = -System.currentTimeMillis();
         stjsClass = generator.generateJavascript(Main.class.getName(), sourceFolder);
         durationMs += System.currentTimeMillis();
+        
+        Map<ClassWithJavascript, DependencyType> deps = stjsClass.getDirectDependencyMap();
+        for (Map.Entry<ClassWithJavascript, DependencyType> entry : deps.entrySet()) {
+        	LOG.info(""+entry);
+        }
+        
+        generator.copyJavascriptSupport(tempFolder);
         
         LOG.info("js generation time (hot, ms): " + durationMs);
         
