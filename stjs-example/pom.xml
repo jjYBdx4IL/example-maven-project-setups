@@ -1,99 +1,78 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="
+	xsi:schemaLocation="
         http://maven.apache.org/POM/4.0.0
             http://maven.apache.org/maven-v4_0_0.xsd
             ">
 
-    <modelVersion>4.0.0</modelVersion>
+	<modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>com.github.jjYBdx4IL.maven.examples</groupId>
-        <artifactId>github-maven-examples</artifactId>
-        <version>1.0-SNAPSHOT</version>
-    </parent>
+	<parent>
+		<groupId>com.github.jjYBdx4IL.maven.examples</groupId>
+		<artifactId>github-maven-examples</artifactId>
+		<version>1.0-SNAPSHOT</version>
+	</parent>
 
-    <artifactId>stjs-example</artifactId>
+	<artifactId>stjs-example</artifactId>
 
-    <name>Maven Examples :: ST-JS Example</name>
+	<name>Maven Examples :: ST-JS Example</name>
 
-    <properties>
-        <jetty.http.port>7392</jetty.http.port>
-    </properties>
+	<properties>
+		<jetty.http.port>7392</jetty.http.port>
+		<stjs.version>3.3.2</stjs.version>
+	</properties>
 
-    <build>
-        <plugins>
-            <!--            <plugin>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-maven-plugin</artifactId>
-                <version>9.3.7.v20160115</version>
-                <executions>
-                    <execution>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>start</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>jetty-stop</id>
-                        <phase>post-integration-test</phase>
-                        <goals>
-                            <goal>stop</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <httpConnector>
-                        <port>${jetty.http.port}</port>
-                    </httpConnector>
-                    <stopPort>7876</stopPort>
-                    <stopKey>abc</stopKey>
-                </configuration>
-            </plugin>-->
-        </plugins>
-    </build>
-    
-    <dependencies>
-<!--        <dependency>
-            <groupId>org.st-js.bridge</groupId>
-            <artifactId>html</artifactId>
-            <version>5.0.bv6</version>
-        </dependency>-->
-        <dependency>
-            <groupId>org.st-js</groupId>
-            <artifactId>client-runtime</artifactId>
-            <version>3.3.2</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.st-js</groupId>
-            <artifactId>generator</artifactId>
-            <version>3.3.2</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.github.jjYBdx4IL</groupId>
-            <artifactId>github-test-utils</artifactId>
-            <version>1.0</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.github.jjYBdx4IL</groupId>
-            <artifactId>github-utils</artifactId>
-            <version>1.1</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>1.7.25</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
+	<dependencies>
+		<dependency>
+			<groupId>org.st-js.bridge</groupId>
+			<artifactId>jquery</artifactId>
+			<version>1.11.3.bv1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.st-js.bridge</groupId>
+			<artifactId>html</artifactId>
+			<version>5.0.bv6</version>
+		</dependency>
+		<dependency>
+			<groupId>org.st-js</groupId>
+			<artifactId>client-runtime</artifactId>
+			<version>${stjs.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.st-js</groupId>
+			<artifactId>generator</artifactId>
+			<version>${stjs.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.st-js</groupId>
+			<artifactId>server</artifactId>
+			<version>${stjs.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.github.jjYBdx4IL</groupId>
+			<artifactId>github-test-utils</artifactId>
+			<version>1.0</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.github.jjYBdx4IL</groupId>
+			<artifactId>github-utils</artifactId>
+			<version>1.2-SNAPSHOT</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<version>1.7.25</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
 
 </project>
 

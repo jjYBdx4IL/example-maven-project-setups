@@ -1,5 +1,7 @@
 package a.b.c;
 
+import org.stjs.javascript.Global;
+
 /**
  *
  * @author jjYBdx4IL
@@ -16,8 +18,12 @@ public class Main {
 
     public void run() {
         counter++;
+        
         DTO dto = new DTO();
         dto.setId(1);
         dto.setText("test");
+        
+        //XMLHttpRequest req = new XMLHttpRequest();
+        Global.console.log("test log output");
     }
 }

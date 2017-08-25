@@ -1,16 +1,19 @@
 package tests;
 
+import a.b.c.DTO;
 import a.b.c.Main;
 import com.github.jjYBdx4IL.test.FileUtil;
 import com.github.jjYBdx4IL.utils.env.Maven;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -31,64 +34,65 @@ import org.stjs.generator.GeneratorConfigurationBuilder;
 import org.stjs.generator.name.DependencyType;
 
 /**
+ * https://github.com/st-js/st-js/blob/master/maven-plugin/src/main/java/org/stjs/maven/AbstractSTJSMojo.java#L199
  *
  * @author jjYBdx4IL
  */
 public class RunGeneratorTest {
 
-    private static final Logger LOG = LoggerFactory.getLogger(RunGeneratorTest.class);
+	private static final Logger LOG = LoggerFactory.getLogger(RunGeneratorTest.class);
 
-    private final File sourceFolder = new File(Maven.getMavenBasedir(), "src/main/java");
-    private final File tempFolder = FileUtil.createMavenTestDir(RunGeneratorTest.class);
+	private final File sourceFolder = new File(new File(Maven.getBasedir(RunGeneratorTest.class)), "src/main/java");
+	private final File tempFolder = FileUtil.createMavenTestDir(RunGeneratorTest.class);
 
-    @Test
-    public void test() throws URISyntaxException, IOException, ScriptException {
-        GeneratorConfigurationBuilder configBuilder = new GeneratorConfigurationBuilder();
-        configBuilder.allowedPackage("a.b.c");
-        configBuilder.stjsClassLoader(getClass().getClassLoader());
-        configBuilder.targetFolder(Paths.get(Maven.getMavenBasedir(), "target", "classes").toFile());
-        GenerationDirectory gendir = new GenerationDirectory(tempFolder, null, new URI("/jsoutput"));
-        configBuilder.generationFolder(gendir);
+	@Test
+	public void test() throws URISyntaxException, IOException, ScriptException {
+		GeneratorConfigurationBuilder configBuilder = new GeneratorConfigurationBuilder();
+		configBuilder.allowedPackage("a.b.c");
+		configBuilder.stjsClassLoader(getClass().getClassLoader());
+		configBuilder.targetFolder(
+				Paths.get(Maven.getMavenBuildDir(RunGeneratorTest.class).getAbsolutePath(), "classes").toFile());
+		GenerationDirectory gendir = new GenerationDirectory(tempFolder, null, new URI("/jsoutput"));
+		configBuilder.generationFolder(gendir);
 
-        GeneratorConfiguration configuration = configBuilder.build();
-        Generator generator = new Generator(configuration);
+		GeneratorConfiguration configuration = configBuilder.build();
+		Generator generator = new Generator(configuration);
 
-        // measure generation time in hot state
-        ClassWithJavascript stjsClass = generator.generateJavascript(Main.class.getName(), sourceFolder);
-        long durationMs = -System.currentTimeMillis();
-        stjsClass = generator.generateJavascript(Main.class.getName(), sourceFolder);
-        durationMs += System.currentTimeMillis();
-        
-        Map<ClassWithJavascript, DependencyType> deps = stjsClass.getDirectDependencyMap();
-        for (Map.Entry<ClassWithJavascript, DependencyType> entry : deps.entrySet()) {
-        	LOG.info(""+entry);
-        }
-        
-        generator.copyJavascriptSupport(tempFolder);
-        
-        LOG.info("js generation time (hot, ms): " + durationMs);
-        
-        List<URI> outputFiles = stjsClass.getJavascriptFiles();
-        assertEquals(1, outputFiles.size());
+		// measure generation time in hot state
+		ClassWithJavascript stjsClass = generator.generateJavascript(Main.class.getName(), sourceFolder);
+		long durationMs = -System.currentTimeMillis();
+		stjsClass = generator.generateJavascript(Main.class.getName(), sourceFolder);
+		durationMs += System.currentTimeMillis();
 
-        LOG.info(outputFiles.get(0).toString());
-        File jsFile = new File(tempFolder, outputFiles.get(0).toString());
+		ClassWithJavascript stjsClass2 = generator.generateJavascript(DTO.class.getName(), sourceFolder);
+		
+		LOG.info("js generation time (hot, ms): " + durationMs);
 
-        LOG.info("jsFile = " + jsFile.getAbsolutePath());
-        String js = IOUtils.toString(jsFile.toURI());
-        LOG.info(js);
+		List<URI> outputFiles = new ArrayList<>(stjsClass2.getJavascriptFiles());
+		outputFiles.addAll(stjsClass.getJavascriptFiles());
+		assertEquals(2, outputFiles.size());
 
-        // run the generated js
-        ScriptEngineManager manager = new ScriptEngineManager();
-        ScriptEngine engine = manager.getEngineByName("javascript");
-        
-        try (InputStream is = getClass().getResourceAsStream("/" + Generator.STJS_PATH)) {
-            engine.eval(new InputStreamReader(is, "UTF-8"));
-        }
-        try {
-            Object result = engine.eval(js);
-        } catch (ScriptException ex) {
-            LOG.error("", ex);
-        }
-    }
+		// run the generated js
+		ScriptEngineManager manager = new ScriptEngineManager();
+		ScriptEngine engine = manager.getEngineByName("javascript");
+
+		generator.copyJavascriptSupport(tempFolder);
+		try (InputStream is = new FileInputStream(new File(tempFolder, "stjs.js"))) {
+			engine.eval(new InputStreamReader(is, "UTF-8"));
+		}
+		try {
+			LOG.info("" + outputFiles);
+			for (URI jsFileUri : outputFiles) {
+				File jsFile = new File(tempFolder, jsFileUri.toString());
+
+				LOG.info("jsFile = " + jsFile.getAbsolutePath());
+				String js = IOUtils.toString(jsFile.toURI(), "UTF-8");
+				LOG.info(js);
+				Object result = engine.eval(js);
+				LOG.info("result = " + result);
+			}
+		} catch (ScriptException ex) {
+			LOG.error("", ex);
+		}
+	}
 }
