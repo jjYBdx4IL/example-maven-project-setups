@@ -1,9 +1,6 @@
 package tests;
 
-import a.b.c.DTO;
-import a.b.c.Main;
-import com.github.jjYBdx4IL.test.FileUtil;
-import com.github.jjYBdx4IL.utils.env.Maven;
+import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,14 +12,13 @@ import java.net.URISyntaxException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
-import static org.junit.Assert.assertEquals;
 
 import org.apache.commons.io.IOUtils;
+import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +27,10 @@ import org.stjs.generator.GenerationDirectory;
 import org.stjs.generator.Generator;
 import org.stjs.generator.GeneratorConfiguration;
 import org.stjs.generator.GeneratorConfigurationBuilder;
-import org.stjs.generator.name.DependencyType;
+
+import a.b.c.DTO;
+import a.b.c.Main;
+import utils.Maven;
 
 /**
  * https://github.com/st-js/st-js/blob/master/maven-plugin/src/main/java/org/stjs/maven/AbstractSTJSMojo.java#L199
@@ -43,7 +42,13 @@ public class RunGeneratorTest {
 	private static final Logger LOG = LoggerFactory.getLogger(RunGeneratorTest.class);
 
 	private final File sourceFolder = new File(new File(Maven.getBasedir(RunGeneratorTest.class)), "src/main/java");
-	private final File tempFolder = FileUtil.createMavenTestDir(RunGeneratorTest.class);
+	private final File tempFolder = new File(new File(Maven.getBasedir(RunGeneratorTest.class)),
+			"target/" + RunGeneratorTest.class.getName());
+
+	@Before
+	public void before() {
+
+	}
 
 	@Test
 	public void test() throws URISyntaxException, IOException, ScriptException {
@@ -65,7 +70,7 @@ public class RunGeneratorTest {
 		durationMs += System.currentTimeMillis();
 
 		ClassWithJavascript stjsClass2 = generator.generateJavascript(DTO.class.getName(), sourceFolder);
-		
+
 		LOG.info("js generation time (hot, ms): " + durationMs);
 
 		List<URI> outputFiles = new ArrayList<>(stjsClass2.getJavascriptFiles());
