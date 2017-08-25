@@ -21,6 +21,65 @@
 		<stjs.version>3.3.2</stjs.version>
 	</properties>
 
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.st-js</groupId>
+				<artifactId>stjs-maven-plugin</artifactId>
+				<version>${stjs.version}</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>generate</goal>
+							<!-- <goal>generate-test</goal> -->
+							<goal>copy-js</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<generateSourceMap>false</generateSourceMap>
+				</configuration>
+			</plugin>
+		</plugins>
+
+		<pluginManagement>
+			<plugins>
+				<!-- configuration for maven plugin 1.0.0 for automatic code generation -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.st-js</groupId>
+										<artifactId>
+											stjs-maven-plugin
+										</artifactId>
+										<versionRange>
+											[${stjs.version},)
+										</versionRange>
+										<goals>
+											<goal>generate</goal>
+											<goal>generate-test</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<execute>
+											<runOnIncremental>true</runOnIncremental>
+										</execute>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.st-js.bridge</groupId>
@@ -65,6 +124,18 @@
 			<artifactId>commons-io</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>net.sourceforge.htmlunit</groupId>
+			<artifactId>htmlunit</artifactId>
+			<version>2.27</version>
+			<scope>test</scope>
+		</dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-server</artifactId>
+            <version>9.4.6.v20170531</version>
+            <scope>test</scope>
+        </dependency>
 	</dependencies>
 
 </project>
