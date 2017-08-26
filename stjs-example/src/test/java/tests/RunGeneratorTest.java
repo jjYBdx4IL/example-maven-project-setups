@@ -155,7 +155,6 @@ public class RunGeneratorTest extends AbstractHandler {
 
 			final HtmlPage page = webClient.getPage(getUrl("/"));
 			assertEquals(0, webClient.waitForBackgroundJavaScript(10000L));
-			assertEquals(0, webClient.waitForBackgroundJavaScript(10000L));
 			LOG.info("page: " + page.asXml());
 		}
 
