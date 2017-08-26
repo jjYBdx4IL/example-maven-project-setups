@@ -88,6 +88,11 @@
 		</dependency>
 		<dependency>
 			<groupId>org.st-js.bridge</groupId>
+			<artifactId>jqueryui</artifactId>
+			<version>1.10.3.bv2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.st-js.bridge</groupId>
 			<artifactId>html</artifactId>
 			<version>5.0.bv6</version>
 		</dependency>
@@ -96,6 +101,11 @@
 			<artifactId>client-runtime</artifactId>
 			<version>${stjs.version}</version>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.st-js</groupId>
+			<artifactId>shared</artifactId>
+			<version>${stjs.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.st-js</groupId>
@@ -130,12 +140,18 @@
 			<version>2.27</version>
 			<scope>test</scope>
 		</dependency>
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-server</artifactId>
-            <version>9.4.6.v20170531</version>
-            <scope>test</scope>
-        </dependency>
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-server</artifactId>
+			<version>9.4.6.v20170531</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.ant</groupId>
+			<artifactId>ant</artifactId>
+			<version>1.10.1</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 </project>

@@ -70,14 +70,14 @@ public class MavenPluginTest extends AbstractHandler {
 	@Ignore
 	@Test
 	public void test() throws IOException, InterruptedException {
-		
+
 		final CountDownLatch countDown = new CountDownLatch(1);
-		
+
 		try (final WebClient webClient = new WebClient()) {
 			webClient.getOptions().setJavaScriptEnabled(true);
 			webClient.getOptions().setThrowExceptionOnScriptError(false);
 			webClient.setAlertHandler(new AlertHandler() {
-				
+
 				@Override
 				public void handleAlert(Page arg0, String arg1) {
 					LOG.info("alert: " + arg1);
@@ -90,7 +90,7 @@ public class MavenPluginTest extends AbstractHandler {
 			final HtmlPage page = webClient.getPage(getUrl("/"));
 			LOG.info("page: " + page.asXml());
 		}
-		
+
 		assertTrue(countDown.await(10, TimeUnit.SECONDS));
 	}
 
