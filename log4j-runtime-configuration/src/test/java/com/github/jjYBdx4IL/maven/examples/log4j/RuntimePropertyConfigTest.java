@@ -1,19 +1,20 @@
 package com.github.jjYBdx4IL.maven.examples.log4j;
 
-import com.github.jjYBdx4IL.test.FileUtil;
-import java.io.File;
-import java.util.Properties;
-import org.apache.commons.io.FileUtils;
-import org.apache.log4j.FileAppender;
-import org.apache.log4j.PatternLayout;
-import org.apache.log4j.PropertyConfigurator;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+
+import java.io.File;
+import java.util.Properties;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.log4j.PropertyConfigurator;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.github.jjYBdx4IL.utils.env.Maven;
 
 /**
  * Beware! This method adds the appender to the root looger. If there are other logger
@@ -29,7 +30,7 @@ public class RuntimePropertyConfigTest {
     
     @Before
     public void before() {
-        tempDir = FileUtil.createMavenTestDir(RuntimePropertyConfigTest.class);
+        tempDir = Maven.getTempTestDir(RuntimePropertyConfigTest.class);
     }
     
     @Test

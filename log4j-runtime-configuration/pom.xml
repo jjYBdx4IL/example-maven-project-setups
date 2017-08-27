@@ -44,13 +44,8 @@
         </dependency>
         <dependency>
             <groupId>com.github.jjYBdx4IL</groupId>
-            <artifactId>github-test-utils</artifactId>
-            <version>1.1-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.github.jjYBdx4IL</groupId>
             <artifactId>github-utils</artifactId>
-            <version>1.2-SNAPSHOT</version>
+            <version>1.2</version>
         </dependency>
     </dependencies>
 
