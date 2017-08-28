@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.nio.file.Paths;
@@ -23,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.tools.ant.DirectoryScanner;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
@@ -64,7 +66,7 @@ public class RunGeneratorTest extends AbstractHandler {
 	private final File sourceFolder = new File(baseDir, "src/main/java");
 	private final File tempFolder = new File(baseDir, "target/" + RunGeneratorTest.class.getName());
 	private Server server = new Server(0);
-	private final List<Class<?>> jsClasses = new ArrayList<>();
+	private final List<String> jsFiles = new ArrayList<>();
 
 	@After
 	public void after() throws Exception {
@@ -79,41 +81,42 @@ public class RunGeneratorTest extends AbstractHandler {
 		tempFolder.mkdirs();
 		FileUtils.cleanDirectory(tempFolder);
 
-		jsClasses.clear();
-		jsClasses.add(Global2.class);
-		jsClasses.add(DTO.class);
-		jsClasses.add(Main.class);
-
 		server.setHandler(this);
 		server.start();
 	}
 
-	private void compileJs(Generator generator, Class<?> jsClass) {
-		long durationMs = -System.currentTimeMillis();
-		generator.generateJavascript(jsClass.getName(), sourceFolder);
-		durationMs += System.currentTimeMillis();
-		LOG.info(String.format(Locale.ROOT, "js generation time for %s: %d ms", jsClass.getName(), durationMs));
-	}
+	private void compileAll() throws URISyntaxException {
+        GeneratorConfigurationBuilder configBuilder = new GeneratorConfigurationBuilder();
+        configBuilder.allowedPackage(Main.class.getPackage().getName());
+        configBuilder.stjsClassLoader(getClass().getClassLoader());
+        configBuilder.targetFolder(Paths.get(baseDir.getAbsolutePath(), "target/classes").toFile());
+        GenerationDirectory gendir = new GenerationDirectory(tempFolder, null, new URI("/jsoutput"));
+        configBuilder.generationFolder(gendir);
+        GeneratorConfiguration configuration = configBuilder.build();
+        Generator generator = new Generator(configuration);
 
+        DirectoryScanner scanner = new DirectoryScanner();
+        scanner.setBasedir(sourceFolder.getAbsolutePath());
+        scanner.setIncludes(new String[] {"**/*.java"});
+        scanner.scan();
+        for (String sourceFile : scanner.getIncludedFiles()) {
+            String className = sourceFile.substring(0,  sourceFile.length()-5).replace(File.separator, ".");
+            long durationMs = -System.currentTimeMillis();
+            generator.generateJavascript(className, sourceFolder);
+            durationMs += System.currentTimeMillis();
+            LOG.info(String.format(Locale.ROOT, "js generation time for %s: %d ms", className, durationMs));
+            jsFiles.add(sourceFile.substring(0, sourceFile.length()-5) + ".js");
+        }
+	    
+        generator.copyJavascriptSupport(tempFolder);
+	}
+	
 	@Test
 	public void test() throws Exception {
-
-		GeneratorConfigurationBuilder configBuilder = new GeneratorConfigurationBuilder();
-		configBuilder.allowedPackage(Main.class.getPackage().getName());
-		configBuilder.stjsClassLoader(getClass().getClassLoader());
-		configBuilder.targetFolder(Paths.get(baseDir.getAbsolutePath(), "target/classes").toFile());
-		GenerationDirectory gendir = new GenerationDirectory(tempFolder, null, new URI("/jsoutput"));
-		configBuilder.generationFolder(gendir);
-		GeneratorConfiguration configuration = configBuilder.build();
-		Generator generator = new Generator(configuration);
-
-		for (Class<?> jsClass : jsClasses) {
-			compileJs(generator, jsClass);
-		}
-
-		generator.copyJavascriptSupport(tempFolder);
+	    compileAll();
 
 		final CountDownLatch countDownNative = new CountDownLatch(1);
+		final CountDownLatch countDownNativePost = new CountDownLatch(1);
 		final CountDownLatch countDownJquery = new CountDownLatch(1);
 
 		// uncomment to test stuff interactively:
@@ -147,6 +150,9 @@ public class RunGeneratorTest extends AbstractHandler {
 					if ("test log alert for native ajax".equals(arg1)) {
 						countDownNative.countDown();
 					}
+                    if ("test log alert for native ajax POST".equals(arg1)) {
+                        countDownNativePost.countDown();
+                    }
 					if ("test log alert for jquery ajax".equals(arg1)) {
 						countDownJquery.countDown();
 					}
@@ -159,6 +165,7 @@ public class RunGeneratorTest extends AbstractHandler {
 		}
 
 		assertTrue(countDownNative.await(10, TimeUnit.SECONDS));
+		assertTrue(countDownNativePost.await(10, TimeUnit.SECONDS));
 		assertTrue(countDownJquery.await(10, TimeUnit.SECONDS));
 	}
 
@@ -172,7 +179,7 @@ public class RunGeneratorTest extends AbstractHandler {
 	@Override
 	public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
-		LOG.info(String.format(Locale.ROOT, "handle(%s, ...)", target));
+		LOG.info(String.format(Locale.ROOT, "handle(%s %s, ...)", request.getMethod(), target));
 
 		if ("/".equals(target)) {
 			response.setStatus(HttpServletResponse.SC_OK);
@@ -180,11 +187,18 @@ public class RunGeneratorTest extends AbstractHandler {
 			response.getWriter().print("<!DOCTYPE html><html><head>");
 			response.getWriter().print("<script type=\"text/javascript\" src=\"jquery.js\"></script>");
 			response.getWriter().print("<script type=\"text/javascript\" src=\"stjs.js\"></script>");
-			for (Class<?> jsClass : jsClasses) {
-				response.getWriter().print("<script type=\"text/javascript\" src=\""
-						+ jsClass.getName().replace(".", "/") + ".js\"></script>");
+			for (String jsFile : jsFiles) {
+				response.getWriter().print("<script type=\"text/javascript\" src=\""+jsFile+"\"></script>");
 			}
 			response.getWriter().print("</head><body>" + "</body></html>");
+        } else if ("/postDtoNative".equals(target)) {
+            String input = IOUtils.toString(request.getReader());
+            LOG.info("POST content: " + input);
+            DTO dto = new Gson().fromJson(input, DTO.class);
+            response.setStatus(HttpServletResponse.SC_OK);
+            response.setContentType("application/json");
+            dto.setText("test " + dto.getText());
+            response.getWriter().print(new Gson().toJson(dto));
 		} else if ("/getDtoNative".equals(target)) {
 			response.setStatus(HttpServletResponse.SC_OK);
 			response.setContentType("application/json");

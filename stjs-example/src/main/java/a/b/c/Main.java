@@ -2,6 +2,7 @@ package a.b.c;
 
 import static org.stjs.javascript.Global.alert;
 import static org.stjs.javascript.Global.window;
+import static org.stjs.javascript.JSGlobal.JSON;
 import static org.stjs.javascript.JSGlobal.stjs;
 import static org.stjs.javascript.jquery.GlobalJQuery.$;
 
@@ -37,7 +38,7 @@ public class Main {
 			@Override
 			public boolean onEvent(Event ev, Element THIS) {
 
-				// native ajax
+				// native ajax GET
 				final XMLHttpRequest request = new XMLHttpRequest();
 				request.onreadystatechange = new Callback0() {
 					@Override
@@ -51,6 +52,23 @@ public class Main {
 
 				request.open("GET", "/getDtoNative");
 				request.send();
+
+                // native ajax POST
+                final XMLHttpRequest request2 = new XMLHttpRequest();
+                request2.onreadystatechange = new Callback0() {
+                    @Override
+                    public void $invoke() {
+                        if (request2.readyState == 4 && request2.status == 200) {
+                            DTO dto = stjs.parseJSON(request2.responseText, DTO.class);
+                            alert(dto.getText());
+                        }
+                    }
+                };
+
+                request2.open("POST", "/postDtoNative");
+                DTO dto = new DTO();
+                dto.setText("log alert for native ajax POST");
+                request2.send(JSON.stringify(dto));
 
 				// jquery ajax frontend
 				$.ajax(new AjaxParams() {
