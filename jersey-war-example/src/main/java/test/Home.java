@@ -34,7 +34,7 @@ public class Home {
     public Response get() {
         LOG.info("get()");
 
-        return Response.ok().entity("Hello THERE!!!!!").build();
+        return Response.ok().entity("Hello THERE!").build();
     } 
 
 }
