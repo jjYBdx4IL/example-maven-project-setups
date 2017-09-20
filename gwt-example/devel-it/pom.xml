@@ -1,6 +1,6 @@
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="
+    xsi:schemaLocation="
         http://maven.apache.org/POM/4.0.0
             http://maven.apache.org/maven-v4_0_0.xsd
             ">
@@ -10,7 +10,7 @@
         <groupId>com.github.jjYBdx4IL</groupId>
         <artifactId>github-parent</artifactId>
         <version>1.1</version>
-        <relativePath/>
+        <relativePath />
     </parent>
 
     <groupId>com.github.jjYBdx4IL.maven.examples</groupId>
@@ -24,7 +24,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        
+
         <jetty.port>8080</jetty.port>
         <gwt.jetty.port>8888</gwt.jetty.port>
         <gwt.codeserver.port>9876</gwt.codeserver.port>
@@ -34,7 +34,7 @@
         <mgmt.script>${project.basedir}/src/main/resources/startStop.sh</mgmt.script>
         <!-- set to 1 or empty -->
         <mgmt.script.debug></mgmt.script.debug>
-        
+
         <antrun.skip>false</antrun.skip>
         <failsafe.skip>false</failsafe.skip>
         <surefire.skip>true</surefire.skip>
@@ -100,27 +100,26 @@
                         </goals>
                         <configuration>
                             <target>
-                                <delete dir="${installDir}"/>
-                                    
+                                <delete dir="${installDir}" />
+
                                 <copy todir="${installDir}/api">
                                     <fileset dir="${project.basedir}/../api">
-                                        <exclude name="**/target/"/>
+                                        <exclude name="**/target/" />
                                     </fileset>
                                 </copy>
                                 <copy todir="${installDir}/client">
                                     <fileset dir="${project.basedir}/../client">
-                                        <exclude name="**/target/"/>
+                                        <exclude name="**/target/" />
                                     </fileset>
                                 </copy>
                                 <copy todir="${installDir}/server">
                                     <fileset dir="${project.basedir}/../server">
-                                        <exclude name="**/target/"/>
+                                        <exclude name="**/target/" />
                                     </fileset>
                                 </copy>
                                         
                                 <!-- shut down running server - just in case -->
-                                <exec executable="bash" dir="${installDir}"
-                                      spawn="false" failonerror="true">
+                                <exec executable="bash" dir="${installDir}" spawn="false" failonerror="true">
                                     <arg value="${mgmt.script}" />
                                     <arg value="${project.groupId}:${project.artifactId}:" />
                                     <arg value="stop" />
@@ -150,15 +149,13 @@
                                 </fail>
                                         
                                 <!-- dev mode server runs against generated api sources -->
-                                <exec executable="bash" dir="${installDir}/api"
-                                      spawn="false" failonerror="true">
+                                <exec executable="bash" dir="${installDir}/api" spawn="false" failonerror="true">
                                     <arg value="-c" />
                                     <arg value="mvn clean compile" />
                                 </exec>
                                         
                                 <!-- start GWT DevMode server -->
-                                <exec executable="bash" dir="${installDir}/client"
-                                      spawn="false" failonerror="true">
+                                <exec executable="bash" dir="${installDir}/client" spawn="false" failonerror="true">
                                     <arg value="${mgmt.script}" />
                                     <arg value="${project.groupId}:${project.artifactId}:gwt" />
                                     <arg value="start" />
@@ -169,7 +166,7 @@
                                     <arg value="-Ddevmode" />
                                     <env key="DEBUG" value="${mgmt.script.debug}" />
                                 </exec>
-                                        
+
                                 <echo>Waiting for GWT jetty server to come up at port ${gwt.jetty.port}</echo>
                                 <waitfor maxwait="3" maxwaitunit="minute" checkevery="1000">
                                     <socket server="localhost" port="${gwt.jetty.port}" />
@@ -180,8 +177,7 @@
                                 </waitfor>
                                         
                                 <!-- start mvn jetty:run -->
-                                <exec executable="bash" dir="${installDir}/server"
-                                      spawn="false" failonerror="true">
+                                <exec executable="bash" dir="${installDir}/server" spawn="false" failonerror="true">
                                     <arg value="${mgmt.script}" />
                                     <arg value="${project.groupId}:${project.artifactId}:jetty" />
                                     <arg value="start" />
@@ -190,7 +186,7 @@
                                     <arg value="jetty:run" />
                                     <env key="DEBUG" value="${mgmt.script.debug}" />
                                 </exec>
-                                        
+
                                 <echo>Waiting for server to come up at port ${jetty.port}</echo>
                                 <waitfor maxwait="3" maxwaitunit="minute" checkevery="1000">
                                     <!-- implicitly check that our reverse proxy to the gwt jetty server is working
@@ -210,8 +206,7 @@
                         <configuration>
                             <target>
                                 <!-- shut down running server - just in case -->
-                                <exec executable="bash" dir="${installDir}"
-                                      spawn="false" failonerror="true">
+                                <exec executable="bash" dir="${installDir}" spawn="false" failonerror="true">
                                     <arg value="${mgmt.script}" />
                                     <arg value="${project.groupId}:${project.artifactId}:" />
                                     <arg value="stop" />
@@ -244,8 +239,7 @@
                         <configuration>
                             <target>
                                 <!-- shut down running server - just in case -->
-                                <exec executable="bash" dir="${project.basedir}"
-                                      spawn="false" failonerror="true">
+                                <exec executable="bash" dir="${project.basedir}" spawn="false" failonerror="true">
                                     <arg value="${mgmt.script}" />
                                     <arg value="${project.groupId}:${project.artifactId}:" />
                                     <arg value="stop" />
@@ -284,7 +278,7 @@
         </plugins>
 
         <pluginManagement>
-            <plugins>        
+            <plugins>
                 <plugin>
                     <artifactId>maven-failsafe-plugin</artifactId>
                     <version>2.20</version>
@@ -374,7 +368,7 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-    
+
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -397,9 +391,34 @@
                 <artifactId>websocket-client</artifactId>
                 <version>9.4.6.v20170531</version>
             </dependency>
+            <dependency>
+                <groupId>org.seleniumhq.selenium</groupId>
+                <artifactId>selenium-api</artifactId>
+                <version>3.5.3</version>
+            </dependency>
+            <dependency>
+                <groupId>org.seleniumhq.selenium</groupId>
+                <artifactId>selenium-chrome-driver</artifactId>
+                <version>3.5.3</version>
+            </dependency>
+            <dependency>
+                <groupId>org.seleniumhq.selenium</groupId>
+                <artifactId>selenium-firefox-driver</artifactId>
+                <version>3.5.3</version>
+            </dependency>
+            <dependency>
+                <groupId>org.seleniumhq.selenium</groupId>
+                <artifactId>selenium-remote-driver</artifactId>
+                <version>3.5.3</version>
+            </dependency>
+            <dependency>
+                <groupId>org.seleniumhq.selenium</groupId>
+                <artifactId>selenium-support</artifactId>
+                <version>3.5.3</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
-    
+
     <profiles>
         <profile>
             <!-- for interactive test development using Netbeans (activate this profile in Netbeans!): -->
@@ -417,7 +436,7 @@
                 <surefire.skip>false</surefire.skip>
             </properties>
         </profile>
-        
+
         <profile>
             <id>skipITs</id>
             <activation>
@@ -432,7 +451,7 @@
                 <surefire.skip>true</surefire.skip>
             </properties>
         </profile>
-        
+
         <profile>
             <id>skipTests</id>
             <activation>
