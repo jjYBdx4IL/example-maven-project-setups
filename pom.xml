@@ -32,6 +32,7 @@
         <module>compile-time-annotation-processing</module>
         <module>download-plugin-example</module>
         <module>gwt-example</module>
+        <module>hbase-example</module>
         <module>izpack-example</module>
         <module>javacpp-opencv-example</module>
         <module>jersey-war-example</module>
