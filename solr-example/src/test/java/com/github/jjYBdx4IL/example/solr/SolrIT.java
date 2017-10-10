@@ -2,35 +2,61 @@ package com.github.jjYBdx4IL.example.solr;
 
 import static org.junit.Assert.assertEquals;
 
+import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
+import org.apache.solr.client.solrj.SolrServerException;
+import org.apache.solr.client.solrj.impl.CloudSolrClient;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.client.solrj.impl.XMLResponseParser;
 import org.apache.solr.client.solrj.response.QueryResponse;
-import org.apache.solr.client.solrj.response.UpdateResponse;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.SolrInputDocument;
+import org.apache.solr.common.cloud.ClusterState.CollectionRef;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-// see also https://github.com/apache/lucene-solr/tree/master/solr/solrj/src/test/org/apache/solr/client/solrj
-// or http://www.baeldung.com/apache-solrj
-public class SolrClientIT {
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.Socket;
 
-    HttpSolrClient solr = null;
+// https://lucene.apache.org/solr/guide/7_0/using-solrj.html
+// https://github.com/apache/lucene-solr/tree/master/solr/solrj/src/test/org/apache/solr/client/solrj
+// http://www.baeldung.com/apache-solrj
+public class SolrIT {
+
+    private static final Logger LOG = LoggerFactory.getLogger(SolrIT.class);
+
+    SolrClient solr = null;
+    static final int ZK_PORT = 9983; // zookeeper port used by cluster example
+    static boolean clustered = portIsOpen(ZK_PORT);
+    static final String COLLECTION = "gettingstarted";
 
     @Before
-    public void before() {
-        String urlString = "http://localhost:8983/solr/bigboxstore";
-        solr = new HttpSolrClient.Builder(urlString).build();
-        solr.setParser(new XMLResponseParser());
+    public void before() throws Exception {
+        LOG.info("is clustered: " + clustered);
+
+        if (clustered) {
+            // add mutiple hosts for resilience:
+            String zkHostString = "localhost:" + ZK_PORT;
+            CloudSolrClient cloudSolr = new CloudSolrClient.Builder().withZkHost(zkHostString).build();
+            cloudSolr.setDefaultCollection(COLLECTION);
+            cloudSolr.setParser(new XMLResponseParser());
+            solr = cloudSolr;
+        } else {
+            String urlString = "http://localhost:8983/solr/" + COLLECTION;
+            HttpSolrClient httpSolr = new HttpSolrClient.Builder(urlString).build();
+            httpSolr.setParser(new XMLResponseParser());
+            solr = httpSolr;
+        }
     }
 
     @Test
     public void testCRUD() throws Exception {
         // delete by query
         solr.deleteByQuery("*");
-        solr.commit();
 
         // add a document
         SolrInputDocument document = new SolrInputDocument();
@@ -39,11 +65,10 @@ public class SolrClientIT {
         document.addField("name", "Kenmore Dishwasher");
         document.addField("price", "599.99");
         solr.add(document);
-        solr.commit();
 
         // add a document by using a bean
         solr.addBean(new ProductBean("888", "Apple iPhone 6s", "299.99"));
-        solr.commit();
+        commit();
 
         // query by field
         SolrQuery query = new SolrQuery();
@@ -63,11 +88,11 @@ public class SolrClientIT {
 
         // delete by query
         solr.deleteByQuery("name:\"Kenmore Dishwasher\"");
-        solr.commit();
+        commit();
 
         // delete by id
         solr.deleteById("123456");
-        solr.commit();
+        commit();
         query = new SolrQuery();
         query.set("q", "id:123456");
         response = solr.query(query);
@@ -79,28 +104,25 @@ public class SolrClientIT {
     public void testSearchSyntax() throws Exception {
         // prepare the dataset
         solr.deleteByQuery("*");
-        solr.commit();
 
         SolrInputDocument document = new SolrInputDocument();
         document.addField("id", "12345");
         document.addField("name", "testSubstringSearch");
         document.addField("text", "one two three four five");
         solr.add(document);
-        solr.commit();
 
         document = new SolrInputDocument();
         document.addField("id", "123457");
         document.addField("name", "testSubstringSearch");
         document.addField("text", "six eighty");
         solr.add(document);
-        solr.commit();
 
         document = new SolrInputDocument();
         document.addField("id", "1234578");
         document.addField("name", "testSubstringSearch");
         document.addField("text", "seven eight");
         solr.add(document);
-        solr.commit();
+        commit();
 
         // http://www.solrtutorial.com/solr-query-syntax.html
         assertQueryMatchCount(1, "text:three");
@@ -132,30 +154,43 @@ public class SolrClientIT {
     public void testDeleteByQuery() throws Exception {
         // prepare the dataset
         solr.deleteByQuery("*");
-        solr.commit();
+        commit();
 
         SolrInputDocument document = new SolrInputDocument();
         document.addField("id", "a12345");
         document.addField("name", "testDeleteByQuery");
         document.addField("text", "one");
         solr.add(document);
-        solr.commit();
+        commit();
 
         document = new SolrInputDocument();
         document.addField("id", "a123457");
         document.addField("name", "testDeleteByQuery ABC");
         document.addField("text", "one");
         solr.add(document);
-        solr.commit();
+        commit();
 
         assertQueryMatchCount(2, "text:\"one\"~0");
 
         // matches are always word-based, therefore the following query will
         // delete both documents:
         solr.deleteByQuery("name:\"testDeleteByQuery\"~0");
-        solr.commit();
+        commit();
 
         assertQueryMatchCount(0, "text:\"one\"~0");
+    }
+
+    // used for manual cluster failover tests
+    @Test
+    public void testAddDocument() throws Exception {
+        SolrInputDocument document = new SolrInputDocument();
+        document.addField("id", "b12345" + System.currentTimeMillis());
+        document.addField("name", "testAddDocument");
+        document.addField("text", "one");
+        solr.add(document);
+        commit();
+
+        dumpQueryMatchCount("name:testAddDocument~0");
     }
 
     public void assertQueryMatchCount(int count, String queryText) throws Exception {
@@ -165,5 +200,29 @@ public class SolrClientIT {
 
         SolrDocumentList docList = response.getResults();
         assertEquals(count, docList.getNumFound());
+    }
+
+    public void dumpQueryMatchCount(String queryText) throws Exception {
+        SolrQuery query = new SolrQuery();
+        query.set("q", queryText);
+        QueryResponse response = solr.query(query);
+
+        SolrDocumentList docList = response.getResults();
+        LOG.info("query: " + queryText + ", matches: " + docList.size());
+    }
+
+    public void commit() throws SolrServerException, IOException {
+        solr.commit(true, true, true);
+    }
+
+    public static boolean portIsOpen(final int port) {
+        try {
+            Socket socket = new Socket();
+            socket.connect(new InetSocketAddress("localhost", port), 1000);
+            socket.close();
+            return true;
+        } catch (Exception ex) {
+            return false;
+        }
     }
 }

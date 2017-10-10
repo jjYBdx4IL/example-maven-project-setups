@@ -18,7 +18,9 @@
 
     <properties>
         <solr.version>7.0.1</solr.version>
+        <zk.version>3.4.10</zk.version>
         <bin.dir>${project.build.directory}/solr-${solr.version}/bin</bin.dir>
+        <zk.bin.dir>${project.build.directory}/zookeeper-${zk.version}/bin</zk.bin.dir>
         <solr.port>8983</solr.port>
     </properties>
 
@@ -38,6 +40,17 @@
                         <configuration>
                             <url>http://apache.mirror.digionline.de/lucene/solr/${solr.version}/solr-${solr.version}.zip</url>
                             <sha512>04dd7ea43acc90aa01b4f2295619c88431e3bdbcbd4adbb629ac0c2d07d7c92b2df39753991a6cbe0a8ec028639410857d22d6cbbb6740b75d9e7a92832c1b25</sha512>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>zk-dist-unpack</id>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>wget</goal>
+                        </goals>
+                        <configuration>
+                            <url>http://apache.mirror.digionline.de/zookeeper/zookeeper-${zk.version}/zookeeper-${zk.version}.tar.gz</url>
+                            <sha512>4c54e40ac8d0b267db4a188a30e39ed0ac2c3e8a8fadaf244be45ff5adee956df28f6cb9f1eb56f175e924fa3629b64f98286a090c46764c91c017613c80a51b</sha512>
                         </configuration>
                     </execution>
                 </executions>
@@ -77,47 +90,6 @@
                 <artifactId>maven-antrun-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>start-pre-integration-test</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <target>
-                                <taskdef resource="net/sf/antcontrib/antcontrib.properties" />
-                                <if>
-                                    <socket server="localhost" port="${solr.port}" />
-                                    <then>
-                                        <exec executable="bash" spawn="false" failonerror="false">
-                                            <arg value="${bin.dir}/solr" />
-                                            <arg value="stop" />
-                                            <arg value="-p" />
-                                            <arg value="${solr.port}" />
-                                        </exec>
-                                    </then>
-                                    <else></else>
-                                </if>
-                                <exec executable="bash" spawn="false" failonerror="false">
-                                    <arg value="${bin.dir}/solr" />
-                                    <arg value="start" />
-                                    <arg value="-p" />
-                                    <arg value="${solr.port}" />
-                                </exec>
-                                <waitfor maxwait="30" maxwaitunit="second">
-                                    <socket server="localhost" port="${solr.port}" />
-                                </waitfor>
-                                <exec executable="bash" spawn="false" failonerror="false">
-                                    <arg value="${bin.dir}/solr" />
-                                    <arg value="create" />
-                                    <arg value="-p" />
-                                    <arg value="${solr.port}" />
-                                    <arg value="-c" />
-                                    <arg value="bigboxstore" />
-                                </exec>
-                            </target>
-                        </configuration>
-                    </execution>
-                    <execution>
                         <id>stop-solr-pre-clean</id>
                         <phase>pre-clean</phase>
                         <goals>
@@ -132,30 +104,11 @@
                                         <exec executable="bash" spawn="false" failonerror="false">
                                             <arg value="${bin.dir}/solr" />
                                             <arg value="stop" />
-                                            <arg value="-p" />
-                                            <arg value="${solr.port}" />
+                                            <arg value="-all" />
                                         </exec>
                                     </then>
                                     <else></else>
                                 </if>
-                            </target>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>stop-post-integration-test</id>
-                        <phase>post-integration-test</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <target>
-                                <taskdef resource="net/sf/antcontrib/antcontrib.properties" />
-                                <exec executable="bash" spawn="false" failonerror="false">
-                                    <arg value="${bin.dir}/solr" />
-                                    <arg value="stop" />
-                                    <arg value="-p" />
-                                    <arg value="${solr.port}" />
-                                </exec>
                             </target>
                         </configuration>
                     </execution>
@@ -224,6 +177,164 @@
             <artifactId>junit</artifactId>
         </dependency>
     </dependencies>
+
+    <profiles>
+        <profile>
+            <id>single-node-example</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+                <property>
+                    <name>!cluster</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>start-pre-integration-test</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target>
+                                        <taskdef resource="net/sf/antcontrib/antcontrib.properties" />
+                                        <if>
+                                            <socket server="localhost" port="${solr.port}" />
+                                            <then>
+                                                <exec executable="bash" spawn="false" failonerror="false">
+                                                    <arg value="${bin.dir}/solr" />
+                                                    <arg value="stop" />
+                                                    <arg value="-all" />
+                                                </exec>
+                                            </then>
+                                            <else></else>
+                                        </if>
+                                        <exec executable="bash" spawn="false" failonerror="false">
+                                            <arg value="${bin.dir}/solr" />
+                                            <arg value="start" />
+                                            <arg value="-p" />
+                                            <arg value="${solr.port}" />
+                                        </exec>
+                                        <waitfor maxwait="30" maxwaitunit="second">
+                                            <socket server="localhost" port="${solr.port}" />
+                                        </waitfor>
+                                        <exec executable="bash" spawn="false" failonerror="false">
+                                            <arg value="${bin.dir}/solr" />
+                                            <arg value="create" />
+                                            <arg value="-p" />
+                                            <arg value="${solr.port}" />
+                                            <arg value="-c" />
+                                            <arg value="gettingstarted" />
+                                        </exec>
+                                    </target>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>stop-post-integration-test</id>
+                                <phase>post-integration-test</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target>
+                                        <taskdef resource="net/sf/antcontrib/antcontrib.properties" />
+                                        <exec executable="bash" spawn="false" failonerror="false">
+                                            <arg value="${bin.dir}/solr" />
+                                            <arg value="stop" />
+                                            <arg value="-all" />
+                                        </exec>
+                                    </target>
+                                </configuration>
+                            </execution>
+                        </executions>
+                        <dependencies>
+                            <dependency>
+                                <groupId>ant-contrib</groupId>
+                                <artifactId>ant-contrib</artifactId>
+                                <version>20020829</version>
+                            </dependency>
+                        </dependencies>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>cluster-example</id>
+            <activation>
+                <property>
+                    <name>cluster</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>start-pre-integration-test</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target>
+                                        <taskdef resource="net/sf/antcontrib/antcontrib.properties" />
+                                        <if>
+                                            <socket server="localhost" port="${solr.port}" />
+                                            <then>
+                                                <exec executable="bash" spawn="false" failonerror="false">
+                                                    <arg value="${bin.dir}/solr" />
+                                                    <arg value="stop" />
+                                                    <arg value="-all" />
+                                                </exec>
+                                            </then>
+                                            <else></else>
+                                        </if>
+                                        <exec executable="bash" spawn="false" failonerror="false">
+                                            <arg value="${bin.dir}/solr" />
+                                            <arg value="-e" />
+                                            <arg value="cloud" />
+                                            <arg value="-noprompt" />
+                                        </exec>
+                                        <waitfor maxwait="30" maxwaitunit="second">
+                                            <socket server="localhost" port="${solr.port}" />
+                                        </waitfor>
+                                    </target>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>stop-post-integration-test</id>
+                                <phase>post-integration-test</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target>
+                                        <taskdef resource="net/sf/antcontrib/antcontrib.properties" />
+                                        <exec executable="bash" spawn="false" failonerror="false">
+                                            <arg value="${bin.dir}/solr" />
+                                            <arg value="stop" />
+                                            <arg value="-all" />
+                                        </exec>
+                                    </target>
+                                </configuration>
+                            </execution>
+                        </executions>
+                        <dependencies>
+                            <dependency>
+                                <groupId>ant-contrib</groupId>
+                                <artifactId>ant-contrib</artifactId>
+                                <version>20020829</version>
+                            </dependency>
+                        </dependencies>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>
 
