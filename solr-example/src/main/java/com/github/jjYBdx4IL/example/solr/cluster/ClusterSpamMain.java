@@ -1,5 +1,6 @@
 package com.github.jjYBdx4IL.example.solr.cluster;
 
+import com.github.jjYBdx4IL.example.solr.Config;
 import org.apache.commons.io.IOUtils;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -21,8 +22,6 @@ public class ClusterSpamMain {
     private static final Logger LOG = LoggerFactory.getLogger(ClusterSpamMain.class);
 
     SolrClient solr = null;
-    static final int ZK_PORT = 2181;
-    static final String COLLECTION = "gettingstarted";
     String[] words = null;
     Random r = new Random(0);
     long wordCount = 0;
@@ -38,7 +37,7 @@ public class ClusterSpamMain {
     }
 
     public void run() throws SolrServerException, IOException {
-        setupClient();
+        solr = Config.createCloudClient();
 
         loadWords();
 
@@ -65,15 +64,6 @@ public class ClusterSpamMain {
         }
         
         // no need for commit because we configured an autocommit max delay
-    }
-
-    private void setupClient() {
-        String zkHostString = "localhost:" + ZK_PORT + ",localhost:" + (ZK_PORT + 1) + ",localhost:"
-            + (ZK_PORT + 2);
-        CloudSolrClient cloudSolr = new CloudSolrClient.Builder().withZkHost(zkHostString).build();
-        cloudSolr.setDefaultCollection(COLLECTION);
-        cloudSolr.setParser(new XMLResponseParser());
-        solr = cloudSolr;
     }
 
     private void loadWords() throws FileNotFoundException, IOException {

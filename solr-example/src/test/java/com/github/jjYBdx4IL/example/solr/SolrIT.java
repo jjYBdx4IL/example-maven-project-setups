@@ -1,17 +1,28 @@
 package com.github.jjYBdx4IL.example.solr;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assume.assumeTrue;
 
+import com.github.jjYBdx4IL.example.solr.cluster.ClusterStatusResponse;
+import com.github.jjYBdx4IL.example.solr.cluster.ClusterStatusResponse.CollectionStatus;
+import com.github.jjYBdx4IL.example.solr.cluster.ClusterStatusResponse.RedundancyState;
+import com.github.jjYBdx4IL.example.solr.cluster.ClusterStatusResponse.RedundancyStatus;
+import org.apache.commons.io.IOUtils;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.CloudSolrClient;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.client.solrj.impl.XMLResponseParser;
+import org.apache.solr.client.solrj.request.CollectionAdminRequest.ClusterStatus;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.SolrInputDocument;
+import org.apache.solr.common.util.NamedList;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -50,6 +61,11 @@ public class SolrIT {
             httpSolr.setParser(new XMLResponseParser());
             solr = httpSolr;
         }
+    }
+    
+    @After
+    public void after() {
+        IOUtils.closeQuietly(solr);
     }
 
     @Test
@@ -179,17 +195,30 @@ public class SolrIT {
         assertQueryMatchCount(0, "text:\"one\"~0");
     }
 
-    // used for manual cluster failover tests
     @Test
-    public void testAddDocument() throws Exception {
-        SolrInputDocument document = new SolrInputDocument();
-        document.addField("id", "b12345" + System.currentTimeMillis());
-        document.addField("name", "testAddDocument");
-        document.addField("text", "one");
-        solr.add(document);
-        commit();
-
-        dumpQueryMatchCount("name:testAddDocument~0");
+    public void testClusterStatusResponse() throws Exception {
+        assumeTrue(clustered);
+        
+        ClusterStatus status = new ClusterStatus();
+        NamedList<Object> res = solr.request(status);
+        ClusterStatusResponse response = new ClusterStatusResponse(res);
+        
+        assertEquals(1, response.getCollections().size());
+        CollectionStatus collectionStatus = response.getCollections().get(Config.COLLECTION);
+        assertNotNull(collectionStatus);
+        assertEquals(2, collectionStatus.getReplicationFactor());
+        assertEquals(Config.COLLECTION_CFGNAME, collectionStatus.getConfigName());
+        
+        assertEquals(3, collectionStatus.getShards().size());
+        
+        RedundancyStatus dataStatus = collectionStatus.getRedundancyStatus();
+        LOG.info(dataStatus.getMessage());
+        LOG.info(dataStatus.getLongMessage());
+        LOG.info(dataStatus.getState().name());
+        assertEquals(RedundancyState.HEALTHY, dataStatus.getState());
+        
+        assertEquals(3, response.getLiveNodes().size());
+        assertTrue(response.getLiveNodes().contains("localhost:8983_solr"));
     }
 
     public void assertQueryMatchCount(int count, String queryText) throws Exception {
@@ -224,4 +253,5 @@ public class SolrIT {
             return false;
         }
     }
+    
 }
