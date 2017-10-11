@@ -12,7 +12,6 @@ import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.SolrInputDocument;
-import org.apache.solr.common.cloud.ClusterState.CollectionRef;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -30,7 +29,7 @@ public class SolrIT {
     private static final Logger LOG = LoggerFactory.getLogger(SolrIT.class);
 
     SolrClient solr = null;
-    static final int ZK_PORT = 9983; // zookeeper port used by cluster example
+    static final int ZK_PORT = 2181;
     static boolean clustered = portIsOpen(ZK_PORT);
     static final String COLLECTION = "gettingstarted";
 

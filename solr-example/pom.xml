@@ -19,8 +19,8 @@
     <properties>
         <solr.version>7.0.1</solr.version>
         <zk.version>3.4.10</zk.version>
-        <bin.dir>${project.build.directory}/solr-${solr.version}/bin</bin.dir>
-        <zk.bin.dir>${project.build.directory}/zookeeper-${zk.version}/bin</zk.bin.dir>
+        <solr.dir>${project.build.directory}/solr-${solr.version}</solr.dir>
+        <zk.home.dir>${project.build.directory}/zookeeper-${zk.version}</zk.home.dir>
         <solr.port>8983</solr.port>
     </properties>
 
@@ -102,9 +102,24 @@
                                     <socket server="localhost" port="${solr.port}" />
                                     <then>
                                         <exec executable="bash" spawn="false" failonerror="false">
-                                            <arg value="${bin.dir}/solr" />
+                                            <arg value="${solr.dir}/bin/solr" />
                                             <arg value="stop" />
                                             <arg value="-all" />
+                                        </exec>
+                                        <exec executable="bash" spawn="false" failonerror="false">
+                                            <arg value="${zk.home.dir}/bin/zkServer.sh" />
+                                            <arg value="stop" />
+                                            <arg value="zoo1.cfg" />
+                                        </exec>
+                                        <exec executable="bash" spawn="false" failonerror="false">
+                                            <arg value="${zk.home.dir}/bin/zkServer.sh" />
+                                            <arg value="stop" />
+                                            <arg value="zoo2.cfg" />
+                                        </exec>
+                                        <exec executable="bash" spawn="false" failonerror="false">
+                                            <arg value="${zk.home.dir}/bin/zkServer.sh" />
+                                            <arg value="stop" />
+                                            <arg value="zoo3.cfg" />
                                         </exec>
                                     </then>
                                     <else></else>
@@ -205,7 +220,7 @@
                                             <socket server="localhost" port="${solr.port}" />
                                             <then>
                                                 <exec executable="bash" spawn="false" failonerror="false">
-                                                    <arg value="${bin.dir}/solr" />
+                                                    <arg value="${solr.dir}/bin/solr" />
                                                     <arg value="stop" />
                                                     <arg value="-all" />
                                                 </exec>
@@ -213,7 +228,7 @@
                                             <else></else>
                                         </if>
                                         <exec executable="bash" spawn="false" failonerror="false">
-                                            <arg value="${bin.dir}/solr" />
+                                            <arg value="${solr.dir}/bin/solr" />
                                             <arg value="start" />
                                             <arg value="-p" />
                                             <arg value="${solr.port}" />
@@ -222,7 +237,7 @@
                                             <socket server="localhost" port="${solr.port}" />
                                         </waitfor>
                                         <exec executable="bash" spawn="false" failonerror="false">
-                                            <arg value="${bin.dir}/solr" />
+                                            <arg value="${solr.dir}/bin/solr" />
                                             <arg value="create" />
                                             <arg value="-p" />
                                             <arg value="${solr.port}" />
@@ -242,7 +257,7 @@
                                     <target>
                                         <taskdef resource="net/sf/antcontrib/antcontrib.properties" />
                                         <exec executable="bash" spawn="false" failonerror="false">
-                                            <arg value="${bin.dir}/solr" />
+                                            <arg value="${solr.dir}/bin/solr" />
                                             <arg value="stop" />
                                             <arg value="-all" />
                                         </exec>
@@ -286,22 +301,139 @@
                                             <socket server="localhost" port="${solr.port}" />
                                             <then>
                                                 <exec executable="bash" spawn="false" failonerror="false">
-                                                    <arg value="${bin.dir}/solr" />
+                                                    <arg value="${solr.dir}/bin/solr" />
                                                     <arg value="stop" />
                                                     <arg value="-all" />
+                                                </exec>
+                                                <exec executable="bash" spawn="false" failonerror="false">
+                                                    <arg value="${zk.home.dir}/bin/zkServer.sh" />
+                                                    <arg value="stop" />
+                                                    <arg value="zoo1.cfg" />
+                                                </exec>
+                                                <exec executable="bash" spawn="false" failonerror="false">
+                                                    <arg value="${zk.home.dir}/bin/zkServer.sh" />
+                                                    <arg value="stop" />
+                                                    <arg value="zoo2.cfg" />
+                                                </exec>
+                                                <exec executable="bash" spawn="false" failonerror="false">
+                                                    <arg value="${zk.home.dir}/bin/zkServer.sh" />
+                                                    <arg value="stop" />
+                                                    <arg value="zoo3.cfg" />
                                                 </exec>
                                             </then>
                                             <else></else>
                                         </if>
+                                        <copy toDir="${zk.home.dir}/conf">
+                                            <fileset dir="${project.basedir}/src/test/resources">
+                                                <include name="**/zoo*.cfg" />
+                                            </fileset>
+                                            <filterset>
+                                                <filter token="ZKHOMEDIR" value="${zk.home.dir}" />
+                                            </filterset>
+                                        </copy>
+                                        <copy tofile="${zk.home.dir}/node1/myid" file="${project.basedir}/src/test/resources/myid1" />
+                                        <copy tofile="${zk.home.dir}/node2/myid" file="${project.basedir}/src/test/resources/myid2" />
+                                        <copy tofile="${zk.home.dir}/node3/myid" file="${project.basedir}/src/test/resources/myid3" />
                                         <exec executable="bash" spawn="false" failonerror="false">
-                                            <arg value="${bin.dir}/solr" />
-                                            <arg value="-e" />
-                                            <arg value="cloud" />
-                                            <arg value="-noprompt" />
+                                            <arg value="${zk.home.dir}/bin/zkServer.sh" />
+                                            <arg value="start" />
+                                            <arg value="zoo1.cfg" />
                                         </exec>
-                                        <waitfor maxwait="30" maxwaitunit="second">
-                                            <socket server="localhost" port="${solr.port}" />
-                                        </waitfor>
+                                        <exec executable="bash" spawn="false" failonerror="false">
+                                            <arg value="${zk.home.dir}/bin/zkServer.sh" />
+                                            <arg value="start" />
+                                            <arg value="zoo2.cfg" />
+                                        </exec>
+                                        <exec executable="bash" spawn="false" failonerror="false">
+                                            <arg value="${zk.home.dir}/bin/zkServer.sh" />
+                                            <arg value="start" />
+                                            <arg value="zoo3.cfg" />
+                                        </exec>
+                                        <!-- initial collection config upload, for updates see
+                                        https://lucene.apache.org/solr/guide/7_0/using-zookeeper-to-manage-configuration-files.html -->
+                                        <exec executable="bash" spawn="false" failonerror="false">
+                                            <arg value="${solr.dir}/bin/solr" />
+                                            <arg value="zk" />
+                                            <arg value="cp" />
+                                            <arg value="file:${solr.dir}/server/solr/solr.xml" />
+                                            <arg value="zk:/solr.xml" />
+                                            <arg value="-z" />
+                                            <arg value="localhost:2181" />
+                                        </exec>
+                                        <exec executable="bash" spawn="false" failonerror="false">
+                                            <arg value="${solr.dir}/bin/solr" />
+                                            <arg value="zk" />
+                                            <arg value="upconfig" />
+                                            <arg value="-n" />
+                                            <arg value="myconfig" />
+                                            <arg value="-d" />
+                                            <arg value="${solr.dir}/server/solr/configsets/_default/conf" />
+                                            <arg value="-z" />
+                                            <arg value="localhost:2181" />
+                                        </exec>
+                                        <mkdir dir="${solr.dir}/node1" />
+                                        <mkdir dir="${solr.dir}/node2" />
+                                        <mkdir dir="${solr.dir}/node3" />
+                                        <exec executable="bash" spawn="false" failonerror="false">
+                                            <arg value="${solr.dir}/bin/solr" />
+                                            <arg value="start" />
+                                            <arg value="-c" />
+                                            <arg value="-z" />
+                                            <arg value="localhost:2181,localhost:2182,localhost:2183" />
+                                            <arg value="-s" />
+                                            <arg value="${solr.dir}/node1" />
+                                            <arg value="-h" />
+                                            <arg value="localhost" />
+                                            <arg value="-p" />
+                                            <arg value="8983" />
+                                        </exec>
+                                        <exec executable="bash" spawn="false" failonerror="false">
+                                            <arg value="${solr.dir}/bin/solr" />
+                                            <arg value="start" />
+                                            <arg value="-c" />
+                                            <arg value="-z" />
+                                            <arg value="localhost:2181,localhost:2182,localhost:2183" />
+                                            <arg value="-s" />
+                                            <arg value="${solr.dir}/node2" />
+                                            <arg value="-h" />
+                                            <arg value="localhost" />
+                                            <arg value="-p" />
+                                            <arg value="8984" />
+                                        </exec>
+                                        <exec executable="bash" spawn="false" failonerror="false">
+                                            <arg value="${solr.dir}/bin/solr" />
+                                            <arg value="start" />
+                                            <arg value="-c" />
+                                            <arg value="-z" />
+                                            <arg value="localhost:2181,localhost:2182,localhost:2183" />
+                                            <arg value="-s" />
+                                            <arg value="${solr.dir}/node3" />
+                                            <arg value="-h" />
+                                            <arg value="localhost" />
+                                            <arg value="-p" />
+                                            <arg value="8985" />
+                                        </exec>
+                                        <exec executable="bash" spawn="false" failonerror="false">
+                                            <arg value="${solr.dir}/bin/solr" />
+                                            <arg value="create" />
+                                            <arg value="-c" />
+                                            <arg value="gettingstarted" />
+                                            <arg value="-n" />
+                                            <arg value="myconfig" />
+                                            <arg value="-shards" />
+                                            <arg value="3" />
+                                            <arg value="-replicationFactor" />
+                                            <arg value="2" />
+                                        </exec>
+                                        <exec executable="bash" spawn="false" failonerror="false">
+                                            <arg value="${solr.dir}/bin/solr" />
+                                            <arg value="zk" />
+                                            <arg value="ls" />
+                                            <arg value="zk:/" />
+                                            <arg value="-r" />
+                                            <arg value="-z" />
+                                            <arg value="localhost:2183" />
+                                        </exec>
                                     </target>
                                 </configuration>
                             </execution>
@@ -315,9 +447,24 @@
                                     <target>
                                         <taskdef resource="net/sf/antcontrib/antcontrib.properties" />
                                         <exec executable="bash" spawn="false" failonerror="false">
-                                            <arg value="${bin.dir}/solr" />
+                                            <arg value="${solr.dir}/bin/solr" />
                                             <arg value="stop" />
                                             <arg value="-all" />
+                                        </exec>
+                                        <exec executable="bash" spawn="false" failonerror="false">
+                                            <arg value="${zk.home.dir}/bin/zkServer.sh" />
+                                            <arg value="stop" />
+                                            <arg value="zoo1.cfg" />
+                                        </exec>
+                                        <exec executable="bash" spawn="false" failonerror="false">
+                                            <arg value="${zk.home.dir}/bin/zkServer.sh" />
+                                            <arg value="stop" />
+                                            <arg value="zoo2.cfg" />
+                                        </exec>
+                                        <exec executable="bash" spawn="false" failonerror="false">
+                                            <arg value="${zk.home.dir}/bin/zkServer.sh" />
+                                            <arg value="stop" />
+                                            <arg value="zoo3.cfg" />
                                         </exec>
                                     </target>
                                 </configuration>
