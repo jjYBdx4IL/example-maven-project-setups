@@ -25,6 +25,7 @@ public class ClusterSpamMain {
     static final String COLLECTION = "gettingstarted";
     String[] words = null;
     Random r = new Random(0);
+    long wordCount = 0;
 
     public static void main(String[] args) {
         try {
@@ -37,23 +38,15 @@ public class ClusterSpamMain {
     }
 
     public void run() throws SolrServerException, IOException {
-        String zkHostString = "localhost:" + ZK_PORT + ",localhost:" + (ZK_PORT + 1) + ",localhost:"
-            + (ZK_PORT + 2);
-        CloudSolrClient cloudSolr = new CloudSolrClient.Builder().withZkHost(zkHostString).build();
-        cloudSolr.setDefaultCollection(COLLECTION);
-        cloudSolr.setParser(new XMLResponseParser());
-        solr = cloudSolr;
+        setupClient();
 
-        try (InputStream is = getWordsFileInputStream()) {
-            String wordsContent = IOUtils.toString(is, "UTF-8");
-            words = wordsContent.split("\\r?\\n");
-        }
-
-        LOG.info("read " + words.length + " words");
+        loadWords();
 
         solr.deleteByQuery("*");
         solr.commit();
 
+        long lastWordCount = wordCount;
+        long lastTime = System.currentTimeMillis();
         for (int i = 1; i >= 0; i++) {
             SolrInputDocument document = new SolrInputDocument();
             document.addField("id", "" + i);
@@ -61,23 +54,46 @@ public class ClusterSpamMain {
             document.addField("content", getText(3 + r.nextInt(2000)));
             solr.add(document);
 
-            if (i % 100 == 0) {
-                LOG.info("" + i);
+            if (i % 1000 == 0) {
+                long millis = Math.max(System.currentTimeMillis() - lastTime, 1);
+                float wordsPerSecond = (wordCount-lastWordCount) / (millis / 1e3f); 
+                LOG.info(String.format("%,d words in %,d documents added (%,d words added per second)",
+                    wordCount, i, (int) wordsPerSecond));
+                lastWordCount = wordCount;
+                lastTime = System.currentTimeMillis();
             }
         }
         
         // no need for commit because we configured an autocommit max delay
     }
 
+    private void setupClient() {
+        String zkHostString = "localhost:" + ZK_PORT + ",localhost:" + (ZK_PORT + 1) + ",localhost:"
+            + (ZK_PORT + 2);
+        CloudSolrClient cloudSolr = new CloudSolrClient.Builder().withZkHost(zkHostString).build();
+        cloudSolr.setDefaultCollection(COLLECTION);
+        cloudSolr.setParser(new XMLResponseParser());
+        solr = cloudSolr;
+    }
+
+    private void loadWords() throws FileNotFoundException, IOException {
+        try (InputStream is = getWordsFileInputStream()) {
+            String wordsContent = IOUtils.toString(is, "UTF-8");
+            words = wordsContent.split("\\r?\\n");
+        }
+        LOG.info("read " + words.length + " words");
+    }
+    
     private InputStream getWordsFileInputStream() throws FileNotFoundException {
-        File f = new File(getClass().getResource("/simplelogger.properties").toExternalForm().substring(5));
-        f = f.getParentFile().getParentFile();
+        File f = new File(getClass().getResource("/").toExternalForm().substring(5));
+        f = f.getParentFile();
         f = new File(f, "words.txt");
         return new FileInputStream(f);
     }
 
     public String getText(int numWords) {
         StringBuilder sb = new StringBuilder(numWords * 5);
+        wordCount += numWords;
         for (int i = 0; i < numWords; i++) {
             if (i > 0) {
                 sb.append(" ");

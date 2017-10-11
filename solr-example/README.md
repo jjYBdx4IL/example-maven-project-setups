@@ -26,3 +26,8 @@ once) using `./target/solr-$version/bin/solr start|stop`.
     mvn antrun:run@stop-post-integration-test -Dcluster # stop
 
 You can use these commands to manually run the test units against the cluster setup.
+
+## Some ZooKeeper commands
+
+    # download configuration stored in zookeeper:
+    ./target/solr-*/bin/solr zk cp -r zk:/ target/cfg-dl -z localhost:2181
