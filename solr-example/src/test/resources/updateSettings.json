@@ -1,0 +1,7 @@
+{
+	"set-property": {
+		"updateHandler.autoCommit.maxTime": 15000,
+		"updateHandler.autoCommit.openSearcher": false,
+		"updateHandler.autoSoftCommit.maxTime": 15000
+	}
+}

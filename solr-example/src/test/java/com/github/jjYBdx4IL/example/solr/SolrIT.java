@@ -38,8 +38,8 @@ public class SolrIT {
         LOG.info("is clustered: " + clustered);
 
         if (clustered) {
-            // add mutiple hosts for resilience:
-            String zkHostString = "localhost:" + ZK_PORT;
+            String zkHostString = "localhost:" + ZK_PORT + ",localhost:" + (ZK_PORT + 1) + ",localhost:"
+                + (ZK_PORT + 2);
             CloudSolrClient cloudSolr = new CloudSolrClient.Builder().withZkHost(zkHostString).build();
             cloudSolr.setDefaultCollection(COLLECTION);
             cloudSolr.setParser(new XMLResponseParser());

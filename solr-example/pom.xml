@@ -53,6 +53,19 @@
                             <sha512>4c54e40ac8d0b267db4a188a30e39ed0ac2c3e8a8fadaf244be45ff5adee956df28f6cb9f1eb56f175e924fa3629b64f98286a090c46764c91c017613c80a51b</sha512>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>wget-words</id>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>wget</goal>
+                        </goals>
+                        <configuration>
+                            <url>https://raw.githubusercontent.com/dwyl/english-words/af8566a78b34b9a1ad7fe0dcd6e183a0f6f5f94b/words.txt</url>
+                            <sha512>3cfc52b1f68a46fb9c7c96fd2e3f24260461663fdc4f5c891e018d07a9bde2d418af5a47a8d72bac952469bf1671cb29f82d89be214d854fa2614b61f6d2c27f</sha512>
+                            <unpack>false</unpack>
+                            <outputDirectory>${project.build.directory}</outputDirectory>
+                        </configuration>
+                    </execution>
                 </executions>
                 <configuration>
                     <skipCache>false</skipCache>
@@ -424,6 +437,11 @@
                                             <arg value="3" />
                                             <arg value="-replicationFactor" />
                                             <arg value="2" />
+                                        </exec>
+                                        <exec executable="curl" spawn="false" failonerror="true">
+                                            <arg value="http://localhost:8983/solr/gettingstarted/config" />
+                                            <arg value="-d" />
+                                            <arg value="@${project.basedir}/src/test/resources/updateSettings.json" />
                                         </exec>
                                         <exec executable="bash" spawn="false" failonerror="false">
                                             <arg value="${solr.dir}/bin/solr" />
