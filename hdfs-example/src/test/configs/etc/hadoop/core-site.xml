@@ -17,9 +17,13 @@
 <!-- Put site-specific property overrides in this file. -->
 <!-- https://hadoop.apache.org/docs/r2.7.2/hadoop-project-dist/hadoop-common/core-default.xml -->
 <configuration>
+<!--     <property> -->
+<!--         <name>fs.default.name</name> -->
+<!--         <value>hdfs://127.0.0.1:9000/</value> -->
+<!--     </property> -->
     <property>
-        <name>fs.default.name</name>
-        <value>hdfs://127.0.0.1:9000/</value>
+        <name>fs.defaultFS</name>
+        <value>hdfs://mycluster</value>
     </property>
     <property>
         <name>dfs.permissions</name>

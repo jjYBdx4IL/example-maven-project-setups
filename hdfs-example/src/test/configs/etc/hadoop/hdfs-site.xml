@@ -17,22 +17,94 @@
 <!-- Put site-specific property overrides in this file. -->
 <!-- http://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-hdfs/hdfs-default.xml -->
 <configuration>
+<!-- https://hadoop.apache.org/docs/r2.4.1/hadoop-project-dist/hadoop-hdfs/HDFSHighAvailabilityWithQJM.html#Note:_Using_the_Quorum_Journal_Manager_or_Conventional_Shared_Storage -->
+    <property>
+        <name>dfs.nameservices</name>
+        <value>mycluster</value>
+    </property>
+
+    <property>
+        <name>dfs.nameservice.id</name>
+        <value>mycluster</value>
+    </property>
+
+    <property>
+        <name>dfs.ha.namenode.id</name>
+        <value>nn@NODENUM@</value>
+    </property>
+
+    <property>
+        <name>dfs.ha.namenodes.mycluster</name>
+        <value>nn1,nn2</value>
+    </property>
+
+    <property>
+        <name>dfs.namenode.rpc-address.mycluster.nn1</name>
+        <value>127.0.0.1:8020</value>
+    </property>
+    <property>
+        <name>dfs.namenode.rpc-address.mycluster.nn2</name>
+        <value>127.0.0.1:8021</value>
+    </property>
+
+    <property>
+        <name>dfs.namenode.http-address.mycluster.nn1</name>
+        <value>127.0.0.1:50070</value>
+    </property>
+    <property>
+        <name>dfs.namenode.http-address.mycluster.nn2</name>
+        <value>127.0.0.1:50071</value>
+    </property>
+
+    <property>
+        <name>dfs.namenode.shared.edits.dir</name>
+        <value>qjournal://127.0.0.1:8185;127.0.0.1:8285;127.0.0.1:8385/mycluster</value>
+    </property>
+
+    <property>
+        <name>dfs.client.failover.proxy.provider.mycluster</name>
+        <value>org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider</value>
+    </property>
+
+    <property>
+        <name>dfs.ha.fencing.methods</name>
+        <value>shell(@BASEDIR@/src/test/resources/failover.sh $target_namenodeid $target_nameserviceid $target_host:$target_port)</value>
+    </property>
+
+    <property>
+        <name>dfs.journalnode.edits.dir</name>
+        <value>@DFSNODEHOME@/journaldata</value>
+    </property>
+
     <property>
         <name>dfs.data.dir</name>
-        <value>@DFSNODEHOME@/data</value>
+        <value>file://@DFSNODEHOME@/data</value>
         <final>true</final>
     </property>
     <property>
         <name>dfs.name.dir</name>
-        <value>@DFSNODEHOME@/name</value>
+        <value>file://@DFSNODEHOME@/name</value>
         <final>true</final>
+    </property>
+
+    <property>
+        <name>dfs.journalnode.rpc-address</name>
+        <value>127.0.0.1:8@NODENUM@85</value>
+    </property>
+    <property>
+        <name>dfs.journalnode.http-address</name>
+        <value>127.0.0.1:8@NODENUM@80</value>
     </property>
 
     <property>
         <name>dfs.replication</name>
         <value>2</value>
     </property>
-    
+<!--     <property> -->
+<!--         <name>dfs.namenode.replication.min</name> -->
+<!--         <value>2</value> -->
+<!--     </property> -->
+
     <property>
         <name>dfs.namenode.rpc-bind-host</name>
         <value>127.0.0.1</value>
@@ -45,12 +117,12 @@
         <name>dfs.namenode.http-address</name>
         <value>127.0.0.1:9870</value>
     </property>
-    
+
     <property>
         <name>dfs.namenode.secondary.http-address</name>
         <value>127.0.0.1:9868</value>
     </property>
-    
+
     <property>
         <name>dfs.datanode.address</name>
         <value>127.0.0.1:9@NODENUM@66</value>
@@ -63,10 +135,19 @@
         <name>dfs.datanode.ipc.address</name>
         <value>127.0.0.1:9@NODENUM@67</value>
     </property>
-    
+
     <property>
         <name>dfs.datanode.dns.interface</name>
         <value>lo</value>
     </property>
     
+    <property>
+        <name>dfs.datanode.scan.period.hours</name>
+        <value>1</value>
+    </property>
+    <property>
+        <name>dfs.block.scanner.volume.bytes.per.second</name>
+        <value>1048576</value>
+    </property>
+
 </configuration>
