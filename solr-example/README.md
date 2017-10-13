@@ -107,7 +107,7 @@ still be read from the local disk after the migration.
     mvn clean -f ../hdfs-example
 
 Sadly, I didn't find a way to make a non-cloud solr instance store its collection configuration on hdfs, though
-the cloud-version of solr will used ZooKeeper's shared storage for storing configuration files.
+the cloud-version of solr would use ZooKeeper's shared storage for storing configuration files.
 
 
 
