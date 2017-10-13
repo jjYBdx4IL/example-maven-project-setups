@@ -47,6 +47,13 @@ name, data and journal nodes with the same number share the same installation di
 
     # dump blocks (remove cursor file to force block scan on startup of data node)
     find . -name 'blk_??????????' -printf '%p\n' -exec bash -c 'cat {}; echo' \; ; find . -name scanner.cursor
+    # list hdfs contents
+    ./hdfs.sh 1 dfs -ls -R /
+    
+    ./hdfs.sh 1 dfs -mkdir /solr
+    ./hdfs.sh 1 dfs -copyFromLocal ../solr-example/target/solr-7.0.1/server/solr/gettingstarted /solr/gettingstarted
+    ./hdfs.sh 1 dfs -rm -R /solr
+    
 
 ## Notes
 

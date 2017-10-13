@@ -1,4 +1,4 @@
-package com.github.jjYBdx4IL.example.solr.cluster;
+package com.github.jjYBdx4IL.example.solr;
 
 import com.github.jjYBdx4IL.example.solr.Config;
 import org.apache.commons.io.IOUtils;
@@ -15,9 +15,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Random;
 
-public class ClusterSpamMain {
+public class SpamMain {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ClusterSpamMain.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SpamMain.class);
 
     SolrClient solr = null;
     String[] words = null;
@@ -26,7 +26,7 @@ public class ClusterSpamMain {
 
     public static void main(String[] args) {
         try {
-            new ClusterSpamMain().run();
+            new SpamMain().run();
         } catch (SolrServerException | IOException e) {
             throw new RuntimeException(e);
         }
@@ -35,7 +35,7 @@ public class ClusterSpamMain {
     }
 
     public void run() throws SolrServerException, IOException {
-        solr = Config.createCloudClient();
+        solr = Config.createClient();
 
         loadWords();
 
@@ -58,6 +58,10 @@ public class ClusterSpamMain {
                     wordCount, i, (int) wordsPerSecond));
                 lastWordCount = wordCount;
                 lastTime = System.currentTimeMillis();
+                
+                if (!Config.IS_CLUSTERED) {
+                    solr.commit();
+                }
             }
         }
         

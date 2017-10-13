@@ -40,29 +40,12 @@ public class SolrIT {
     private static final Logger LOG = LoggerFactory.getLogger(SolrIT.class);
 
     SolrClient solr = null;
-    static final int ZK_PORT = 2181;
-    static boolean clustered = portIsOpen(ZK_PORT);
-    static final String COLLECTION = "gettingstarted";
 
     @Before
     public void before() throws Exception {
-        LOG.info("is clustered: " + clustered);
-
-        if (clustered) {
-            String zkHostString = "localhost:" + ZK_PORT + ",localhost:" + (ZK_PORT + 1) + ",localhost:"
-                + (ZK_PORT + 2);
-            CloudSolrClient cloudSolr = new CloudSolrClient.Builder().withZkHost(zkHostString).build();
-            cloudSolr.setDefaultCollection(COLLECTION);
-            cloudSolr.setParser(new XMLResponseParser());
-            solr = cloudSolr;
-        } else {
-            String urlString = "http://localhost:8983/solr/" + COLLECTION;
-            HttpSolrClient httpSolr = new HttpSolrClient.Builder(urlString).build();
-            httpSolr.setParser(new XMLResponseParser());
-            solr = httpSolr;
-        }
+        solr = Config.createClient();
     }
-    
+
     @After
     public void after() {
         IOUtils.closeQuietly(solr);
@@ -197,26 +180,26 @@ public class SolrIT {
 
     @Test
     public void testClusterStatusResponse() throws Exception {
-        assumeTrue(clustered);
-        
+        assumeTrue(Config.IS_CLUSTERED);
+
         ClusterStatus status = new ClusterStatus();
         NamedList<Object> res = solr.request(status);
         ClusterStatusResponse response = new ClusterStatusResponse(res);
-        
+
         assertEquals(1, response.getCollections().size());
         CollectionStatus collectionStatus = response.getCollections().get(Config.COLLECTION);
         assertNotNull(collectionStatus);
         assertEquals(2, collectionStatus.getReplicationFactor());
         assertEquals(Config.COLLECTION_CFGNAME, collectionStatus.getConfigName());
-        
+
         assertEquals(3, collectionStatus.getShards().size());
-        
+
         RedundancyStatus dataStatus = collectionStatus.getRedundancyStatus();
         LOG.info(dataStatus.getMessage());
         LOG.info(dataStatus.getLongMessage());
         LOG.info(dataStatus.getState().name());
         assertEquals(RedundancyState.HEALTHY, dataStatus.getState());
-        
+
         assertEquals(3, response.getLiveNodes().size());
         assertTrue(response.getLiveNodes().contains("localhost:8983_solr"));
     }
@@ -243,15 +226,4 @@ public class SolrIT {
         solr.commit(true, true, true);
     }
 
-    public static boolean portIsOpen(final int port) {
-        try {
-            Socket socket = new Socket();
-            socket.connect(new InetSocketAddress("localhost", port), 1000);
-            socket.close();
-            return true;
-        } catch (Exception ex) {
-            return false;
-        }
-    }
-    
 }
