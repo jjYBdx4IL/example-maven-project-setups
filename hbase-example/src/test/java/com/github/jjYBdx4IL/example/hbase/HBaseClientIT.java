@@ -2,6 +2,7 @@ package com.github.jjYBdx4IL.example.hbase;
 
 import static org.junit.Assert.assertEquals;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.Cell;
 import org.apache.hadoop.hbase.HBaseConfiguration;
@@ -27,11 +28,14 @@ import org.apache.hadoop.hbase.filter.FilterList.Operator;
 import org.apache.hadoop.hbase.filter.PrefixFilter;
 import org.apache.hadoop.hbase.filter.QualifierFilter;
 import org.apache.hadoop.hbase.util.Bytes;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -41,6 +45,7 @@ public class HBaseClientIT {
 
     // see http://www.baeldung.com/hbase to provide a non-default hbase config.
     static Configuration config = HBaseConfiguration.create();
+    Connection connection = null; 
 
     @BeforeClass
     public static void beforeClass() throws Exception {
@@ -56,10 +61,19 @@ public class HBaseClientIT {
         HBaseAdmin.checkHBaseAvailable(config);
     }
 
+    @Before
+    public void before() throws IOException {
+        connection = ConnectionFactory.createConnection(config);
+    }
+    
+    @After
+    public void after() {
+        IOUtils.closeQuietly(connection);
+    }
+    
     @Test
     public void test() throws Exception {
         // dropping and creating the table
-        Connection connection = ConnectionFactory.createConnection(config);
         Admin admin = connection.getAdmin();
 
         TableName table1 = TableName.valueOf("Table1");

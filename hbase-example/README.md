@@ -5,8 +5,11 @@ The maven build downloads the binary HBase distribution and installs it below ta
 The default single-node setup will be start before integration-tests are being run if there is
 nothing listening on port 2181.
 
-You may stop the server gracefully by running `./target/hbase-1.2.6/bin/stop-hbase.sh`.
+You may start/stop the server gracefully by running 
 
-It won't be stopped automatically.
+    mvn antrun:run@start
+    mvn antrun:run@stop
 
-A management frontend is accessible via localhost:16010.
+A management frontend is accessible via:
+
+    localhost:16010

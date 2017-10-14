@@ -77,7 +77,33 @@
                 <artifactId>maven-antrun-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>start-pre-integration-test</id>
+                        <id>stop-clean</id>
+                        <phase>pre-clean</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <taskdef resource="net/sf/antcontrib/antcontrib.properties" />
+                                <if>
+                                    <socket server="localhost" port="${hbase.zk.port}" />
+                                    <then>
+                                        <exec executable="bash" spawn="false" failonerror="false">
+                                            <arg value="${bin.dir}/stop-hbase.sh" />
+                                        </exec>
+                                        <waitfor maxwait="30" maxwaitunit="second">
+                                            <not>
+                                                <socket server="localhost" port="${hbase.zk.port}" />
+                                            </not>
+                                        </waitfor>
+                                    </then>
+                                    <else></else>
+                                </if>
+                            </target>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>start</id>
                         <phase>pre-integration-test</phase>
                         <goals>
                             <goal>run</goal>
@@ -95,6 +121,32 @@
                                         </exec>
                                         <waitfor maxwait="30" maxwaitunit="second">
                                             <socket server="localhost" port="${hbase.zk.port}" />
+                                        </waitfor>
+                                    </then>
+                                    <else></else>
+                                </if>
+                            </target>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>stop</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <taskdef resource="net/sf/antcontrib/antcontrib.properties" />
+                                <if>
+                                    <socket server="localhost" port="${hbase.zk.port}" />
+                                    <then>
+                                        <exec executable="bash" spawn="false" failonerror="false">
+                                            <arg value="${bin.dir}/stop-hbase.sh" />
+                                        </exec>
+                                        <waitfor maxwait="30" maxwaitunit="second">
+                                            <not>
+                                                <socket server="localhost" port="${hbase.zk.port}" />
+                                            </not>
                                         </waitfor>
                                     </then>
                                     <else></else>
