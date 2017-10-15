@@ -12,6 +12,8 @@ once) using `./target/solr-$version/bin/solr start|stop`.
     mvn clean install
     ./target/solr-*/bin/solr start
     ./target/solr-*/bin/solr stop
+    mvn antrun:run@start
+    mvn antrun:run@stop
 
 ## running test units against a full-blown cluster
   
@@ -24,8 +26,8 @@ once) using `./target/solr-$version/bin/solr start|stop`.
 ## setting up and starting/stopping the cluster for manual test execution against it
    
     mvn clean install -Dcluster
-    mvn antrun:run@start-pre-integration-test -Dcluster # start
-    mvn antrun:run@stop-post-integration-test -Dcluster # stop
+    mvn antrun:run@start -Dcluster # start
+    mvn antrun:run@stop  -Dcluster # stop
 
 You can use these commands to manually run the test units against the cluster setup.
 

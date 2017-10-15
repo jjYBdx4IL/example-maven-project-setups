@@ -5,17 +5,16 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeTrue;
 
+import com.github.jjYBdx4IL.example.solr.beans.ProductBean;
 import com.github.jjYBdx4IL.example.solr.cluster.ClusterStatusResponse;
 import com.github.jjYBdx4IL.example.solr.cluster.ClusterStatusResponse.CollectionStatus;
 import com.github.jjYBdx4IL.example.solr.cluster.ClusterStatusResponse.RedundancyState;
 import com.github.jjYBdx4IL.example.solr.cluster.ClusterStatusResponse.RedundancyStatus;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import org.apache.commons.io.IOUtils;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
-import org.apache.solr.client.solrj.impl.CloudSolrClient;
-import org.apache.solr.client.solrj.impl.HttpSolrClient;
-import org.apache.solr.client.solrj.impl.XMLResponseParser;
 import org.apache.solr.client.solrj.request.CollectionAdminRequest.ClusterStatus;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
@@ -24,23 +23,29 @@ import org.apache.solr.common.SolrInputDocument;
 import org.apache.solr.common.util.NamedList;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.Socket;
 
 // https://lucene.apache.org/solr/guide/7_0/using-solrj.html
 // https://github.com/apache/lucene-solr/tree/master/solr/solrj/src/test/org/apache/solr/client/solrj
 // http://www.baeldung.com/apache-solrj
+// https://github.com/apache/lucene-solr/blob/master/solr/solrj/src/test/org/apache/solr/client/solrj/request/SchemaTest.java
 public class SolrIT {
 
     private static final Logger LOG = LoggerFactory.getLogger(SolrIT.class);
 
     SolrClient solr = null;
 
+    @BeforeClass
+    public static void beforeClass() throws IOException, SolrServerException, UnirestException {
+        Config.verifyOrDisableAutoCreateFields();
+        Config.verifyOrCreateSchema(ProductBean.class);
+    }
+    
     @Before
     public void before() throws Exception {
         solr = Config.createClient();
@@ -49,6 +54,12 @@ public class SolrIT {
     @After
     public void after() {
         IOUtils.closeQuietly(solr);
+    }
+
+    @Test
+    public void testAddBean() throws IOException, SolrServerException {
+        solr.addBean(new ProductBean("888", "Apple iPhone 6s", "299.99"));
+        commit();
     }
 
     @Test
@@ -97,7 +108,7 @@ public class SolrIT {
         docList = response.getResults();
         assertEquals(docList.getNumFound(), 0);
     }
-
+    
     @Test
     public void testSearchSyntax() throws Exception {
         // prepare the dataset

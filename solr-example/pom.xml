@@ -22,6 +22,8 @@
         <solr.dir>${project.build.directory}/solr-${solr.version}</solr.dir>
         <zk.home.dir>${project.build.directory}/zookeeper-${zk.version}</zk.home.dir>
         <solr.port>8983</solr.port>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
 
     <build>
@@ -203,6 +205,15 @@
             <artifactId>io-utils</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>com.jayway.jsonpath</groupId>
+            <artifactId>json-path</artifactId>
+            <version>2.3.0</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -217,8 +228,9 @@
         </dependency>
 
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
+            <groupId>com.mashape.unirest</groupId>
+            <artifactId>unirest-java</artifactId>
+            <version>1.4.9</version>
         </dependency>
     </dependencies>
 
@@ -237,7 +249,7 @@
                         <artifactId>maven-antrun-plugin</artifactId>
                         <executions>
                             <execution>
-                                <id>start-pre-integration-test</id>
+                                <id>start</id>
                                 <phase>pre-integration-test</phase>
                                 <goals>
                                     <goal>run</goal>
@@ -256,6 +268,7 @@
                                             </then>
                                             <else></else>
                                         </if>
+                                        ''
                                         <exec executable="bash" spawn="false" failonerror="false">
                                             <arg value="${solr.dir}/bin/solr" />
                                             <arg value="start" />
@@ -277,7 +290,7 @@
                                 </configuration>
                             </execution>
                             <execution>
-                                <id>stop-post-integration-test</id>
+                                <id>stop</id>
                                 <phase>post-integration-test</phase>
                                 <goals>
                                     <goal>run</goal>
@@ -318,7 +331,7 @@
                         <artifactId>maven-antrun-plugin</artifactId>
                         <executions>
                             <execution>
-                                <id>start-pre-integration-test</id>
+                                <id>start</id>
                                 <phase>pre-integration-test</phase>
                                 <goals>
                                     <goal>run</goal>
@@ -472,7 +485,7 @@
                                 </configuration>
                             </execution>
                             <execution>
-                                <id>stop-post-integration-test</id>
+                                <id>stop</id>
                                 <phase>post-integration-test</phase>
                                 <goals>
                                     <goal>run</goal>
