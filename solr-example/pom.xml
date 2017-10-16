@@ -190,9 +190,9 @@
             <version>${solr.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.solr</groupId>
-            <artifactId>solr-solrj</artifactId>
-            <version>${solr.version}</version>
+            <groupId>com.github.jjYBdx4IL.utils</groupId>
+            <artifactId>solr-utils</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
 
         <dependency>
@@ -204,11 +204,6 @@
             <groupId>com.github.jjYBdx4IL.utils</groupId>
             <artifactId>io-utils</artifactId>
             <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.jayway.jsonpath</groupId>
-            <artifactId>json-path</artifactId>
-            <version>2.3.0</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -225,12 +220,6 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
             <version>1.7.25</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.mashape.unirest</groupId>
-            <artifactId>unirest-java</artifactId>
-            <version>1.4.9</version>
         </dependency>
     </dependencies>
 
@@ -467,11 +456,11 @@
                                             <arg value="-replicationFactor" />
                                             <arg value="2" />
                                         </exec>
-                                        <exec executable="curl" spawn="false" failonerror="true">
-                                            <arg value="http://localhost:8983/solr/gettingstarted/config" />
-                                            <arg value="-d" />
-                                            <arg value="@${project.basedir}/src/test/resources/updateSettings.json" />
-                                        </exec>
+<!--                                         <exec executable="curl" spawn="false" failonerror="true"> -->
+<!--                                             <arg value="http://localhost:8983/solr/gettingstarted/config" /> -->
+<!--                                             <arg value="-d" /> -->
+<!--                                             <arg value="@${project.basedir}/src/test/resources/updateSettings.json" /> -->
+<!--                                         </exec> -->
                                         <exec executable="bash" spawn="false" failonerror="false">
                                             <arg value="${solr.dir}/bin/solr" />
                                             <arg value="zk" />

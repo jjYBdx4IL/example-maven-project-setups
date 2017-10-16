@@ -1,5 +1,7 @@
 package com.github.jjYBdx4IL.example.solr.beans;
 
+import com.github.jjYBdx4IL.utils.solr.beans.FieldConfig;
+import com.github.jjYBdx4IL.utils.solr.beans.FieldType;
 import org.apache.solr.client.solrj.beans.Field;
 
 public class ProductBean {

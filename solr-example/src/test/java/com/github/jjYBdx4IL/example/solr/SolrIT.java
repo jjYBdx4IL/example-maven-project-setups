@@ -10,6 +10,10 @@ import com.github.jjYBdx4IL.example.solr.cluster.ClusterStatusResponse;
 import com.github.jjYBdx4IL.example.solr.cluster.ClusterStatusResponse.CollectionStatus;
 import com.github.jjYBdx4IL.example.solr.cluster.ClusterStatusResponse.RedundancyState;
 import com.github.jjYBdx4IL.example.solr.cluster.ClusterStatusResponse.RedundancyStatus;
+import com.github.jjYBdx4IL.utils.solr.SolrUtils;
+import com.jayway.jsonpath.JsonPath;
+import com.jayway.jsonpath.PathNotFoundException;
+import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.apache.commons.io.IOUtils;
 import org.apache.solr.client.solrj.SolrClient;
@@ -41,11 +45,16 @@ public class SolrIT {
     SolrClient solr = null;
 
     @BeforeClass
-    public static void beforeClass() throws IOException, SolrServerException, UnirestException {
-        Config.verifyOrDisableAutoCreateFields();
-        Config.verifyOrCreateSchema(ProductBean.class);
+    public static void beforeClass() throws Exception {
+        if (Config.IS_CLUSTERED) {
+            SolrUtils.verifyOrEnableAutoCommit(Config.SOLR_COLLECTION_URL);
+        }
+        SolrUtils.verifyOrDisableAutoCreateFields(Config.SOLR_COLLECTION_URL);
+        try (SolrClient client = Config.createClient()) {
+            SolrUtils.verifyOrCreateSchema(client, ProductBean.class);
+        }
     }
-    
+
     @Before
     public void before() throws Exception {
         solr = Config.createClient();
@@ -108,7 +117,7 @@ public class SolrIT {
         docList = response.getResults();
         assertEquals(docList.getNumFound(), 0);
     }
-    
+
     @Test
     public void testSearchSyntax() throws Exception {
         // prepare the dataset
