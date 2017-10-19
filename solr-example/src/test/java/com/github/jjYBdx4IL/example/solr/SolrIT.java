@@ -31,6 +31,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 // https://lucene.apache.org/solr/guide/7_0/using-solrj.html
 // https://github.com/apache/lucene-solr/tree/master/solr/solrj/src/test/org/apache/solr/client/solrj
@@ -224,6 +225,47 @@ public class SolrIT {
                                                        // match
         // remark: there seems to be no way to match the entire contents of a
         // text-field (use 'string' type for that, not 'text_general')
+    }
+
+    @Test
+    public void testHighlighting() throws Exception {
+        // prepare the dataset
+        solr.deleteByQuery("*");
+
+        SolrInputDocument document = new SolrInputDocument();
+        document.addField("id", "12345");
+        document.addField("name", "testSubstringSearch");
+        document.addField("text", "one two three four five");
+        solr.add(document);
+
+        document = new SolrInputDocument();
+        document.addField("id", "123457");
+        document.addField("name", "testSubstringSearch");
+        document.addField("text", "six eighty");
+        solr.add(document);
+
+        document = new SolrInputDocument();
+        document.addField("id", "1234578");
+        document.addField("name", "testSubstringSearch");
+        document.addField("text", "seven eight");
+        solr.add(document);
+        commit();
+
+        SolrQuery query = new SolrQuery();
+        query.set("q", "text:two");
+        query.set("hl", true);
+        query.set("hl.fl", "name,text");
+        QueryResponse response = solr.query(query);
+        List<ProductBean> docList = response.getBeans(ProductBean.class);
+        assertEquals(1, docList.size());
+        
+        Map<String, Map<String, List<String>>> hl = response.getHighlighting();
+        assertNotNull(hl);
+        assertEquals(1, hl.size());
+        assertNotNull(hl.get("12345"));
+        assertNotNull(hl.get("12345").get("text"));
+        assertEquals(1, hl.get("12345").get("text").size());
+        assertEquals("one <em>two</em> three four five", hl.get("12345").get("text").get(0));
     }
 
     @Test
