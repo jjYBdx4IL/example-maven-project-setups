@@ -3,18 +3,15 @@ package com.github.jjYBdx4IL.example.solr;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.junit.Assume.assumeTrue;
 
 import com.github.jjYBdx4IL.example.solr.beans.ProductBean;
-import com.github.jjYBdx4IL.example.solr.cluster.ClusterStatusResponse;
-import com.github.jjYBdx4IL.example.solr.cluster.ClusterStatusResponse.CollectionStatus;
-import com.github.jjYBdx4IL.example.solr.cluster.ClusterStatusResponse.RedundancyState;
-import com.github.jjYBdx4IL.example.solr.cluster.ClusterStatusResponse.RedundancyStatus;
+import com.github.jjYBdx4IL.utils.solr.ClusterStatusResponse;
 import com.github.jjYBdx4IL.utils.solr.SolrUtils;
-import com.jayway.jsonpath.JsonPath;
-import com.jayway.jsonpath.PathNotFoundException;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
+import com.github.jjYBdx4IL.utils.solr.ClusterStatusResponse.CollectionStatus;
+import com.github.jjYBdx4IL.utils.solr.ClusterStatusResponse.RedundancyState;
+import com.github.jjYBdx4IL.utils.solr.ClusterStatusResponse.RedundancyStatus;
 import org.apache.commons.io.IOUtils;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
@@ -33,6 +30,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.List;
 
 // https://lucene.apache.org/solr/guide/7_0/using-solrj.html
 // https://github.com/apache/lucene-solr/tree/master/solr/solrj/src/test/org/apache/solr/client/solrj
@@ -67,8 +65,68 @@ public class SolrIT {
 
     @Test
     public void testAddBean() throws IOException, SolrServerException {
-        solr.addBean(new ProductBean("888", "Apple iPhone 6s", "299.99"));
+        solr.addBean(new ProductBean("888", "Apple iPhone 6s", 299.99));
         commit();
+    }
+
+    @Test
+    public void testIdField() throws Exception {
+        // delete by query
+        solr.deleteByQuery("*");
+
+        // add a document
+        SolrInputDocument document = new SolrInputDocument();
+        document.addField("name", "someRandomStuffTestIdField");
+        document.addField("price", "512.34");
+        try {
+            solr.add(document);
+            fail();
+        } catch (Exception ex) {
+            assertTrue(ex.getMessage().contains("Document is missing mandatory uniqueKey field"));
+        }
+    }
+
+    @Test
+    public void testNotQuery() throws Exception {
+        // delete by query
+        solr.deleteByQuery("*");
+
+        // add a document
+        SolrInputDocument document = new SolrInputDocument();
+        document.addField("id", "1");
+        document.addField("name", "someRandomStuffTestIdField");
+        solr.add(document);
+        document = new SolrInputDocument();
+        document.addField("id", "2");
+        document.addField("name", "someRandomStuffTestIdField");
+        document.addField("price", 1.23);
+        solr.add(document);
+        commit();
+        
+        assertQueryMatchCount(2, "NOT price:*");
+        assertQueryMatchCount(2, "*:* NOT price:*");
+        assertQueryMatchCount(2, "(*:* NOT price:*)");
+        assertQueryMatchCount(2, "(*:* AND NOT price:*)");
+        assertQueryMatchCount(2, "(*:* and not price:*)");
+        assertQueryMatchCount(2, "(*:* and not price)");
+        
+        assertQueryMatchCount(0, "price:*");
+        assertQueryMatchCount(1, "price:[* TO *]");
+        assertQueryMatchCount(1, "NOT price:[* TO *]");
+        
+        SolrQuery query = new SolrQuery();
+        query.set("q", "NOT price:[* TO *]");
+        QueryResponse response = solr.query(query);
+        SolrDocumentList docList = response.getResults();
+        assertEquals(docList.getNumFound(), 1);
+        assertEquals((String) docList.get(0).getFieldValue("id"), "1");
+        
+        query = new SolrQuery();
+        query.set("q", "price:[* TO *]");
+        response = solr.query(query);
+        docList = response.getResults();
+        assertEquals(docList.getNumFound(), 1);
+        assertEquals((String) docList.get(0).getFieldValue("id"), "2");
     }
 
     @Test
@@ -85,7 +143,7 @@ public class SolrIT {
         solr.add(document);
 
         // add a document by using a bean
-        solr.addBean(new ProductBean("888", "Apple iPhone 6s", "299.99"));
+        solr.addBean(new ProductBean("888", "Apple iPhone 6s", 299.99));
         commit();
 
         // query by field
@@ -165,7 +223,69 @@ public class SolrIT {
         assertQueryMatchCount(1, "text:\"eighty\"~0"); // exact word/phrase
                                                        // match
         // remark: there seems to be no way to match the entire contents of a
-        // field
+        // text-field (use 'string' type for that, not 'text_general')
+    }
+
+    @Test
+    public void testOrderedResultPages() throws Exception {
+        // prepare the dataset
+        solr.deleteByQuery("*");
+
+        for (int i = 0; i < 30; i++) {
+            SolrInputDocument document = new SolrInputDocument();
+            document.addField("id", "" + i);
+            document.addField("price", i * 1.5);
+            solr.add(document);
+        }
+        commit();
+
+        SolrQuery query = new SolrQuery();
+        query.set("q", "price:[* TO *]");
+        query.set("rows", 3);
+        query.set("start", 0);
+        query.set("sort", "price asc");
+        QueryResponse response = solr.query(query);
+        List<ProductBean> docList = response.getBeans(ProductBean.class);
+        assertEquals(3, docList.size());
+        assertEquals(0, docList.get(0).getPrice(), 1e-6);
+        assertEquals(1.5, docList.get(1).getPrice(), 1e-6);
+        assertEquals(3, docList.get(2).getPrice(), 1e-6);
+
+        query = new SolrQuery();
+        query.set("q", "price:[* TO *]");
+        query.set("rows", 3);
+        query.set("start", 3);
+        query.set("sort", "price asc");
+        response = solr.query(query);
+        docList = response.getBeans(ProductBean.class);
+        assertEquals(3, docList.size());
+        assertEquals(4.5, docList.get(0).getPrice(), 1e-6);
+        assertEquals(6, docList.get(1).getPrice(), 1e-6);
+        assertEquals(7.5, docList.get(2).getPrice(), 1e-6);
+
+        query = new SolrQuery();
+        query.set("q", "price:[* TO 40]");
+        query.set("rows", 3);
+        query.set("start", 0);
+        query.set("sort", "price desc");
+        response = solr.query(query);
+        docList = response.getBeans(ProductBean.class);
+        assertEquals(3, docList.size());
+        assertEquals(39, docList.get(0).getPrice(), 1e-6);
+        assertEquals(37.5, docList.get(1).getPrice(), 1e-6);
+        assertEquals(36, docList.get(2).getPrice(), 1e-6);
+
+        query = new SolrQuery();
+        query.set("q", "price:[* TO 40]");
+        query.set("rows", 3);
+        query.set("start", 2);
+        query.set("sort", "price desc");
+        response = solr.query(query);
+        docList = response.getBeans(ProductBean.class);
+        assertEquals(3, docList.size());
+        assertEquals(36, docList.get(0).getPrice(), 1e-6);
+        assertEquals(34.5, docList.get(1).getPrice(), 1e-6);
+        assertEquals(33, docList.get(2).getPrice(), 1e-6);
     }
 
     @Test

@@ -8,35 +8,38 @@ public class ProductBean {
 
     String id;
     String name;
-    String price;
+    double price;
     String text;
 
-    public ProductBean(String id, String name, String price) {
+    public ProductBean() {
+    }
+
+    public ProductBean(String id, String name, double price) {
         this.id = id;
         this.name = name;
         this.price = price;
     }
 
     @Field("id")
-    @FieldConfig(type = FieldType.string, indexed = true, required = true)
+    @FieldConfig(type = FieldType.string, indexed = true, required = true, stored = true)
     protected void setId(String id) {
         this.id = id;
     }
 
     @Field("name")
-    @FieldConfig(type = FieldType.text_general)
+    @FieldConfig(type = FieldType.text_general, indexed=true)
     protected void setName(String name) {
         this.name = name;
     }
 
     @Field("price")
-    @FieldConfig(type = FieldType.pdoubles)
-    protected void setPrice(String price) {
+    @FieldConfig(type = FieldType.pdoubles, indexed = true)
+    protected void setPrice(double price) {
         this.price = price;
     }
 
     @Field("text")
-    @FieldConfig(type = FieldType.text_general)
+    @FieldConfig(type = FieldType.text_general, indexed=true)
     protected void setText(String text) {
         this.text = text;
     }
@@ -49,7 +52,7 @@ public class ProductBean {
         return name;
     }
 
-    public String getPrice() {
+    public double getPrice() {
         return price;
     }
 
