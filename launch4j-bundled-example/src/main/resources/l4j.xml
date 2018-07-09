@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch4jConfig>
+  <!-- http://launch4j.sourceforge.net/docs.html -->
+  <dontWrapJar>true</dontWrapJar>
+  <headerType>gui</headerType>
+  <jar>${project.artifactId}-${project.version}.jar</jar>
+  <outfile>${launch4j.output.exe}</outfile>
+  <errTitle></errTitle>
+  <cmdLine></cmdLine>
+  <chdir>.</chdir>
+  <priority>normal</priority>
+  <downloadUrl>http://java.com/download</downloadUrl>
+  <supportUrl></supportUrl>
+  <stayAlive>false</stayAlive>
+  <restartOnCrash>false</restartOnCrash>
+  <manifest></manifest>
+  <icon></icon>
+  <classPath>
+      <mainClass>maven.examples.Main</mainClass>
+  </classPath>
+  <singleInstance>
+    <mutexName>${project.artifactId}</mutexName>
+    <windowTitle>${project.artifactId}</windowTitle>
+  </singleInstance>
+  <jre>
+    <path>jre_win64</path>
+    <bundledJre64Bit>true</bundledJre64Bit>
+    <minVersion>1.8.0</minVersion>
+    <maxVersion></maxVersion>
+    <jdkPreference>preferJre</jdkPreference>
+    <runtimeBits>64/32</runtimeBits>
+  </jre>
+</launch4jConfig>

@@ -23,7 +23,8 @@
     <modules>
         <module>antrun-conditional</module>
         <module>antrun-foreach</module>
-        <module>antrun-buildfile-params</module>
+	<module>antrun-buildfile-params</module>
+	<module>antrun-rename-unknown-dir</module>
         <module>antrun-set-maven-props</module>
         <module>aop-dynamic-proxy-jetty-example</module>
         <module>aspectj-jetty-ltw-example</module>
@@ -44,6 +45,7 @@
         <!--<module>java6only</module> -->
         <module>launch4j-plugin</module>
         <module>launch4j-example</module>
+        <module>launch4j-bundled-example</module>
         <module>log4j-runtime-configuration</module>
         <module>maven-checkstyle-example</module>
         <module>maven-jnaerator-example</module>
