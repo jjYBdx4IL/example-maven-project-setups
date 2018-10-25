@@ -13,3 +13,4 @@ Read more: http://launch4j.sourceforge.net/
 There seems to be no single nice and open-source way of creating an executable wrapper
 for the most popular platforms. For Mac, app bundler would probably be a good option.
 For Linux, a simple shell script would suffice.
+

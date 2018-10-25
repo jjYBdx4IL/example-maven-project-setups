@@ -25,6 +25,17 @@
 		<launch4j.output.exe>${project.build.directory}/${project.artifactId}-${project.version}.exe</launch4j.output.exe>
 	</properties>
 
+	<repositories>
+		<repository>
+			<id>simulation</id>
+			<url>http://www.simulation.tudelft.nl/maven</url>
+		</repository>
+		<repository>
+			<id>sk-3</id>
+			<url>http://simulation.tudelft.nl/maven</url>
+		</repository>
+	</repositories>
+
 	<dependencies>
 		<dependency>
 			<groupId>log4j</groupId>
