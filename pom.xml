@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="
         http://maven.apache.org/POM/4.0.0
             http://maven.apache.org/maven-v4_0_0.xsd
@@ -23,8 +24,8 @@
     <modules>
         <module>antrun-conditional</module>
         <module>antrun-foreach</module>
-	<module>antrun-buildfile-params</module>
-	<module>antrun-rename-unknown-dir</module>
+        <module>antrun-buildfile-params</module>
+        <module>antrun-rename-unknown-dir</module>
         <module>antrun-set-maven-props</module>
         <module>aop-dynamic-proxy-jetty-example</module>
         <module>appbundler-example</module>
@@ -34,8 +35,6 @@
         <module>compile-time-annotation-processing</module>
         <module>download-plugin-example</module>
         <module>gwt-example</module>
-        <module>hbase-example</module>
-        <module>hdfs-example</module>
         <module>izpack-example</module>
         <module>javacpp-opencv-example</module>
         <module>jersey-war-example</module>
@@ -52,8 +51,41 @@
         <module>maven-jnaerator-example</module>
         <module>multimodule-archetype-example</module>
         <!-- <module>nar-maven-plugin-jni-example</module> not working atm -->
-        <module>solr-example</module>
+        <module>os-profiles-example</module>
     </modules>
+
+    <profiles>
+        <profile>
+            <id>mac</id>
+            <activation>
+                <os>
+                    <family>mac</family>
+                </os>
+            </activation>
+        </profile>
+        <profile>
+            <id>unix</id>
+            <activation>
+                <os>
+                    <family>unix</family>
+                    <name>Linux</name>
+                </os>
+            </activation>
+            <modules>
+                <module>hbase-example</module>
+                <module>hdfs-example</module>
+                <module>solr-example</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>windows</id>
+            <activation>
+                <os>
+                    <family>windows</family>
+                </os>
+            </activation>
+        </profile>
+    </profiles>
 
     <build>
         <pluginManagement>

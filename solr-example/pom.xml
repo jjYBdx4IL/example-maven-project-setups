@@ -40,7 +40,7 @@
                             <goal>wget</goal>
                         </goals>
                         <configuration>
-                            <url>http://apache.mirror.digionline.de/lucene/solr/${solr.version}/solr-${solr.version}.zip</url>
+                            <url>https://www.apache.org/dyn/mirrors/mirrors.cgi?action=download&amp;filename=lucene/solr/${solr.version}/solr-${solr.version}.zip</url>
                             <sha512>085eb16912dd91b40dffec363554cb434db6aff928761a9c1b852a56172c0c9a1026a875a10c3d1c8dc6d992e29bc2b273e83eb07876e544542ab44ce91407f1</sha512>
                         </configuration>
                     </execution>
@@ -51,7 +51,7 @@
                             <goal>wget</goal>
                         </goals>
                         <configuration>
-                            <url>http://apache.mirror.digionline.de/zookeeper/zookeeper-${zk.version}/zookeeper-${zk.version}.tar.gz</url>
+                            <url>https://www.apache.org/dyn/mirrors/mirrors.cgi?action=download&amp;filename=zookeeper/zookeeper-${zk.version}/zookeeper-${zk.version}.tar.gz</url>
                             <sha512>4c54e40ac8d0b267db4a188a30e39ed0ac2c3e8a8fadaf244be45ff5adee956df28f6cb9f1eb56f175e924fa3629b64f98286a090c46764c91c017613c80a51b</sha512>
                         </configuration>
                     </execution>

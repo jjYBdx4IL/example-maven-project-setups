@@ -17,7 +17,7 @@
     <name>Maven Examples :: HDFS Example</name>
 
     <properties>
-        <hadoop.version>2.8.1</hadoop.version>
+        <hadoop.version>2.8.5</hadoop.version>
         <zk.version>3.4.10</zk.version>
         <solr.dir>${project.build.directory}/solr-${solr.version}</solr.dir>
         <zk.home.dir>${project.build.directory}/zookeeper-${zk.version}</zk.home.dir>
@@ -38,8 +38,8 @@
                             <goal>wget</goal>
                         </goals>
                         <configuration>
-                            <url>https://archive.apache.org/dist/hadoop/core/hadoop-${hadoop.version}/hadoop-${hadoop.version}.tar.gz</url>
-                            <sha512>ab6f11225c5aa4e89d787437423f22ef8a45928367608ae73af3e721c3f9c0c6a1b8a7bd5e68ff2a9ca65514f00cc251f5c408208dba7fb66a06c2cc886a04c5</sha512>
+                            <url>https://www.apache.org/dyn/mirrors/mirrors.cgi?action=download&amp;filename=hadoop/core/hadoop-${hadoop.version}/hadoop-${hadoop.version}.tar.gz</url>
+                            <sha512>4174e7a67b614b7d5e47a1a2420cbe9a57978908f8ad0405f1d177306fb36ed87c895810f70e3c6a6cbadc76afb9303f1c49cbca67237e18c799d30f87afa57c</sha512>
                             <unpack>false</unpack>
                             <overwrite>false</overwrite>
                         </configuration>
