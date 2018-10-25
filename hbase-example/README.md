@@ -13,3 +13,5 @@ You may start/stop the server gracefully by running
 A management frontend is accessible via:
 
     localhost:16010
+
+Works on Linux only, hbase shell scripts don't support cygwin.

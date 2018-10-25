@@ -17,7 +17,7 @@
     <name>Maven Examples :: solr Example</name>
 
     <properties>
-        <solr.version>7.0.1</solr.version>
+        <solr.version>7.5.0</solr.version>
         <zk.version>3.4.10</zk.version>
         <solr.dir>${project.build.directory}/solr-${solr.version}</solr.dir>
         <zk.home.dir>${project.build.directory}/zookeeper-${zk.version}</zk.home.dir>
@@ -41,7 +41,7 @@
                         </goals>
                         <configuration>
                             <url>http://apache.mirror.digionline.de/lucene/solr/${solr.version}/solr-${solr.version}.zip</url>
-                            <sha512>04dd7ea43acc90aa01b4f2295619c88431e3bdbcbd4adbb629ac0c2d07d7c92b2df39753991a6cbe0a8ec028639410857d22d6cbbb6740b75d9e7a92832c1b25</sha512>
+                            <sha512>085eb16912dd91b40dffec363554cb434db6aff928761a9c1b852a56172c0c9a1026a875a10c3d1c8dc6d992e29bc2b273e83eb07876e544542ab44ce91407f1</sha512>
                         </configuration>
                     </execution>
                     <execution>

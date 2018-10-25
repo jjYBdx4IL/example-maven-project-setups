@@ -38,7 +38,7 @@
                             <goal>wget</goal>
                         </goals>
                         <configuration>
-                            <url>http://apache.mirror.digionline.de/hadoop/common/hadoop-${hadoop.version}/hadoop-${hadoop.version}.tar.gz</url>
+                            <url>https://archive.apache.org/dist/hadoop/core/hadoop-${hadoop.version}/hadoop-${hadoop.version}.tar.gz</url>
                             <sha512>ab6f11225c5aa4e89d787437423f22ef8a45928367608ae73af3e721c3f9c0c6a1b8a7bd5e68ff2a9ca65514f00cc251f5c408208dba7fb66a06c2cc886a04c5</sha512>
                             <unpack>false</unpack>
                             <overwrite>false</overwrite>

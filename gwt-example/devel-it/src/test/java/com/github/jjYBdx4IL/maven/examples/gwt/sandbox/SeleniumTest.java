@@ -56,6 +56,9 @@ import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 
+import io.github.bonigarcia.wdm.ChromeDriverManager;
+import io.github.bonigarcia.wdm.DriverManagerType;
+
 public class SeleniumTest extends SeleniumTestBase {
 
     private static final Logger LOG = LoggerFactory.getLogger(SeleniumTest.class);
@@ -65,6 +68,8 @@ public class SeleniumTest extends SeleniumTestBase {
         String s = System.getProperty("devmode.install.dir", null);
         LOG.info(s);
         DEVMODE_INSTALL_DIR = s == null ? null : new File(s);
+        
+        ChromeDriverManager.getInstance(DriverManagerType.CHROME).setup();
     }
 
     /**
@@ -281,15 +286,23 @@ public class SeleniumTest extends SeleniumTestBase {
     }
 
     @Test
-    public void testSimpleEventBusDemo() throws WebElementNotFoundException {
+    public void testSimpleEventBusDemo() throws WebElementNotFoundException, InterruptedException {
         openPage();
         setTestName("testSimpleEventBusDemo");
         takeScreenshot();
 
         click("SimpleEventBusDemo");
         takeScreenshot();
+        
         List<WebElement> inputs = filterDisplayed(getDriver().findElements(By.tagName("input")));
+        int i = 10;
+        while (i > 0 && inputs.size() != 3) {
+            Thread.sleep(1000L);
+            inputs = filterDisplayed(getDriver().findElements(By.tagName("input")));
+            i--;
+        }
         assertEquals(3, inputs.size());
+        
         inputs.get(0).sendKeys("123\n");
         takeScreenshot();
         assertEquals("123", inputs.get(1).getAttribute("value"));
@@ -411,7 +424,7 @@ public class SeleniumTest extends SeleniumTestBase {
 
     /**
      * when running against GWT dev mode, the page sometimes fails to load. this is a workaround.
-     * @throws com.github.jjYBdx4IL.test.selenium.WebElementNotFoundException
+     * @throws com.github.jjYBdx4IL.test.selenium.WebElementNotFoundException if not found
      */
     protected void openPage() throws WebElementNotFoundException {
         for (int i = 0; i < 10; i++) {
@@ -430,7 +443,7 @@ public class SeleniumTest extends SeleniumTestBase {
      * @param tagName the child elements' tag name, ie. 'input' or 'div'. Can be null.
      * @param minCount supply non-positive value to not check for min count limit
      * @param maxCount supply negative value to not check for max count limit
-     * @return 
+     * @return list of matching elements
      */
     public List<WebElement> getElementsByTagName(DebugId parentElementId, String tagName, final int minCount, final int maxCount) {
         assertNotNull(tagName);

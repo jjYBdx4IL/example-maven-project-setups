@@ -36,7 +36,7 @@
                             <goal>wget</goal>
                         </goals>
                         <configuration>
-                            <url>http://apache.mirror.digionline.de/hbase/${hbase.version}/hbase-${hbase.version}-bin.tar.gz</url>
+                            <url>https://archive.apache.org/dist/hbase/${hbase.version}/hbase-${hbase.version}-bin.tar.gz</url>
                             <sha512>face6b85fc6d2d24ca0b4b81338de30763695b99bfb78b7176a4da7f2b1d355abf8c262fa7c2af59aacd9e0e8902f7a1026bce4e6cf979684f6e5644c53a2aa3</sha512>
                         </configuration>
                     </execution>

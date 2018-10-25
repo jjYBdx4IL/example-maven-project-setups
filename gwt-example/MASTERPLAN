@@ -38,3 +38,8 @@ that it is possible to configure the RemoteServiceServlet to access a running co
 TODO
 
 * fix XSRF protection
+
+REQUIREMENTS
+
+* a somewhat recent Google Chrome browser to run the test units. Latest tested (win10+linux): v70. Chromedriver is being
+retrieved and installed by WebDriverManager automatically.

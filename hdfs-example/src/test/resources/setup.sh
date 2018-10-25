@@ -82,7 +82,7 @@ if [[  "$cmd" == "start" ]]; then
     for i in 1 2 3; do
         if isAddrUp 127.0.0.1:8"$i"80 ; then continue; fi
         export HADOOP_HOME=$basedir/target/dfsnode$i
-        screen -dmS journalnode$i -L $basedir/target/journalnode$i.log $HADOOP_HOME/bin/hdfs --config $HADOOP_HOME/etc/hadoop journalnode
+        screen -dmS journalnode$i -L -Logfile $basedir/target/journalnode$i.log $HADOOP_HOME/bin/hdfs --config $HADOOP_HOME/etc/hadoop journalnode
     done
     for i in 1 2 3; do
         waitAddr 127.0.0.1:8"$i"80 journalnode$i
@@ -93,7 +93,7 @@ if [[  "$cmd" == "start" ]]; then
 	    if ! test -e $HADOOP_HOME/name/current/VERSION; then
 	        $HADOOP_HOME/bin/hdfs --config $HADOOP_HOME/etc/hadoop namenode -format -force
 	    fi
-	    screen -dmS namenode1 -L $basedir/target/namenode1.log $HADOOP_HOME/bin/hdfs --config $HADOOP_HOME/etc/hadoop namenode
+	    screen -dmS namenode1 -L -Logfile $basedir/target/namenode1.log $HADOOP_HOME/bin/hdfs --config $HADOOP_HOME/etc/hadoop namenode
 	    waitAddr 127.0.0.1:8020 namenode1
     fi
     
@@ -102,14 +102,14 @@ if [[  "$cmd" == "start" ]]; then
 	    if ! test -e $HADOOP_HOME/name/current/VERSION; then
 	        $HADOOP_HOME/bin/hdfs --config $HADOOP_HOME/etc/hadoop namenode -bootstrapStandby -force
 	    fi
-	    screen -dmS namenode2 -L $basedir/target/namenode2.log $HADOOP_HOME/bin/hdfs --config $HADOOP_HOME/etc/hadoop namenode
+	    screen -dmS namenode2 -L -Logfile $basedir/target/namenode2.log $HADOOP_HOME/bin/hdfs --config $HADOOP_HOME/etc/hadoop namenode
 	    waitAddr 127.0.0.1:8021 namenode2
 	fi
     
     for i in 1 2 3; do
         if isAddrUp 127.0.0.1:9"$i"67 ; then continue; fi
         export HADOOP_HOME=$basedir/target/dfsnode$i
-        screen -dmS datanode$i -L $basedir/target/datanode$i.log $HADOOP_HOME/bin/hdfs --config $HADOOP_HOME/etc/hadoop datanode
+        screen -dmS datanode$i -L -Logfile $basedir/target/datanode$i.log $HADOOP_HOME/bin/hdfs --config $HADOOP_HOME/etc/hadoop datanode
     done
     for i in 1 2 3; do
         waitAddr 127.0.0.1:9"$i"67 datanode$i
