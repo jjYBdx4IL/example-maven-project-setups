@@ -30,7 +30,8 @@
         <module>aop-dynamic-proxy-jetty-example</module>
         <module>appbundler-example</module>
         <module>aspectj-jetty-ltw-example</module>
-        <module>aspectj-maven-plugin-example</module>
+        <!-- broken since java 9
+        <module>aspectj-maven-plugin-example</module> -->
         <module>classpath-jar</module>
         <module>compile-time-annotation-processing</module>
         <module>download-plugin-example</module>
@@ -40,7 +41,8 @@
         <module>jersey-war-example</module>
         <module>jetty-gwt-errai-bus</module>
         <module>jna-jni-example</module>
-        <module>stjs-example</module>
+        <!-- broken since java 9, no upstream updates
+        <module>stjs-example</module> -->
         <!-- intentionally broken: -->
         <!--<module>java6only</module> -->
         <module>launch4j-plugin</module>
@@ -93,7 +95,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.6.1</version>
+                    <version>3.8.0</version>
                     <configuration>
                         <encoding>${project.build.sourceEncoding}</encoding>
                     </configuration>
@@ -124,7 +126,7 @@
             <dependency>
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
-                <version>2.5</version>
+                <version>2.6</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

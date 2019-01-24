@@ -36,7 +36,7 @@
                             <goal>wget</goal>
                         </goals>
                         <configuration>
-                            <url>https://www.apache.org/dyn/mirrors/mirrors.cgi?action=download&amp;filename=hbase/${hbase.version}/hbase-${hbase.version}-bin.tar.gz</url>
+                            <url>http://archive.apache.org/dist/hbase/${hbase.version}/hbase-${hbase.version}-bin.tar.gz</url>
                             <sha512>16eb62dad4ea40f6dd8747cf6a49678ed1a4a53eb3a9e67dc53a89f1471d1dc55147e5cad1aed8b0b22a01f5c1f6f6ca4b4e956261cda9b691d94c1626593afb</sha512>
                         </configuration>
                     </execution>
@@ -50,7 +50,7 @@
 
             <plugin>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <version>2.20.1</version>
+                <version>2.22.1</version>
                 <executions>
                     <execution>
                         <id>integration-test</id>
@@ -200,6 +200,12 @@
             <groupId>org.apache.hbase</groupId>
             <artifactId>hbase-client</artifactId>
             <version>${hbase.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>jdk.tools</artifactId>
+                    <groupId>jdk.tools</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>

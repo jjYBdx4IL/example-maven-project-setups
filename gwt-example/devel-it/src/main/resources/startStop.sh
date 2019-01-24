@@ -13,6 +13,8 @@ fi
 # terminating it:
 PROCIDTAG=$1
 shift
+port=$1
+shift
 cmd=$1
 shift
 
@@ -20,7 +22,15 @@ export LC_ALL=C
 export LANG=C
 export TZ=UTC
 
+isWin=0
+if which taskkill; then
+    isWin=1
+    which tasklist
+    which netstat
+fi
+
 function check_started() {
+    if [[ -n $(get_win_pids) ]]; then return 0; fi
     (
         set +o pipefail
         grep -l "PROCIDTAG=$PROCIDTAG" /proc/*/environ 2>/dev/null | grep proc >&/dev/null
@@ -36,10 +46,35 @@ function get_pids() {
     done
 }
 
+function get_win_pids() {
+    local f
+    if ! ((isWin)); then return 0; fi
+    if [[ $PROCIDTAG =~ :gwt$ ]]; then
+        for f in `tasklist /v /fo csv /fi "imagename eq java.exe" /fi "windowtitle eq GWT Development Mode" /nh | grep '^"' | cut -d , -f 2 | cut -d '"' -f 2`; do
+            echo " $f"
+        done
+    fi
+    local l
+    netstat -a -o -n -p TCP | LC_ALL=C grep "^\s*TCP\s*[:\.0-9]*:$port\s" | while read l; do
+        if [[ $l =~ [[:space:]]([0-9]*)[[:space:]]*$ ]]; then
+            if [[ ${BASH_REMATCH[1]} -ne 0 ]]; then 
+                echo " ${BASH_REMATCH[1]}"
+            fi
+        fi
+    done
+}
+
 function stop() {
     local sig=$1
     for pid in `get_pids`; do
         kill -$sig $pid
+    done
+    for pid in `get_win_pids`; do
+        if [[ $sig -eq KILL ]] || [[ $sig -eq kill ]]; then
+            taskkill /F /PID $pid
+        else 
+            taskkill /PID $pid
+        fi
     done
     return 0
 }
@@ -70,6 +105,8 @@ if [[ $cmd == "start" ]]; then
     fi
 
     export PROCIDTAG
+    pwd
+    echo "$@ >& log"
     (
         "$@" || :
     ) >& log &

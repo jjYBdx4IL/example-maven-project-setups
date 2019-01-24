@@ -65,7 +65,7 @@
             <plugin>
                 <groupId>com.github.jjYBdx4IL.aop</groupId>
                 <artifactId>aspectj-ltw-maven-plugin</artifactId>
-                <version>1.0</version>
+                <version>1.1-SNAPSHOT</version>
                 <executions>
                     <execution>
                         <goals>
@@ -75,7 +75,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <aspectjWeaverVersion>1.8.10</aspectjWeaverVersion>
+                    <aspectjWeaverVersion>1.9.2</aspectjWeaverVersion>
                 </configuration>
             </plugin>
             

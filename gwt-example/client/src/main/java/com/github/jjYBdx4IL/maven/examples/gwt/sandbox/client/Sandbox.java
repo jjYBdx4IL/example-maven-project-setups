@@ -5,10 +5,14 @@ import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
+import dagger.Component;
+
 import static com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client.ResourceBundle.RES;
 import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client.events.CompletionEvent;
 import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client.events.LoginEvent;
+import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client.gin.DaggerInjector;
 import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client.gin.Injector;
+import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client.gin.InjectorModule_ProvideSimpleEventBusFactory;
 import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client.shared.ManualEventHandling;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.Cookies;
@@ -24,9 +28,9 @@ public class Sandbox implements EntryPoint, ResizeHandler, CompletionEvent.Handl
 
     private final String rootDivId = "testPane";
 
-    private MainPanel mainPanel = Injector.INSTANCE.getMainPanel();
-    private EventBus eventBus = Injector.INSTANCE.getEventBus();
-    private XSRF xsrf = Injector.INSTANCE.getXSRF();
+    private MainPanel mainPanel;// = Injector.INSTANCE.getMainPanel();
+    private EventBus eventBus;// = Injector.INSTANCE.getEventBus();
+    private XSRF xsrf;// = Injector.INSTANCE.getXSRF();
 
     private String jSessionId = Cookies.getCookie("JSESSIONID");
 
@@ -38,6 +42,10 @@ public class Sandbox implements EntryPoint, ResizeHandler, CompletionEvent.Handl
      */
     @Override
     public void onModuleLoad() {
+        mainPanel = DaggerInjector.create().getMainPanel();
+        eventBus = DaggerInjector.create().getEventBus();
+        xsrf = DaggerInjector.create().getXSRF();
+        
         LoginEvent.register(eventBus, this);
         CompletionEvent.register(eventBus, this);
 

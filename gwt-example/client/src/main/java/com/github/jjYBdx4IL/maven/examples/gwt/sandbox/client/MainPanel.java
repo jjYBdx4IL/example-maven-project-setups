@@ -20,10 +20,13 @@ import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client.handlermanager.Han
 import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client.keyevents.KeyEventDemo;
 import com.github.jjYBdx4IL.maven.examples.gwt.sandbox.client.rpcdemo.RpcDemo;
 import com.google.gwt.user.client.ui.StackLayoutPanel;
-import com.google.inject.Inject;
 import java.util.logging.Logger;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 @SuppressWarnings("LoggerStringConcat")
+@Singleton
 public class MainPanel extends Composite implements ValueChangeHandler<String> {
 
     private static final Logger LOG = Logger.getLogger(MainPanel.class.getName());

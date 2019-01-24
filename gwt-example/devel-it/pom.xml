@@ -5,26 +5,16 @@
             http://maven.apache.org/maven-v4_0_0.xsd
             ">
     <modelVersion>4.0.0</modelVersion>
-
     <parent>
-        <groupId>com.github.jjYBdx4IL</groupId>
-        <artifactId>github-parent</artifactId>
-        <version>1.1</version>
-        <relativePath />
+        <groupId>com.github.jjYBdx4IL.maven.examples</groupId>
+        <artifactId>gwt-example-aggregator</artifactId>
+        <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>com.github.jjYBdx4IL.maven.examples</groupId>
     <artifactId>gwt-example-devel-it</artifactId>
-    <packaging>jar</packaging>
-    <version>1.0-SNAPSHOT</version>
     <name>Maven Examples :: GWT Example :: Development Setup IT</name>
 
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-
         <jetty.port>8080</jetty.port>
         <gwt.jetty.port>8888</gwt.jetty.port>
         <gwt.codeserver.port>9876</gwt.codeserver.port>
@@ -54,40 +44,16 @@
                 </executions>
             </plugin>
             <plugin>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+            <plugin>
                 <artifactId>maven-failsafe-plugin</artifactId>
             </plugin>
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <artifactId>maven-enforcer-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>enforce</id>
-                        <goals>
-                            <goal>enforce</goal>
-                        </goals>
-                        <phase>verify</phase>
-                    </execution>
-                </executions>
-                <configuration>
-                    <rules>
-                        <requireNoRepositories />
-                        <requirePluginVersions />
-                        <dependencyConvergence />
-                        <requireUpperBoundDeps />
-                        <requireReleaseDeps>
-                            <message>No Snapshots Allowed!</message>
-                            <onlyWhenRelease>true</onlyWhenRelease>
-                        </requireReleaseDeps>
-                        <requireJavaVersion>
-                            <version>[1.8,)</version>
-                        </requireJavaVersion>
-                        <requireMavenVersion>
-                            <version>[3.0,)</version>
-                        </requireMavenVersion>
-                    </rules>
-                </configuration>
             </plugin>
             <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
@@ -121,13 +87,32 @@
                                 <!-- shut down running server - just in case -->
                                 <exec executable="bash" dir="${installDir}" spawn="false" failonerror="true">
                                     <arg value="${mgmt.script}" />
-                                    <arg value="${project.groupId}:${project.artifactId}:" />
+                                    <arg value="${project.groupId}:${project.artifactId}:jetty" />
+                                    <arg value="${jetty.port}" />
                                     <arg value="stop" />
                                     <env key="DEBUG" value="${mgmt.script.debug}" />
                                 </exec>
                                 <waitfor maxwait="3" maxwaitunit="minute" checkevery="1000">
                                     <not>
                                         <socket server="localhost" port="${jetty.port}" />
+                                    </not>
+                                </waitfor>
+                                
+                                <exec executable="bash" dir="${installDir}" spawn="false" failonerror="true">
+                                    <arg value="${mgmt.script}" />
+                                    <arg value="${project.groupId}:${project.artifactId}:gwt" />
+                                    <arg value="${gwt.jetty.port}" />
+                                    <arg value="stop" />
+                                    <env key="DEBUG" value="${mgmt.script.debug}" />
+                                </exec>
+                                <waitfor maxwait="3" maxwaitunit="minute" checkevery="1000">
+                                    <not>
+                                        <socket server="localhost" port="${gwt.jetty.port}" />
+                                    </not>
+                                </waitfor>
+                                <waitfor maxwait="3" maxwaitunit="minute" checkevery="1000">
+                                    <not>
+                                        <socket server="localhost" port="${gwt.codeserver.port}" />
                                     </not>
                                 </waitfor>
 
@@ -158,12 +143,16 @@
                                 <exec executable="bash" dir="${installDir}/client" spawn="false" failonerror="true">
                                     <arg value="${mgmt.script}" />
                                     <arg value="${project.groupId}:${project.artifactId}:gwt" />
+                                    <arg value="${gwt.jetty.port}" />
                                     <arg value="start" />
                                     <arg value="mvn" />
                                     <arg value="clean" />
-                                    <arg value="package" />
-                                    <arg value="-Dnocompile" />
-                                    <arg value="-Ddevmode" />
+<!--                                     <arg value="package" /> -->
+<!--                                     <arg value="-Dnocompile" /> -->
+                                    <arg value="gwt:run" />
+<!--                                     <arg value="exec:java" /> -->
+<!--                                     <arg value="-Dnocompile" /> -->
+<!--                                     <arg value="-Ddevmode" /> -->
                                     <env key="DEBUG" value="${mgmt.script.debug}" />
                                 </exec>
 
@@ -180,6 +169,7 @@
                                 <exec executable="bash" dir="${installDir}/server" spawn="false" failonerror="true">
                                     <arg value="${mgmt.script}" />
                                     <arg value="${project.groupId}:${project.artifactId}:jetty" />
+                                    <arg value="${jetty.port}" />
                                     <arg value="start" />
                                     <arg value="mvn" />
                                     <arg value="clean" />
@@ -208,7 +198,8 @@
                                 <!-- shut down running server - just in case -->
                                 <exec executable="bash" dir="${installDir}" spawn="false" failonerror="true">
                                     <arg value="${mgmt.script}" />
-                                    <arg value="${project.groupId}:${project.artifactId}:" />
+                                    <arg value="${project.groupId}:${project.artifactId}:jetty" />
+                                    <arg value="${jetty.port}" />
                                     <arg value="stop" />
                                     <env key="DEBUG" value="${mgmt.script.debug}" />
                                 </exec>
@@ -217,6 +208,14 @@
                                         <socket server="localhost" port="${jetty.port}" />
                                     </not>
                                 </waitfor>
+                                
+                                <exec executable="bash" dir="${installDir}" spawn="false" failonerror="true">
+                                    <arg value="${mgmt.script}" />
+                                    <arg value="${project.groupId}:${project.artifactId}:gwt" />
+                                    <arg value="${gwt.jetty.port}" />
+                                    <arg value="stop" />
+                                    <env key="DEBUG" value="${mgmt.script.debug}" />
+                                </exec>
                                 <waitfor maxwait="3" maxwaitunit="minute" checkevery="1000">
                                     <not>
                                         <socket server="localhost" port="${gwt.jetty.port}" />
@@ -237,11 +236,11 @@
                             <goal>run</goal>
                         </goals>
                         <configuration>
-                            <target>
                                 <!-- shut down running server - just in case -->
-                                <exec executable="bash" dir="${project.basedir}" spawn="false" failonerror="true">
+                                <exec executable="bash" dir="${installDir}" spawn="false" failonerror="true">
                                     <arg value="${mgmt.script}" />
-                                    <arg value="${project.groupId}:${project.artifactId}:" />
+                                    <arg value="${project.groupId}:${project.artifactId}:jetty" />
+                                    <arg value="${jetty.port}" />
                                     <arg value="stop" />
                                     <env key="DEBUG" value="${mgmt.script.debug}" />
                                 </exec>
@@ -250,6 +249,14 @@
                                         <socket server="localhost" port="${jetty.port}" />
                                     </not>
                                 </waitfor>
+                                
+                                <exec executable="bash" dir="${installDir}" spawn="false" failonerror="true">
+                                    <arg value="${mgmt.script}" />
+                                    <arg value="${project.groupId}:${project.artifactId}:gwt" />
+                                    <arg value="${gwt.jetty.port}" />
+                                    <arg value="stop" />
+                                    <env key="DEBUG" value="${mgmt.script.debug}" />
+                                </exec>
                                 <waitfor maxwait="3" maxwaitunit="minute" checkevery="1000">
                                     <not>
                                         <socket server="localhost" port="${gwt.jetty.port}" />
@@ -260,7 +267,6 @@
                                         <socket server="localhost" port="${gwt.codeserver.port}" />
                                     </not>
                                 </waitfor>
-                            </target>
                         </configuration>
                     </execution>
                 </executions>
@@ -281,7 +287,6 @@
             <plugins>
                 <plugin>
                     <artifactId>maven-failsafe-plugin</artifactId>
-                    <version>2.20</version>
                     <executions>
                         <execution>
                             <goals>
@@ -311,7 +316,6 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>2.20</version>
                     <configuration>
                         <systemPropertyVariables>
                             <sandbox.location>${testUrl}</sandbox.location>
@@ -353,13 +357,11 @@
         <dependency>
             <groupId>org.apache.ant</groupId>
             <artifactId>ant</artifactId>
-            <version>1.10.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.github.jjYBdx4IL.aop</groupId>
             <artifactId>aspectj-tx-manager-api</artifactId>
-            <version>1.0</version> <!-- FIXME inherit this -->
         </dependency>
         <dependency>
             <groupId>com.github.jjYBdx4IL.utils</groupId>
@@ -373,91 +375,6 @@
             <version>3.0.0</version>
         </dependency>
     </dependencies>
-
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.ow2.asm</groupId>
-                <artifactId>asm</artifactId>
-                <version>5.1</version>
-            </dependency>
-            <dependency>
-                <groupId>org.ow2.asm</groupId>
-                <artifactId>asm-commons</artifactId>
-                <version>5.1</version>
-            </dependency>
-            <dependency>
-                <groupId>org.ow2.asm</groupId>
-                <artifactId>asm-tree</artifactId>
-                <version>5.1</version>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.jetty.websocket</groupId>
-                <artifactId>websocket-client</artifactId>
-                <version>9.4.6.v20170531</version>
-            </dependency>
-            <dependency>
-                <groupId>org.seleniumhq.selenium</groupId>
-                <artifactId>selenium-api</artifactId>
-                <version>3.5.3</version>
-            </dependency>
-            <dependency>
-                <groupId>org.seleniumhq.selenium</groupId>
-                <artifactId>selenium-chrome-driver</artifactId>
-                <version>3.5.3</version>
-            </dependency>
-            <dependency>
-                <groupId>org.seleniumhq.selenium</groupId>
-                <artifactId>selenium-firefox-driver</artifactId>
-                <version>3.5.3</version>
-            </dependency>
-            <dependency>
-                <groupId>org.seleniumhq.selenium</groupId>
-                <artifactId>selenium-remote-driver</artifactId>
-                <version>3.5.3</version>
-            </dependency>
-            <dependency>
-                <groupId>org.seleniumhq.selenium</groupId>
-                <artifactId>selenium-support</artifactId>
-                <version>3.5.3</version>
-            </dependency>
-            <dependency>
-                <groupId>com.google.code.gson</groupId>
-                <artifactId>gson</artifactId>
-                <version>2.8.5</version>
-            </dependency>
-            <dependency>
-                <groupId>commons-io</groupId>
-                <artifactId>commons-io</artifactId>
-                <version>2.6</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.commons</groupId>
-                <artifactId>commons-compress</artifactId>
-                <version>1.14</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.commons</groupId>
-                <artifactId>commons-lang3</artifactId>
-                <version>3.7</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.httpcomponents</groupId>
-                <artifactId>httpclient</artifactId>
-                <version>4.5.5</version>
-            </dependency>
-            <dependency>
-                <groupId>org.jsoup</groupId>
-                <artifactId>jsoup</artifactId>
-                <version>1.11.3</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.httpcomponents</groupId>
-                <artifactId>httpcore</artifactId>
-                <version>4.4.9</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
 
     <profiles>
         <profile>

@@ -10,9 +10,9 @@ shift 3
 install -d "$targetDir/generated-sources/c"
 
 # JNI
-javah -classpath "$classesOutputDir" \
-    -d "$targetDir/generated-sources/c" \
-    com.github.jjYBdx4IL.maven.examples.jnajni.JNIAccess
+#javah -classpath "$classesOutputDir" \
+#    -d "$targetDir/generated-sources/c" \
+#    com.github.jjYBdx4IL.maven.examples.jnajni.JNIAccess
 gcc -shared -fPIC -O2 -g \
     -I"$JAVA_HOME/include" -I"$JAVA_HOME/include/linux" \
     -I"$targetDir/generated-sources/c" \
@@ -34,9 +34,9 @@ fi
 
 # JNI with native lib loader...
 # see https://github.com/scijava/native-lib-loader
-javah -classpath "$classesOutputDir" \
-    -d "$targetDir/generated-sources/c" \
-    com.github.jjYBdx4IL.maven.examples.jnajni.JNIAccessWithLibLoader
+#javah -classpath "$classesOutputDir" \
+#    -d "$targetDir/generated-sources/c" \
+#    com.github.jjYBdx4IL.maven.examples.jnajni.JNIAccessWithLibLoader
 install -d "$classesOutputDir/META-INF/lib/linux_64"
 gcc -shared -fPIC -O2 -g \
     -I"$JAVA_HOME/include" -I"$JAVA_HOME/include/linux" \

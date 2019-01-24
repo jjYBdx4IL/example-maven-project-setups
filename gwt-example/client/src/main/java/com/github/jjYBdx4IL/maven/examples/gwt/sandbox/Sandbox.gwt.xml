@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <module rename-to='sandbox'>
-    <add-linker name="xsiframe" />
-    
     <inherits name='com.google.gwt.user.User'/>
     <inherits name="com.google.gwt.user.Debug"/>
     <inherits name='javax.Persistence'/>
-    <inherits name='com.google.gwt.inject.Inject'/>
+    <inherits name="dagger.Dagger" />
     <inherits name="com.google.gwt.logging.Logging"/>
     <inherits name="com.google.gwt.resources.Resources" />
     <inherits name='com.google.gwt.place.Place'/>

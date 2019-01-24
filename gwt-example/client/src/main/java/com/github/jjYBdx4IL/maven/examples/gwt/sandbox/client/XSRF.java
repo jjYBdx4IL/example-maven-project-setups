@@ -10,12 +10,15 @@ import com.google.gwt.user.client.rpc.ServiceDefTarget;
 import com.google.gwt.user.client.rpc.XsrfToken;
 import com.google.gwt.user.client.rpc.XsrfTokenService;
 import com.google.gwt.user.client.rpc.XsrfTokenServiceAsync;
-import com.google.inject.Inject;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  *
  * @author jjYBdx4IL
  */
+@Singleton
 public class XSRF {
 
     private final EventBus eventBus;
