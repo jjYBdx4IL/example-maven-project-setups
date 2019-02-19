@@ -46,6 +46,7 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <skip>${skipITs}</skip>
                     <skipCache>false</skipCache>
                     <retries>2</retries>
                     <unpack>true</unpack>
@@ -106,6 +107,7 @@
                             <goal>run</goal>
                         </goals>
                         <configuration>
+                            <skip>${skipITs}</skip>
                             <target>
                                 <taskdef resource="net/sf/antcontrib/antcontrib.properties" />
                                 <exec executable="bash" spawn="false" failonerror="true">
@@ -123,6 +125,7 @@
                             <goal>run</goal>
                         </goals>
                         <configuration>
+                            <skip>${skipITs}</skip>
                             <target>
                                 <taskdef resource="net/sf/antcontrib/antcontrib.properties" />
                                 <exec executable="bash" spawn="false" failonerror="true">

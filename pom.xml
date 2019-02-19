@@ -36,6 +36,7 @@
         <module>compile-time-annotation-processing</module>
         <module>download-plugin-example</module>
         <module>gwt-example</module>
+        <module>gwt-example-2</module>
         <module>izpack-example</module>
         <module>javacpp-opencv-example</module>
         <module>jersey-war-example</module>
@@ -93,7 +94,10 @@
         <pluginManagement>
             <plugins>
                 <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-clean-plugin</artifactId>
+                    <version>3.1.0</version>
+                </plugin>
+                <plugin>
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>3.8.0</version>
                     <configuration>
@@ -101,7 +105,6 @@
                     </configuration>
                 </plugin>
                 <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-resources-plugin</artifactId>
                     <version>3.0.2</version>
                     <configuration>
