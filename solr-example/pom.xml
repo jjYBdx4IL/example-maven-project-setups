@@ -40,7 +40,7 @@
                             <goal>wget</goal>
                         </goals>
                         <configuration>
-                            <url>https://www.apache.org/dyn/mirrors/mirrors.cgi?action=download&amp;filename=lucene/solr/${solr.version}/solr-${solr.version}.zip</url>
+                            <url>https://archive.apache.org/dist/lucene/solr/7.5.0/solr-7.5.0.zip</url>
                             <sha512>085eb16912dd91b40dffec363554cb434db6aff928761a9c1b852a56172c0c9a1026a875a10c3d1c8dc6d992e29bc2b273e83eb07876e544542ab44ce91407f1</sha512>
                         </configuration>
                     </execution>
