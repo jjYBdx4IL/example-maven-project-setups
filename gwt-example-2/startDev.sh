@@ -25,7 +25,7 @@ echo "Hit ENTER to STOP, go to http://localhost:8080 for development."
 tail -n0 -F target/*.log &
 tailpid=$!
 trap "kill $tailpid" EXIT
-screen -d -m -S gwtcodeserver -L -Logfile target/gwtcodeserver.log mvn gwt:codeserver
+screen -c /dev/null -dmS gwtcodeserver -L -Logfile target/gwtcodeserver.log mvn gwt:codeserver
 # haven't had problems with the two maven processes starting up in parallel yet, but
 # it should be problematic at least in principle.
 # Also, in a clean environment, the codeserver seems to create directories that make jetty
@@ -34,7 +34,7 @@ screen -d -m -S gwtcodeserver -L -Logfile target/gwtcodeserver.log mvn gwt:codes
 if [[ -n "$SLOW" ]]; then
     while ! curl -s -o /dev/null http://localhost:9876; do sleep 1; done
 fi
-screen -d -m -S webserver -L -Logfile target/webserver.log mvn jetty:run -Denv=dev
+screen -c /dev/null -dmS webserver -L -Logfile target/webserver.log mvn jetty:run -Denv=dev
 read
 kill `screen -ls | perl -ne '/^\s+(\d+)\.(webserver|gwtcodeserver)\s+.*$/&&print $1.$/'`
 

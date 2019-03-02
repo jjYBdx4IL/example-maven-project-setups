@@ -56,8 +56,13 @@ mvn -f example-server wildfly:shutdown
 ```
 
 Caveats: currently runs against the packaged war file, therefore this mode is currently not suitable for server-side
-development. There is kind of a workaround for this though: https://github.com/jjYBdx4IL/snippets/blob/master/bash/jee_autodeploy.sh
+development. There is kind of a workaround for this though:
+
+    https://github.com/jjYBdx4IL/snippets/blob/master/java/jee_autodeploy.sh
+
 scans for changes on disk, and
 Wildfire allows to deploy ecploded WARs and add external classpaths to them:
 https://developer.jboss.org/wiki/HowToPutAnExternalFileInTheClasspath. That should make it possible to include
 the build paths of other workspace modules in order to avoid having to rebuild and deploy them.
+
+
