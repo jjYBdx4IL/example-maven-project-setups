@@ -51,7 +51,7 @@
                             <goal>wget</goal>
                         </goals>
                         <configuration>
-                            <url>https://www.apache.org/dyn/mirrors/mirrors.cgi?action=download&amp;filename=zookeeper/zookeeper-${zk.version}/zookeeper-${zk.version}.tar.gz</url>
+                            <url>https://archive.apache.org/dist/zookeeper/zookeeper-${zk.version}/zookeeper-${zk.version}.tar.gz</url>
                             <sha512>4c54e40ac8d0b267db4a188a30e39ed0ac2c3e8a8fadaf244be45ff5adee956df28f6cb9f1eb56f175e924fa3629b64f98286a090c46764c91c017613c80a51b</sha512>
                         </configuration>
                     </execution>
