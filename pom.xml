@@ -38,7 +38,6 @@
         <module>gwt-example</module>
         <module>gwt-example-2</module>
         <module>izpack-example</module>
-        <module>javacpp-opencv-example</module>
         <module>jersey-war-example</module>
         <module>jetty-gwt-errai-bus</module>
         <module>jna-jni-example</module>
