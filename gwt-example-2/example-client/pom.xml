@@ -4,8 +4,9 @@
 
   <parent>
     <groupId>my.example</groupId>
-    <artifactId>example</artifactId>
+    <artifactId>gwt-example-2</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <relativePath>..</relativePath>
   </parent>
 
   <artifactId>example-client</artifactId>

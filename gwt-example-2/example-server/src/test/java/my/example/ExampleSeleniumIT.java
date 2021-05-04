@@ -3,8 +3,8 @@ package my.example;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import io.github.bonigarcia.wdm.ChromeDriverManager;
-import io.github.bonigarcia.wdm.DriverManagerType;
+import io.github.bonigarcia.wdm.WebDriverManager;
+
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -21,7 +21,7 @@ public class ExampleSeleniumIT {
 
     static {
         // fetch chrome driver executable 
-        ChromeDriverManager.getInstance(DriverManagerType.CHROME).setup();
+    	WebDriverManager.chromedriver().setup();
     }
     
     static ChromeDriver driver = null;

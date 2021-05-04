@@ -37,10 +37,25 @@
     <modules>
         <module>api</module>
         <module>client</module>
-        <module>devel-it</module>
-        <module>dist</module>
         <module>server</module>
     </modules>
+
+	<!-- this example only fully works under Linux-type systems -->
+	<profiles>
+        <profile>
+            <id>unix</id>
+            <activation>
+                <os>
+                    <family>unix</family>
+                    <name>Linux</name>
+                </os>
+            </activation>
+            <modules>
+		        <module>devel-it</module>
+		        <module>dist</module>
+            </modules>
+        </profile>
+	</profiles>
 
     <build>
         <!-- put compiled classes where jetty:run's auto-reload is looking 

@@ -18,10 +18,17 @@ start the following two commands in the given order:
 mvn gwt:codeserver
 # and
 mvn jetty:run -Denv=dev
-# or: mvn tomcat7:run -Denv=dev
+# or: mvn tomcat7:run -Denv=dev (no auto-reload of server classes)
 ```
 
 Point your browser at http://localhost:8080 and start hacking.
+
+The jetty server is configured to automatically restart after changing any of the 
+server classes. Updating the CSS sometimes requires to do a shift-reload
+(force reload) in your browser (or simply disable caching using your
+browser's dev tools). The gwt:codeserver is known to not shut down properly
+under Windows when using SIGINT/ctrl-c. Use task manager for that.
+You'll likely discover a few locked files in that case.
 
 For release do:
 

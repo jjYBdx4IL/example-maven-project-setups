@@ -36,7 +36,7 @@
                                     <then></then>
                                     <else>
                                         <genkey alias="james" storepass="nosecret" keypass="nosecret"
-                                        keystore="${keystore.location}"
+                                        keystore="${keystore.location}" keyalg="rsa"
                                         dname="CN=localhost"/>
                                     </else>
                                 </if>

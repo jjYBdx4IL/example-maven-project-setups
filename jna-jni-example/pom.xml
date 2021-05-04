@@ -30,6 +30,8 @@
                         <arg>-h</arg>
                         <arg>${project.build.directory}/generated-sources/c</arg>
                     </compilerArgs>
+                    <source>7</source>
+                    <target>7</target>
                 </configuration>
             </plugin>        
             <!-- ITs run against the natives bundled in the final jar -->

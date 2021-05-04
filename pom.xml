@@ -29,9 +29,6 @@
         <module>antrun-set-maven-props</module>
         <module>aop-dynamic-proxy-jetty-example</module>
         <module>appbundler-example</module>
-        <module>aspectj-jetty-ltw-example</module>
-        <!-- broken since java 9
-        <module>aspectj-maven-plugin-example</module> -->
         <module>classpath-jar</module>
         <module>compile-time-annotation-processing</module>
         <module>download-plugin-example</module>
@@ -41,13 +38,8 @@
         <module>jersey-war-example</module>
         <module>jetty-gwt-errai-bus</module>
         <module>jna-jni-example</module>
-        <!-- broken since java 9, no upstream updates
-        <module>stjs-example</module> -->
         <!-- intentionally broken: -->
         <!--<module>java6only</module> -->
-        <module>launch4j-plugin</module>
-        <module>launch4j-example</module>
-        <module>launch4j-bundled-example</module>
         <module>log4j-runtime-configuration</module>
         <module>maven-checkstyle-example</module>
         <module>maven-jnaerator-example</module>
@@ -56,7 +48,31 @@
         <module>os-profiles-example</module>
     </modules>
 
+	<!-- these profiles are for modules that only work in specific circumstances (older jvms, specific platforms) -->
+	<!-- Some of them may be easily fixable though. -->
     <profiles>
+        <profile>
+            <id>java-pre-9</id>
+            <activation>
+                <jdk>[,9)</jdk>
+            </activation>
+            <modules>
+		        <module>aspectj-maven-plugin-example</module>
+		        <module>stjs-example</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>java-pre-12</id>
+            <activation>
+                <jdk>[,12)</jdk>
+            </activation>
+            <modules>
+		        <module>aspectj-jetty-ltw-example</module>
+		        <module>launch4j-plugin</module>
+		        <module>launch4j-example</module>
+		        <module>launch4j-bundled-example</module>
+            </modules>
+        </profile>
         <profile>
             <id>mac</id>
             <activation>
