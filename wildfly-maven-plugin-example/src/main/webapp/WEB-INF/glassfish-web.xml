@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glassfish-web-app error-url="">
+    <!-- browser tend to not send encoding information, so we have to match the servlet container's
+    default encoding with our requested form data encoding: -->
+    <parameter-encoding default-charset="UTF-8" />
+</glassfish-web-app>

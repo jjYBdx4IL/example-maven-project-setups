@@ -3,3 +3,5 @@
 .settings
 .classpath
 /gwt-example*/*/target/
+/*/db.mv.db
+/*/db.trace.db

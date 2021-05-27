@@ -1,0 +1,266 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+        http://maven.apache.org/POM/4.0.0
+            http://maven.apache.org/maven-v4_0_0.xsd
+            ">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.github.jjYBdx4IL.maven.examples</groupId>
+        <artifactId>github-maven-examples</artifactId>
+        <version>1.0-SNAPSHOT</version>
+        <relativePath>..</relativePath>
+    </parent>
+
+    <artifactId>wildfly-maven-plugin-example</artifactId>
+    <packaging>war</packaging>
+
+    <name>Maven Examples :: Wildfly Maven Plugin example</name>
+
+    <properties>
+        <wildfly.version>23.0.2.Final</wildfly.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.wildfly.plugins</groupId>
+                <artifactId>wildfly-maven-plugin</artifactId>
+                <version>2.0.2.Final</version>
+                <executions>
+                    <execution>
+                        <id>start</id>
+                        <goals>
+                            <goal>start</goal>
+                        </goals>
+                        <phase>pre-integration-test</phase>
+                    </execution>
+                    <!-- reserve a spot in the execution chain to allow for 
+                        configuring DS before deploying a war that depends on it -->
+                    <execution>
+                        <id>configure-instance</id>
+                        <goals>
+                            <goal>execute-commands</goal>
+                            <goal>shutdown</goal>
+                        </goals>
+                        <phase>pre-integration-test</phase>
+                        <configuration>
+                            <!-- because we are configuring a custom data 
+                                source, calling install without clean causes errors because of duplication: -->
+                            <failOnError>false</failOnError>
+                            <reload>true</reload>
+                            <skip>${wildfly.skip.config}</skip>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>deploy</id>
+                        <goals>
+                            <goal>deploy-only</goal>
+                        </goals>
+                        <phase>pre-integration-test</phase>
+                        <configuration>
+                            <name>ROOT.war</name>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>shutdown</id>
+                        <goals>
+                            <goal>shutdown</goal>
+                        </goals>
+                        <phase>post-integration-test</phase>
+                    </execution>
+                </executions>
+                <configuration>
+                    <javaOpts>
+                        <javaOpt>-Djboss.socket.binding.port-offset=2</javaOpt>
+                        <javaOpt>-Dhibernate.hbm2ddl.auto=update</javaOpt>
+                        <javaOpt>-Dhibernate.show_sql=true</javaOpt>
+                        <javaOpt>-Xdebug</javaOpt>
+                        <javaOpt>-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5000</javaOpt>
+                        <javaOpt>-Dorg.slf4j.simpleLogger.defaultLogLevel=debug</javaOpt>
+                        <!-- lots of stuff implicitly depends on the time 
+                            zone setting... better to "unset" it. However, this only applies to the local 
+                            setup in target/, and not when the webapp is deployed somewhere else. For 
+                            that purpose, we also set hibernate.jdbc.time_zone=UTC in persistence.xml -->
+                        <javaOpt>-Duser.timezone=UTC</javaOpt>
+                    </javaOpts>
+                    <port>9992</port>
+                    <scripts>
+                        <script>${project.build.directory}/devel_config.cli</script>
+                    </scripts>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>3.0.0-M5</version>
+                <executions>
+                    <execution>
+                        <id>default-test</id>
+                        <phase>integration-test</phase>
+                        <goals>
+                            <goal>integration-test</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>default-verify</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <includes>
+                        <include>**/*IT.java</include>
+                    </includes>
+                </configuration>
+            </plugin>
+        </plugins>
+
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <artifactId>maven-war-plugin</artifactId>
+                    <version>3.2.2</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.jboss.resteasy</groupId>
+            <artifactId>resteasy-multipart-provider</artifactId>
+            <version>3.6.2.Final</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>javax</groupId>
+            <artifactId>javaee-api</artifactId>
+            <version>8.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>1.7.30</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-impl</artifactId>
+            <version>2.3.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jaxb</groupId>
+            <artifactId>jaxb-runtime</artifactId>
+            <version>2.3.2</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.1.0</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.13</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <profiles>
+        <profile>
+            <id>wildfly-run-config</id>
+            <activation>
+                <file>
+                    <exists>${basedir}/devel_config.cli</exists>
+                </file>
+            </activation>
+            <properties>
+                <wildfly.skip.config>false</wildfly.skip.config>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.gmavenplus</groupId>
+                        <artifactId>gmavenplus-plugin</artifactId>
+                        <version>1.12.1</version>
+                        <executions>
+                            <execution>
+                                <id>escape-basedir</id>
+                                <goals>
+                                    <goal>execute</goal>
+                                </goals>
+                                <phase>generate-resources</phase>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <scripts>
+                                <script><![CDATA[
+                      project.properties.basedirEscaped =
+                      project.basedir.absolutePath.replace('\\','/');
+                    ]]></script>
+                            </scripts>
+                        </configuration>
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.codehaus.groovy</groupId>
+                                <artifactId>groovy</artifactId>
+                                <version>3.0.8</version>
+                                <scope>runtime</scope>
+                            </dependency>
+                            <dependency>
+                                <groupId>org.codehaus.groovy</groupId>
+                                <artifactId>groovy-ant</artifactId>
+                                <version>3.0.8</version>
+                                <scope>runtime</scope>
+                            </dependency>
+                        </dependencies>
+                    </plugin>
+                    <!-- using an explicit plugin exec step, we could also 
+                        move this section to a parent pom: -->
+                    <plugin>
+                        <artifactId>maven-resources-plugin</artifactId>
+                        <version>3.2.0</version>
+                        <executions>
+                            <execution>
+                                <id>copy-wildfly-init-script</id>
+                                <phase>process-resources</phase>
+                                <goals>
+                                    <goal>copy-resources</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>${project.build.directory}</outputDirectory>
+                                    <resources>
+                                        <resource>
+                                            <directory>${basedir}</directory>
+                                            <filtering>true</filtering>
+                                            <includes>
+                                                <include>devel_config.cli</include>
+                                            </includes>
+                                        </resource>
+                                    </resources>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+</project>
+

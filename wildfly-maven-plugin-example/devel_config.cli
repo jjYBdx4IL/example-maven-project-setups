@@ -1,0 +1,4 @@
+/subsystem=datasources/data-source=CustomDS:add(jndi-name=java:jboss/datasources/CustomDS,driver-name=h2,connection-url="jdbc:h2:file:${basedirEscaped}/db;TRACE_LEVEL_SYSTEM_OUT=0",user-name=sa,validate-on-match=true,background-validation=false,driver-class=org.h2.Driver)
+/subsystem=undertow/server=default-server/host=custom-host:add
+/subsystem=undertow/server=default-server/host=default-host:write-attribute(name=alias,value=["localhost2"])
+/subsystem=undertow/server=default-server/host=custom-host:write-attribute(name=alias,value=["localhost"])

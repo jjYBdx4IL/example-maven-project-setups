@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jboss-web version="10.0" xmlns="http://www.jboss.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.jboss.org/j2ee/schema/jboss-web_10_0.xsd">
+    <!-- browser tend to not send encoding information, so we have to match the servlet container's
+    default encoding with our requested form data encoding: -->
+    <default-encoding>UTF-8</default-encoding>
+    <!-- omit this if you manage stuff manually on the wildfly console -->
+    <context-root>/</context-root>
+    <virtual-host>custom-host</virtual-host>
+</jboss-web>
