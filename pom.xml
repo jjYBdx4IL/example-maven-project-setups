@@ -45,7 +45,6 @@
         <!--<module>java6only</module> -->
         <module>log4j-runtime-configuration</module>
         <module>maven-checkstyle-example</module>
-        <module>maven-jnaerator-example</module>
         <module>multimodule-archetype-example</module>
         <!-- <module>nar-maven-plugin-jni-example</module> not working atm -->
         <module>os-profiles-example</module>
@@ -53,8 +52,9 @@
         <module>wildfly-maven-plugin-example</module>
     </modules>
 
-	<!-- these profiles are for modules that only work in specific circumstances (older jvms, specific platforms) -->
-	<!-- Some of them may be easily fixable though. -->
+    <!-- these profiles are for modules that only work in specific circumstances 
+        (older jvms, specific platforms) -->
+    <!-- Some of them may be easily fixable though. -->
     <profiles>
         <profile>
             <id>java-pre-9</id>
@@ -62,8 +62,8 @@
                 <jdk>[,9)</jdk>
             </activation>
             <modules>
-		        <module>aspectj-maven-plugin-example</module>
-		        <module>stjs-example</module>
+                <module>aspectj-maven-plugin-example</module>
+                <module>stjs-example</module>
             </modules>
         </profile>
         <profile>
@@ -72,10 +72,14 @@
                 <jdk>[,12)</jdk>
             </activation>
             <modules>
-		        <module>aspectj-jetty-ltw-example</module>
-		        <module>launch4j-plugin</module>
-		        <module>launch4j-example</module>
-		        <module>launch4j-bundled-example</module>
+                <module>aspectj-jetty-ltw-example</module>
+                <module>hbase-example</module>
+                <module>hdfs-example</module>
+                <module>launch4j-plugin</module>
+                <module>launch4j-example</module>
+                <module>launch4j-bundled-example</module>
+                <module>maven-jnaerator-example</module>
+                <module>solr-example</module>
             </modules>
         </profile>
         <profile>
@@ -95,9 +99,6 @@
                 </os>
             </activation>
             <modules>
-                <module>hbase-example</module>
-                <module>hdfs-example</module>
-                <module>solr-example</module>
             </modules>
         </profile>
         <profile>

@@ -423,6 +423,20 @@
                 <surefire.skip>true</surefire.skip>
             </properties>
         </profile>
+        
+        <profile>
+            <id>skipCI</id>
+            <activation>
+                <property>
+                    <name>env.CI</name>
+                </property>
+            </activation>
+            <properties>
+                <antrun.skip>true</antrun.skip>
+                <failsafe.skip>true</failsafe.skip>
+                <surefire.skip>true</surefire.skip>
+            </properties>
+        </profile>
     </profiles>
 
 </project>

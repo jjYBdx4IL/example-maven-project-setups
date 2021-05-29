@@ -24,6 +24,9 @@
         <testUrl>http://localhost:${jetty.port}/sandbox.jsp</testUrl>
         <installDir>${project.build.directory}/install/${project.artifactId}</installDir>
         <h2db.mgmt.port>8083</h2db.mgmt.port>
+        
+        <antrun.skip>false</antrun.skip>
+        <failsafe.skip>false</failsafe.skip>
     </properties>
 
     <dependencies>
@@ -227,7 +230,109 @@
                             <goal>run</goal>
                         </goals>
                     </execution>
+                    <execution>
+                        <id>start-jetty-server</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <!-- unpack dist -->
+                                <delete dir="${installDir}" />
+                                <unzip src="${zip.artifact}" dest="${project.build.directory}/install" />
+                                
+                                <!-- shut down running server - just in case -->
+                                <exec executable="bash" dir="${installDir}" spawn="false" failonerror="true">
+                                    <arg value="./autostart.sh" />
+                                    <arg value="stop" />
+                                </exec>
+                                <waitfor maxwait="3" maxwaitunit="minute" checkevery="1000">
+                                    <not>
+                                        <socket server="localhost" port="${jetty.port}" />
+                                    </not>
+                                </waitfor>
+
+                                <!-- ensure there is no server still running -->
+                                <fail>
+                                    <condition>
+                                        <socket server="localhost" port="${jetty.port}" />
+                                    </condition>
+                                </fail>
+                                <exec executable="bash" dir="${installDir}" spawn="false" failonerror="true">
+                                    <arg value="./autostart.sh" />
+                                    <arg value="start" />
+                                </exec>
+                                <echo>Waiting for server to come up at port ${jetty.port}</echo>
+                                <waitfor maxwait="3" maxwaitunit="minute" checkevery="1000">
+                                    <http url="${testUrl}" errorsBeginAt="300" />
+                                </waitfor>
+                                <echo>Waiting for h2 database frontend to come up at port ${h2db.mgmt.port}</echo>
+                                <waitfor maxwait="3" maxwaitunit="minute" checkevery="1000">
+                                    <socket server="localhost" port="${h2db.mgmt.port}" />
+                                </waitfor>
+                            </target>
+                            <skip>${antrun.skip}</skip>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>shutdown-jetty-server</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <exec executable="bash" dir="${installDir}" spawn="false" failonerror="true">
+                                    <arg value="./autostart.sh" />
+                                    <arg value="stop" />
+                                </exec>
+                                <fail>
+                                    <condition>
+                                        <socket server="localhost" port="${jetty.port}" />
+                                    </condition>
+                                </fail>
+                            </target>
+                            <skip>${antrun.skip}</skip>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>shutdown-jetty-server-preclean</id>
+                        <phase>pre-clean</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <taskdef resource="net/sf/antcontrib/antcontrib.properties" />
+                                <if>
+                                    <available file="${installDir}/autostart.sh" />
+                                    <then>
+                                        <exec executable="bash" dir="${installDir}" spawn="false"
+                                            failonerror="true">
+                                            <arg value="./autostart.sh" />
+                                            <arg value="stop" />
+                                        </exec>
+                                    </then>
+                                    <else></else>
+                                </if>
+                                <fail>
+                                    <condition>
+                                        <socket server="localhost" port="${jetty.port}" />
+                                    </condition>
+                                </fail>
+                            </target>
+                            <skip>${antrun.skip}</skip>
+                        </configuration>
+                    </execution>
                 </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>ant-contrib</groupId>
+                        <artifactId>ant-contrib</artifactId>
+                        <version>20020829</version>
+                    </dependency>
+                </dependencies>
             </plugin>
 
             <plugin>
@@ -298,6 +403,7 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <skip>${failsafe.skip}</skip>
                     <systemPropertyVariables>
                         <sandbox.location>${testUrl}</sandbox.location>
                     </systemPropertyVariables>
@@ -313,117 +419,21 @@
             <activation>
                 <property>
                     <name>skipITs</name>
-                    <value>!true</value>
+                    <value>true</value>
                 </property>
             </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <artifactId>maven-antrun-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>start-jetty-server</id>
-                                <phase>pre-integration-test</phase>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                                <configuration>
-                                    <target>
-                                        <!-- unpack dist -->
-                                        <delete dir="${installDir}" />
-                                        <unzip src="${zip.artifact}" dest="${project.build.directory}/install" />
-                                        
-                                        <!-- shut down running server - just in case -->
-                                        <exec executable="bash" dir="${installDir}" spawn="false" failonerror="true">
-                                            <arg value="./autostart.sh" />
-                                            <arg value="stop" />
-                                        </exec>
-                                        <waitfor maxwait="3" maxwaitunit="minute" checkevery="1000">
-                                            <not>
-                                                <socket server="localhost" port="${jetty.port}" />
-                                            </not>
-                                        </waitfor>
-
-                                        <!-- ensure there is no server still running -->
-                                        <fail>
-                                            <condition>
-                                                <socket server="localhost" port="${jetty.port}" />
-                                            </condition>
-                                        </fail>
-                                        <exec executable="bash" dir="${installDir}" spawn="false" failonerror="true">
-                                            <arg value="./autostart.sh" />
-                                            <arg value="start" />
-                                        </exec>
-                                        <echo>Waiting for server to come up at port ${jetty.port}</echo>
-                                        <waitfor maxwait="3" maxwaitunit="minute" checkevery="1000">
-                                            <http url="${testUrl}" errorsBeginAt="300" />
-                                        </waitfor>
-                                        <echo>Waiting for h2 database frontend to come up at port ${h2db.mgmt.port}</echo>
-                                        <waitfor maxwait="3" maxwaitunit="minute" checkevery="1000">
-                                            <socket server="localhost" port="${h2db.mgmt.port}" />
-                                        </waitfor>
-                                    </target>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>shutdown-jetty-server</id>
-                                <phase>post-integration-test</phase>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                                <configuration>
-                                    <target>
-                                        <exec executable="bash" dir="${installDir}" spawn="false" failonerror="true">
-                                            <arg value="./autostart.sh" />
-                                            <arg value="stop" />
-                                        </exec>
-                                        <fail>
-                                            <condition>
-                                                <socket server="localhost" port="${jetty.port}" />
-                                            </condition>
-                                        </fail>
-                                    </target>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>shutdown-jetty-server-preclean</id>
-                                <phase>pre-clean</phase>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                                <configuration>
-                                    <target>
-                                        <taskdef resource="net/sf/antcontrib/antcontrib.properties" />
-                                        <if>
-                                            <available file="${installDir}/autostart.sh" />
-                                            <then>
-                                                <exec executable="bash" dir="${installDir}" spawn="false"
-                                                    failonerror="true">
-                                                    <arg value="./autostart.sh" />
-                                                    <arg value="stop" />
-                                                </exec>
-                                            </then>
-                                            <else></else>
-                                        </if>
-                                        <fail>
-                                            <condition>
-                                                <socket server="localhost" port="${jetty.port}" />
-                                            </condition>
-                                        </fail>
-                                    </target>
-                                </configuration>
-                            </execution>
-                        </executions>
-                        <dependencies>
-                            <dependency>
-                                <groupId>ant-contrib</groupId>
-                                <artifactId>ant-contrib</artifactId>
-                                <version>20020829</version>
-                            </dependency>
-                        </dependencies>
-                    </plugin>
-                </plugins>
-            </build>
+        </profile>
+        <profile>
+            <id>skipCI</id>
+            <activation>
+                <property>
+                    <name>env.CI</name>
+                </property>
+            </activation>
+            <properties>
+                <antrun.skip>true</antrun.skip>
+                <failsafe.skip>true</failsafe.skip>
+            </properties>
         </profile>
     </profiles>
 
