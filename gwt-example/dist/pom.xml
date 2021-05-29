@@ -415,15 +415,6 @@
 
     <profiles>
         <profile>
-            <id>run-its</id>
-            <activation>
-                <property>
-                    <name>skipITs</name>
-                    <value>true</value>
-                </property>
-            </activation>
-        </profile>
-        <profile>
             <id>skipCI</id>
             <activation>
                 <property>

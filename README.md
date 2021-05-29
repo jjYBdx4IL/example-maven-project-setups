@@ -11,4 +11,4 @@ See wildfly-maven-plugin-example.
 
 
 --
-devel/java/github/example-maven-project-setups@7858
+devel/java/github/example-maven-project-setups@7861

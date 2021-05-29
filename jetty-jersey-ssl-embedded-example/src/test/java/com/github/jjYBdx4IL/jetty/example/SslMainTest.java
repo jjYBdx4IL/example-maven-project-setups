@@ -49,6 +49,15 @@ public class SslMainTest {
         System.out.println("Total Memory  : " + Runtime.getRuntime().totalMemory() / dataSize + " MB");
         System.out.println("Max Memory    : " + Runtime.getRuntime().maxMemory() / dataSize + " MB");
 
+        System.out.println("** After GC: **");
+        Runtime.getRuntime().gc();
+        
+        System.out.println("Used Memory   : "
+            + (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / dataSize + " MB");
+        System.out.println("Free Memory   : " + Runtime.getRuntime().freeMemory() / dataSize + " MB");
+        System.out.println("Total Memory  : " + Runtime.getRuntime().totalMemory() / dataSize + " MB");
+        System.out.println("Max Memory    : " + Runtime.getRuntime().maxMemory() / dataSize + " MB");
+        
         t.setUncaughtExceptionHandler(new UncaughtExceptionHandler() {
 
             @Override

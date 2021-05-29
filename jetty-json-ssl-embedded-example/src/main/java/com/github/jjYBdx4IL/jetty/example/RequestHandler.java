@@ -11,6 +11,10 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Arrays;
+import java.util.Enumeration;
+
+import javax.net.ssl.SSLPeerUnverifiedException;
+import javax.net.ssl.SSLSession;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -37,6 +41,21 @@ public class RequestHandler extends AbstractHandler {
 
         PrintWriter out = response.getWriter();
 
+        Enumeration<String> attrs = request.getAttributeNames();
+        while (attrs.hasMoreElements()) {
+            String attr = attrs.nextElement();
+            LOG.info("{}: {}", attr, request.getAttribute(attr));
+        }
+        
+        SSLSession ssl = (SSLSession) request.getAttribute("org.eclipse.jetty.servlet.request.ssl_session");
+        if (ssl != null) {
+            try {
+                LOG.info("authenticated peer principal: {}", ssl.getPeerPrincipal().getName());
+            } catch (SSLPeerUnverifiedException ex) {
+                LOG.info("peer not verified");
+            }
+        }
+        
         if ("GET".equals(request.getMethod())) {
             out.print("<h1>ehlo</h1>");
         } else if ("POST".equals(request.getMethod())) {
