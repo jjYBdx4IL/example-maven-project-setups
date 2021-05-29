@@ -38,6 +38,8 @@
         <module>izpack-example</module>
         <module>jersey-war-example</module>
         <module>jetty-gwt-errai-bus</module>
+        <module>jetty-json-ssl-embedded-example</module>
+        <module>jetty-jersey-ssl-embedded-example</module>
         <module>jna-jni-example</module>
         <!-- intentionally broken: -->
         <!--<module>java6only</module> -->

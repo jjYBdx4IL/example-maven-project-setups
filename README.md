@@ -12,5 +12,5 @@ See wildfly-maven-plugin-example.
 
 
 --
-[![Build Status](https://travis-ci.org/jjYBdx4IL/example-maven-project-setups.png?branch=master)](https://travis-ci.org/jjYBdx4IL/example-maven-project-setups)
-devel/java/github/example-maven-project-setups@7850
+[![Build Status](https://travis-ci.com/jjYBdx4IL/example-maven-project-setups.png?branch=master)](https://travis-ci.org/jjYBdx4IL/example-maven-project-setups)
+devel/java/github/example-maven-project-setups@7857
