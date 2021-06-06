@@ -45,19 +45,19 @@ jobs:
       with:
         repository: jjYBdx4IL/misc
         path: co.misc
-    - name: Checkout aspectj-utils repo
-      uses: actions/checkout@v2
-      with:
-        repository: jjYBdx4IL/aspectj-utils
-        path: co.aspectj-utils
+#    - name: Checkout aspectj-utils repo
+#      uses: actions/checkout@v2
+#      with:
+#        repository: jjYBdx4IL/aspectj-utils
+#        path: co.aspectj-utils
     - name: Build misc dependency with Maven
       uses: GabrielBB/xvfb-action@v1
       with:
         run: mvn -V -B install -f co.misc -DskipTests -DskipITs -Ddependency-check.skip -Dmaven.javadoc.skip
-    - name: Build aspectj-utils dependency with Maven
-      uses: GabrielBB/xvfb-action@v1
-      with:
-        run: mvn -B install -f co.aspectj-utils -DskipTests -DskipITs -Ddependency-check.skip -Dmaven.javadoc.skip
+#    - name: Build aspectj-utils dependency with Maven
+#      uses: GabrielBB/xvfb-action@v1
+#      with:
+#        run: mvn -B install -f co.aspectj-utils -DskipTests -DskipITs -Ddependency-check.skip -Dmaven.javadoc.skip
     - name: Build with Maven
       uses: GabrielBB/xvfb-action@v1
       with:
