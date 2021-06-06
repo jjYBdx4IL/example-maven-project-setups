@@ -33,11 +33,9 @@
         <module>commons-logging-example</module>
         <module>compile-time-annotation-processing</module>
         <module>download-plugin-example</module>
-        <module>gwt-example</module>
         <module>gwt-example-2</module>
         <module>izpack-example</module>
         <module>jersey-war-example</module>
-        <module>jetty-gwt-errai-bus</module>
         <module>jetty-json-ssl-embedded-example</module>
         <module>jetty-jersey-ssl-embedded-example</module>
         <module>jna-jni-example</module>
@@ -63,6 +61,8 @@
             </activation>
             <modules>
                 <module>aspectj-maven-plugin-example</module>
+                <module>gwt-example</module>
+                <module>jetty-gwt-errai-bus</module>
                 <module>stjs-example</module>
             </modules>
         </profile>

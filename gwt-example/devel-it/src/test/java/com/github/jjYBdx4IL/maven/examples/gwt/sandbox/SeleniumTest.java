@@ -29,11 +29,14 @@ import com.github.jjYBdx4IL.test.selenium.WebElementNotFoundException;
 import org.apache.commons.io.FileUtils;
 import org.apache.tools.ant.DirectoryScanner;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.Select;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,8 +59,7 @@ import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 
-import io.github.bonigarcia.wdm.ChromeDriverManager;
-import io.github.bonigarcia.wdm.DriverManagerType;
+import io.github.bonigarcia.wdm.WebDriverManager;
 
 public class SeleniumTest extends SeleniumTestBase {
 
@@ -69,7 +71,12 @@ public class SeleniumTest extends SeleniumTestBase {
         LOG.info(s);
         DEVMODE_INSTALL_DIR = s == null ? null : new File(s);
         
-        ChromeDriverManager.getInstance(DriverManagerType.CHROME).setup();
+        WebDriverManager.chromedriver().setup();
+        
+        ChromeOptions chromeOptions = new ChromeOptions();
+        chromeOptions.addArguments("--disable-gpu");
+        chromeOptions.addArguments("--dbus-stub");
+        setDriver(new ChromeDriver(chromeOptions));
     }
 
     /**
@@ -86,7 +93,6 @@ public class SeleniumTest extends SeleniumTestBase {
 
     @Before
     public void before() throws InterruptedException {
-        getDriver(SeleniumTestBase.Driver.CHROME);
     }
 
     @Test
