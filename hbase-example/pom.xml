@@ -10,6 +10,7 @@
         <groupId>com.github.jjYBdx4IL.maven.examples</groupId>
         <artifactId>github-maven-examples</artifactId>
         <version>1.0-SNAPSHOT</version>
+        <relativePath>..</relativePath>
     </parent>
 
     <artifactId>hbase-example</artifactId>
@@ -27,7 +28,6 @@
             <plugin>
                 <groupId>com.googlecode.maven-download-plugin</groupId>
                 <artifactId>download-maven-plugin</artifactId>
-                <version>1.3.0</version>
                 <executions>
                     <execution>
                         <id>hbase-dist-unpack</id>

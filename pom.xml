@@ -136,6 +136,11 @@
                     <artifactId>maven-antrun-plugin</artifactId>
                     <version>1.8</version>
                 </plugin>
+                <plugin>
+                    <groupId>com.googlecode.maven-download-plugin</groupId>
+                    <artifactId>download-maven-plugin</artifactId>
+                    <version>1.6.3</version>
+                </plugin>
             </plugins>
         </pluginManagement>
     </build>
